@@ -1,1 +1,63 @@
+EASY ONLY
+
+1) Average Selling Price - did not get
+
+2) Product Sales Analysis I
+
+SELECT product_name, year, price
+FROM product JOIN sales USING (product_id);
+
+3) Game Play Analysis I
+
+SELECT player_id, MIN(event_date) AS first_login
+FROM Activity
+GROUP BY player_id;
+
+4) Big Countries
+
+SELECT name, population, area
+FROM World
+WHERE area > 3000000 OR population > 25000000;
+
+5) Number of Comments per Post - medium level
+
+6) Actors and Directors Who Cooperated At Least Three Times
+
+7) Article Views I 
+
+SELECT DISTINCT author_id AS id
+FROM Views
+WHERE author_id = viewer_id
+ORDER BY id ASC;
+
+8) Sales Analysis I - medium difficulty
+
+9) Not Boring Movies
+
+SELECT id, movie, description, rating
+FROM cinema
+WHERE description <> 'boring' AND (id%2) <> 0
+ORDER BY rating DESC;
+
+10) Project Employees I
+
+SELECT project_id, CAST(AVG(experience_years) AS DECIMAL (10,2)) AS average_years
+FROM Project JOIN Employee USING (employee_id)
+GROUP BY project_id;
+
+*****
+CAST AS DECIMAL (10,2) - means 10 digits in total, with 2 after the decimal.
+
+CREATE TABLE dbo.MyTable  
+(  
+  MyDecimalColumn decimal(5,2)  
+,MyNumericColumn numeric(10,5)
+  
+);  
+  
+Answer:
+
+ MyDecimalColumn                         MyNumericColumn  
+--------------------------------------- ---------------------------------------  
+123.00                                  12345.12000  
 
