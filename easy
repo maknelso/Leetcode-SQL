@@ -1,5 +1,7 @@
 EASY ONLY
 
+*a lot of these solutions were slow - take a look and try to find a faster solution after
+
 1) Average Selling Price - did not get
 
 2) Product Sales Analysis I
@@ -60,4 +62,57 @@ Answer:
  MyDecimalColumn                         MyNumericColumn  
 --------------------------------------- ---------------------------------------  
 123.00                                  12345.12000  
+
+11) Duplicate Emails
+
+SELECT Email
+FROM Person
+GROUP BY Email
+HAVING COUNT(*) > 1;
+
+12) Combine Two Tables
+
+SELECT FirstName, LastName, City, State
+FROM Person LEFT JOIN Address USING (PersonId);   /*LEFT JOIN - to keep the NULLS*/
+
+13) Sales Analysis III - medium difficulty? - involves dates
+
+14) Employees Earning More Than Their Managers - a bit tricky, need to think about it after studying solution
+
+15) Customers Who Never Order
+
+SELECT Name AS Customers
+FROM Customers 
+WHERE Customers.Id NOT IN (
+                            SELECT CustomerId
+                            FROM Orders);
+                            
+16) Biggest Single Number - medium hard - have to redo again... need to SUBQUERY THE FROM.... why?
+
+SELECT MAX(num) AS num
+FROM (SELECT num
+      FROM my_numbers
+      GROUP BY num
+      HAVING COUNT(*) <= 1) AS a;
+      
+17) Rising Temperature - involves dates
+
+18) Delete Duplicate Emails - sort of easy
+
+19) User Activity for the Past 30 Days II
+
+20) Second Highest Salary
+
+SELECT MAX(Salary) AS SecondHighestSalary
+FROM Employee E1
+WHERE E1.Salary < (
+                   SELECT MAX(Salary)
+                   FROM Employee E2);
+                   
+DONE! THAT IS ALL THE EASY LEETCODE QUESTIONS - CONGRATULATIONS!
+
+
+
+
+
 
