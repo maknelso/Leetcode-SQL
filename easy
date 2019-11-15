@@ -1,4 +1,4 @@
-EASY ONLY
+EASY ONLY - All Database
 
 *a lot of these solutions were slow - take a look and try to find a faster solution after
 
@@ -9,32 +9,68 @@ EASY ONLY
 SELECT product_name, year, price
 FROM product JOIN sales USING (product_id);
 
-3) Game Play Analysis I
+3) Product Sales Analysis II - database
+
+SELECT product_id, SUM(quantity) AS total_quantity
+FROM Sales JOIN Product USING(product_id)
+GROUP BY Sales.product_id;
+
+4) Game Play Analysis I
 
 SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
 GROUP BY player_id;
 
-4) Big Countries
+5) Big Countries
 
 SELECT name, population, area
 FROM World
 WHERE area > 3000000 OR population > 25000000;
 
-5) Number of Comments per Post - medium level
+6) Immediate Food Delivery I - seems medium hard?
 
-6) Actors and Directors Who Cooperated At Least Three Times
+7) Shortest Distance in a Line - hmm new thing to learn?
 
-7) Article Views I 
+8) Reformat Department Table - new thing to learn.
+
+9) Number of Comments per Post - medium level
+
+10) Actors and Directors Who Cooperated At Least Three Times
+
+11) Article Views I 
 
 SELECT DISTINCT author_id AS id
 FROM Views
 WHERE author_id = viewer_id
 ORDER BY id ASC;
 
-8) Sales Analysis I - medium difficulty
+12) Swap Salary - new thing to learn
 
-9) Not Boring Movies
+13) Sales Analysis I - medium difficulty
+
+14) Find Customer Referee - easy redo
+
+SELECT name
+FROM customer
+WHERE referee_id IS NULL OR referee_id <> 2;
+
+15) Customer Placing the Largest Number of Orders - somewhat easy - REDO
+
+SELECT customer_number
+FROM orders
+GROUP BY customer_number
+ORDER BY COUNT(*) DESC
+LIMIT 1;
+
+16) Queries Quality and Percentage
+
+
+
+
+
+
+
+17) Not Boring Movies
 
 SELECT id, movie, description, rating
 FROM cinema
