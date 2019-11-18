@@ -62,13 +62,12 @@ GROUP BY customer_number
 ORDER BY COUNT(*) DESC
 LIMIT 1;
 
-16) Queries Quality and Percentage
+16) Queries Quality and Percentage - poor_query_percentage do not fully get - REDO
 
-
-
-
-
-
+SELECT query_name, ROUND(AVG(rating/position),2) AS quality, ROUND(AVG(rating <3)*100, 2) AS poor_query_percentage
+FROM Queries
+GROUP BY query_name
+ORDER BY quality DESC;
 
 17) Not Boring Movies
 
@@ -77,7 +76,15 @@ FROM cinema
 WHERE description <> 'boring' AND (id%2) <> 0
 ORDER BY rating DESC;
 
-10) Project Employees I
+18) Triangle Judgement - recursion - **need to learn
+
+19) Employee Bonus - REDO - LEFT JOIN to keep the NULLS, OR bonus IS NULL to show the nulls
+
+SELECT name, bonus
+FROM Employee LEFT JOIN Bonus USING(empId)
+WHERE bonus < 1000 OR bonus IS NULL;
+
+20) Project Employees I
 
 SELECT project_id, CAST(AVG(experience_years) AS DECIMAL (10,2)) AS average_years
 FROM Project JOIN Employee USING (employee_id)
@@ -99,17 +106,42 @@ Answer:
 --------------------------------------- ---------------------------------------  
 123.00                                  12345.12000  
 
-11) Duplicate Emails
+
+21) Consecutive Available Seats - a bit harder
+
+22) Reported Posts - redo - DISTINCT post_id - why do you need?
+
+SELECT extra AS report_reason, COUNT(DISTINCT post_id) AS report_count
+FROM Actions
+WHERE action_date = '2019-07-04' AND action = 'report'
+GROUP BY extra;
+
+23) Sales Person - does not seem too hard.... REDO
+
+SELECT salesperson.name
+FROM salesperson 
+WHERE salesperson.sales_id NOT IN(
+                                  SELECT salesperson.sales_id
+                                  FROM salesperson JOIN orders USING (sales_id) JOIN company USING (com_id)
+                                  WHERE company.name = 'RED');
+
+24) Duplicate Emails
 
 SELECT Email
 FROM Person
 GROUP BY Email
 HAVING COUNT(*) > 1;
 
-12) Combine Two Tables
+25) Combine Two Tables
 
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);   /*LEFT JOIN - to keep the NULLS*/
+
+26) Game Play Analysis II
+
+
+
+
 
 13) Sales Analysis III - medium difficulty? - involves dates
 
