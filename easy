@@ -2,7 +2,13 @@ EASY ONLY - All Database
 
 *a lot of these solutions were slow - take a look and try to find a faster solution after
 
-1) Average Selling Price - did not get
+1) Average Selling Price - not too bad - redo
+
+SELECT product_id, ROUND(SUM(price*units)/SUM(units),2) AS average_price    /*the SUM part is the difficult part*/
+FROM prices JOIN UnitsSold USING (product_id)
+WHERE purchase_date BETWEEN start_date AND end_date
+GROUP BY product_id
+ORDER BY product_id DESC;
 
 2) Product Sales Analysis I
 
@@ -27,15 +33,62 @@ SELECT name, population, area
 FROM World
 WHERE area > 3000000 OR population > 25000000;
 
-6) Immediate Food Delivery I - seems medium hard?
+6) Immediate Food Delivery I - seems a bit weird, try to understand the calculations. AVG() returns average value of a numeric column.
+
+SELECT ROUND(100*(AVG(order_date = customer_pref_delivery_date),2) AS immediate_percentage  /*new way to AVG with equal */
+FROM delivery;
 
 7) Shortest Distance in a Line - hmm new thing to learn?
 
-8) Reformat Department Table - new thing to learn.
+Calculate the distance between 2 points first, then display the minimum one.
 
-9) Number of Comments per Post - medium level
+To get the distances of each two points, we need to join this table with itself and use ABS() function.
 
-10) Actors and Directors Who Cooperated At Least Three Times
+SELECT MIN(ABS(P1.x-P2.x)) AS shortest
+FROM point P1 JOIN point P2 ON P1.x != P2.x;   /*self-join and NOT equal*/
+
+8) Reformat Department Table - new thing to learn - IF function
+
+
+SELECT id,
+  MAX(IF(month = 'Jan', revenue, NULL)) AS Jan_Revenue,
+  MAX(IF(month = 'Feb', revenue, NULL)) AS Feb_Revenue,
+  MAX(IF(month = 'Mar', revenue, NULL)) AS Mar_Revenue,
+  MAX(IF(month = 'Apr', revenue, NULL)) AS Apr_Revenue,
+  MAX(IF(month = 'May', revenue, NULL)) AS May_Revenue,
+  MAX(IF(month = 'Jun', revenue, NULL)) AS Jun_Revenue,
+  MAX(IF(month = 'Jul', revenue, NULL)) AS Jul_Revenue,
+  MAX(IF(month = 'Aug', revenue, NULL)) AS Aug_Revenue,
+  MAX(IF(month = 'Sep', revenue, NULL)) AS Sep_Revenue,
+  MAX(IF(month = 'Oct', revenue, NULL)) AS Oct_Revenue,
+  MAX(IF(month = 'Nov', revenue, NULL)) AS Nov_Revenue,
+  MAX(IF(month = 'Dec', revenue, NULL)) AS Dec_Revenue,
+FROM department
+GROUP BY id;
+
+*MAX lets us combine each revenue with NULL and selects that 1 revenue for the cell
+
+IF() returns a value if a condition is TRUE, or another value if condition is FALSE.
+
+IF(condition, value_if_true, value_if_false)
+
+9) Number of Comments per Post - STILL DONT GET IT *RELEARN
+
+SELECT S1.sub_id AS post_id, COUNT(DISTINCT S2.sub_id) AS number_of_comments
+FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id
+WHERE S1.parent_id IS NULL
+GROUP BY S1.sub_id;
+
+10) Actors and Directors Who Cooperated At Least Three Times - REDO - does not seem tooo hard
+
+SELECT actor_id, director_id
+FROM ActorDirector
+GROUP BY actor_id, director_id
+HAVING COUNT(*) >= 3;
+
+*GROUP BY actor_id - put all those with the same value for X in the one group
+*GROUP BY actor_id, director_id - put all those with the same values for BOTH x and y in the one group
+
 
 11) Article Views I 
 
