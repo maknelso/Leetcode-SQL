@@ -1,6 +1,5 @@
 EASY ONLY - All Database
 
-*a lot of these solutions were slow - take a look and try to find a faster solution after
 
 1) Average Selling Price - not too bad - redo
 
@@ -10,10 +9,12 @@ WHERE purchase_date BETWEEN start_date AND end_date
 GROUP BY product_id
 ORDER BY product_id DESC;
 
+
 2) Product Sales Analysis I
 
 SELECT product_name, year, price
 FROM product JOIN sales USING (product_id);
+
 
 3) Product Sales Analysis II - database
 
@@ -21,11 +22,13 @@ SELECT product_id, SUM(quantity) AS total_quantity
 FROM Sales JOIN Product USING(product_id)
 GROUP BY Sales.product_id;
 
+
 4) Game Play Analysis I
 
 SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
 GROUP BY player_id;
+
 
 5) Big Countries
 
@@ -33,10 +36,12 @@ SELECT name, population, area
 FROM World
 WHERE area > 3000000 OR population > 25000000;
 
+
 6) Immediate Food Delivery I - seems a bit weird, try to understand the calculations. AVG() returns average value of a numeric column.
 
 SELECT ROUND(100*(AVG(order_date = customer_pref_delivery_date),2) AS immediate_percentage  /*new way to AVG with equal */
 FROM delivery;
+
 
 7) Shortest Distance in a Line - hmm new thing to learn?
 
@@ -46,6 +51,7 @@ To get the distances of each two points, we need to join this table with itself 
 
 SELECT MIN(ABS(P1.x-P2.x)) AS shortest
 FROM point P1 JOIN point P2 ON P1.x != P2.x;   /*self-join and NOT equal*/
+
 
 8) Reformat Department Table - new thing to learn - IF function
 
@@ -72,12 +78,14 @@ IF() returns a value if a condition is TRUE, or another value if condition is FA
 
 IF(condition, value_if_true, value_if_false)
 
+
 9) Number of Comments per Post - STILL DONT GET IT *RELEARN
 
 SELECT S1.sub_id AS post_id, COUNT(DISTINCT S2.sub_id) AS number_of_comments
 FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id
 WHERE S1.parent_id IS NULL
 GROUP BY S1.sub_id;
+
 
 10) Actors and Directors Who Cooperated At Least Three Times - REDO - does not seem tooo hard
 
@@ -97,15 +105,19 @@ FROM Views
 WHERE author_id = viewer_id
 ORDER BY id ASC;
 
+
 12) Swap Salary - new thing to learn
 
+
 13) Sales Analysis I - medium difficulty
+
 
 14) Find Customer Referee - easy redo
 
 SELECT name
 FROM customer
 WHERE referee_id IS NULL OR referee_id <> 2;
+
 
 15) Customer Placing the Largest Number of Orders - somewhat easy - REDO
 
@@ -115,12 +127,14 @@ GROUP BY customer_number
 ORDER BY COUNT(*) DESC
 LIMIT 1;
 
+
 16) Queries Quality and Percentage - poor_query_percentage do not fully get - REDO
 
 SELECT query_name, ROUND(AVG(rating/position),2) AS quality, ROUND(AVG(rating <3)*100, 2) AS poor_query_percentage
 FROM Queries
 GROUP BY query_name
 ORDER BY quality DESC;
+
 
 17) Not Boring Movies
 
@@ -129,13 +143,16 @@ FROM cinema
 WHERE description <> 'boring' AND (id%2) <> 0
 ORDER BY rating DESC;
 
+
 18) Triangle Judgement - recursion - **need to learn
+
 
 19) Employee Bonus - REDO - LEFT JOIN to keep the NULLS, OR bonus IS NULL to show the nulls
 
 SELECT name, bonus
 FROM Employee LEFT JOIN Bonus USING(empId)
 WHERE bonus < 1000 OR bonus IS NULL;
+
 
 20) Project Employees I
 
@@ -162,12 +179,14 @@ Answer:
 
 21) Consecutive Available Seats - a bit harder
 
+
 22) Reported Posts - redo - DISTINCT post_id - why do you need?
 
 SELECT extra AS report_reason, COUNT(DISTINCT post_id) AS report_count
 FROM Actions
 WHERE action_date = '2019-07-04' AND action = 'report'
 GROUP BY extra;
+
 
 23) Sales Person - does not seem too hard.... REDO
 
@@ -178,6 +197,7 @@ WHERE salesperson.sales_id NOT IN(
                                   FROM salesperson JOIN orders USING (sales_id) JOIN company USING (com_id)
                                   WHERE company.name = 'RED');
 
+
 24) Duplicate Emails
 
 SELECT Email
@@ -185,51 +205,139 @@ FROM Person
 GROUP BY Email
 HAVING COUNT(*) > 1;
 
+
 25) Combine Two Tables
 
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);   /*LEFT JOIN - to keep the NULLS*/
 
-26) Game Play Analysis II
+
+26) Game Play Analysis II - need to redo. Study this
+
+SELECT player_id, device_id
+FROM Activity 
+WHERE (player_id, event_date) IN(
+                                 SELECT DISTINCT player_id, MIN(event_date)
+                                 FROM Activity
+                                 GROUP BY player_id);
 
 
+27) User Activity for the Past 30 Days I - not too bad - study and REDO
+
+SELECT activity_date AS day, COUNT(DISTINCT(user_id)) AS active_users
+FROM Activity
+WHERE activity_date BETWEEN '2019-06-28' AND  '2019-07-27'
+GROUP BY day;
 
 
+28) Sales Analysis III - medium difficulty? - involves dates - study this and REDO - CASE
 
-13) Sales Analysis III - medium difficulty? - involves dates
+SELECT product_id, product_name
+FROM Product  JOIN Sales USING (product_id)
+GROUP BY Product.product_id
+HAVING COUNT(*) = SUM(
+                      CASE 
+                        WHEN sale_date BETWEEN '2019-01-01' AND '2019-03-31' THEN 1 
+                        ELSE 0 
+                       END);
 
-14) Employees Earning More Than Their Managers - a bit tricky, need to think about it after studying solution
 
-15) Customers Who Never Order
+The SQL CASE Statement
+The CASE statement goes through conditions and returns a value when the first condition is met (like an IF-THEN-ELSE statement). So, once a condition is true, it will stop reading and return the result. If no conditions are true, it returns the value in the ELSE clause.
+
+If there is no ELSE part and no conditions are true, it returns NULL.
+
+CASE Syntax
+CASE
+    WHEN condition1 THEN result1
+    WHEN condition2 THEN result2
+    WHEN conditionN THEN resultN
+    ELSE result
+END;
+
+
+29) Project Employees II - need to REDO
+
+SELECT project_id 
+FROM Project
+GROUP BY project_id
+HAVING COUNT(employee_id) = (
+                             SELECT COUNT(employee_id) 
+                             FROM Project 
+                             GROUP BY project_id 
+                             ORDER BY count(employee_id) DESC 
+                             LIMIT 1);
+
+
+30) Employees Earning More Than Their Managers - a bit tricky, need to think about it after studying solution - REDO
+
+SELECT E1.Name AS Employee 
+FROM Employee E1, Employee E2 
+WHERE E1.Salary > E2.Salary and E1.ManagerId = E2.Id;
+
+
+31) Sales Analysis II - not really sure 
+
+Select list who bought S8, select list who bought iphone. Select only list who bought S8 and not list who bought iPhone
+
+SELECT DISTINCT s.buyer_id
+FROM Sales s LEFT JOIN Product p           /*why do we need a LEFT JOIN?*/
+ON s.product_id = p.product_id
+WHERE p.product_name = "S8"
+AND s.buyer_id NOT IN 
+(
+    SELECT DISTINCT s.buyer_id
+    FROM sales s LEFT JOIN product p
+    ON s.product_id = p.product_id
+    WHERE p.product_name = "iPhone" 
+)
+
+
+32) Customers Who Never Order
 
 SELECT Name AS Customers
 FROM Customers 
 WHERE Customers.Id NOT IN (
                             SELECT CustomerId
                             FROM Orders);
-                            
-16) Biggest Single Number - medium hard - have to redo again... need to SUBQUERY THE FROM.... why?
+
+
+32) Friend Requests I: Overall Acceptance Rate
+
+
+
+                      
+33) Biggest Single Number - medium hard - have to redo again... need to SUBQUERY THE FROM.... why?
 
 SELECT MAX(num) AS num
 FROM (SELECT num
       FROM my_numbers
       GROUP BY num
       HAVING COUNT(*) <= 1) AS a;
-      
-17) Rising Temperature - involves dates
 
-18) Delete Duplicate Emails - sort of easy
 
-19) User Activity for the Past 30 Days II
+34) Classes More Than 5 Students
 
-20) Second Highest Salary
+
+35) Rising Temperature - involves dates
+
+
+36) Delete Duplicate Emails - sort of easy
+
+
+37) User Activity for the Past 30 Days II
+
+
+38) Second Highest Salary
 
 SELECT MAX(Salary) AS SecondHighestSalary
 FROM Employee E1
 WHERE E1.Salary < (
                    SELECT MAX(Salary)
                    FROM Employee E2);
-                   
+
+
+
 DONE! THAT IS ALL THE EASY LEETCODE QUESTIONS - CONGRATULATIONS!
 
 
