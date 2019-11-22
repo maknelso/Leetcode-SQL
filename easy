@@ -302,7 +302,7 @@ WHERE Customers.Id NOT IN (
                             FROM Orders);
 
 
-32) Friend Requests I: Overall Acceptance Rate
+32) Friend Requests I: Overall Acceptance Rate - medium hard
 
 
 
@@ -316,10 +316,14 @@ FROM (SELECT num
       HAVING COUNT(*) <= 1) AS a;
 
 
-34) Classes More Than 5 Students
+34) Classes More Than 5 Students - need to COUNT(DISTINCT student) to avoid duplication
 
+SELECT class
+FROM courses
+GROUP BY class
+HAVING COUNT(DISTINCT student) >= 5;
 
-35) Rising Temperature - involves dates
+35) Rising Temperature - involves dates - DATEDIFF() function to compare two date type values 
 
 
 36) Delete Duplicate Emails - sort of easy
