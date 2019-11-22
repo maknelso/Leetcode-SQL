@@ -7,7 +7,9 @@ SELECT product_id, ROUND(SUM(price*units)/SUM(units),2) AS average_price    /*th
 FROM prices JOIN UnitsSold USING (product_id)
 WHERE purchase_date BETWEEN start_date AND end_date
 GROUP BY product_id
-ORDER BY product_id DESC;
+ORDER BY product_id DESC;           /*SQL orders by ASC by default*/
+
+*finished on paper 
 
 
 2) Product Sales Analysis I
@@ -15,6 +17,7 @@ ORDER BY product_id DESC;
 SELECT product_name, year, price
 FROM product JOIN sales USING (product_id);
 
+*flashed it on paper
 
 3) Product Sales Analysis II - database
 
