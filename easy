@@ -17,13 +17,22 @@ ORDER BY product_id DESC;           /*SQL orders by ASC by default*/
 SELECT product_name, year, price
 FROM product JOIN sales USING (product_id);
 
-*flashed it on paper
+*flashed on paper
 
 3) Product Sales Analysis II - database
 
 SELECT product_id, SUM(quantity) AS total_quantity
 FROM Sales JOIN Product USING(product_id)
 GROUP BY Sales.product_id;
+
+OR
+
+SELECT product_id, SUM(quantity) AS total_quantity
+FROM Sales
+GROUP BY product_id
+ORDER By product_id DESC;
+
+*flashed on paper
 
 
 4) Game Play Analysis I
@@ -32,6 +41,7 @@ SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
 GROUP BY player_id;
 
+*flashed on paper
 
 5) Big Countries
 
@@ -39,12 +49,15 @@ SELECT name, population, area
 FROM World
 WHERE area > 3000000 OR population > 25000000;
 
+*flashed on paper
 
-6) Immediate Food Delivery I - seems a bit weird, try to understand the calculations. AVG() returns average value of a numeric column.
 
-SELECT ROUND(100*(AVG(order_date = customer_pref_delivery_date),2) AS immediate_percentage  /*new way to AVG with equal */
+6) Immediate Food Delivery I - learn AVG with conditional
+
+SELECT ROUND(100*(AVG(order_date = customer_pref_delivery_date),2) AS immediate_percentage  /*seems like AVG with (condition) */
 FROM delivery;
 
+*not too bad
 
 7) Shortest Distance in a Line - hmm new thing to learn?
 
@@ -54,6 +67,12 @@ To get the distances of each two points, we need to join this table with itself 
 
 SELECT MIN(ABS(P1.x-P2.x)) AS shortest
 FROM point P1 JOIN point P2 ON P1.x != P2.x;   /*self-join and NOT equal*/
+
+or
+
+SELECT MIN(ABS(p1.x-p2.x)) AS shortest
+FROM point p1 JOIN point p2 ON p1.x <> p2.x;   /*have to remember thsi part JOIN ON p1.x <> p2.x */
+
 
 
 8) Reformat Department Table - new thing to learn - IF function
