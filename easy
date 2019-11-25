@@ -54,10 +54,10 @@ WHERE area > 3000000 OR population > 25000000;
 
 6) Immediate Food Delivery I - learn AVG with conditional
 
-SELECT ROUND(100*(AVG(order_date = customer_pref_delivery_date),2) AS immediate_percentage  /*seems like AVG with (condition) */
+SELECT ROUND(100*(AVG(order_date = customer_pref_delivery_date),2) AS immediate_percentage  /*seems like AVG with (condition)*/
 FROM delivery;
 
-*not too bad
+*did 2nd/3rd try on paper
 
 7) Shortest Distance in a Line - hmm new thing to learn?
 
@@ -73,6 +73,7 @@ or
 SELECT MIN(ABS(p1.x-p2.x)) AS shortest
 FROM point p1 JOIN point p2 ON p1.x <> p2.x;   /*have to remember thsi part JOIN ON p1.x <> p2.x */
 
+*did on 2nd/3rd try on paper
 
 8) Reformat Department Table - new thing to learn - CASE(WHEN condition1 THEN result1 END)
 
@@ -92,6 +93,7 @@ SUM(CASE WHEN month = 'Dec' THEN revenue END) AS Dec_Revenue
 FROM Department
 GROUP BY id;
 
+*did on 2nd/3rd try on paper
 
 9) Number of Comments per Post - do not fully understand the strange JOIN of S1.sub_id = S2.parent_id
 
@@ -100,38 +102,73 @@ FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id     /*d
 WHERE S1.parent_id IS NULL      /*the question only wants answer from where S1.parent_id IS NULL*/
 GROUP BY S1.sub_id;
 
+*did on 3rd try on paper
 
-10) Actors and Directors Who Cooperated At Least Three Times - REDO - does not seem tooo hard
+10) Actors and Directors Who Cooperated At Least Three Times
 
 SELECT actor_id, director_id
 FROM ActorDirector
-GROUP BY actor_id, director_id
+GROUP BY actor_id, director_id      /*no parentheses*/
 HAVING COUNT(*) >= 3;
 
 *GROUP BY actor_id - put all those with the same value for X in the one group
 *GROUP BY actor_id, director_id - put all those with the same values for BOTH x and y in the one group
 
+*did on 2nd try on paper
 
 11) Article Views I 
 
 SELECT DISTINCT author_id AS id
 FROM Views
 WHERE author_id = viewer_id
-ORDER BY id ASC;
+ORDER BY id ASC;                          /*I guess always do the ORDER BY ASC or DESC*/
 
 
-12) Swap Salary - new thing to learn
+SELECT DISTINCT author_id AS id
+FROM Views
+GROUP BY author_id, viewer_id
+HAVING COUNT(*) > 3;                         /*this did not work*/ why?
 
 
-13) Sales Analysis I - medium difficulty
+*did it on 2nd try on paper
 
+12) Swap Salary - single UPDATE statement, IF statement
 
-14) Find Customer Referee - easy redo
+UPDATE salary
+SET sex = IF(sex = 'm', 'f', 'm');
+
+*did it on 2nd try on paper 
+
+13) Sales Analysis I - need to redo - does not seem too hard
+
+SELECT seller_id
+FROM Sales
+GROUP BY seller_id
+HAVING SUM(price) = (
+                     SELECT SUM(price) AS S
+                     FROM Sales
+                     GROUP BY seller_id
+                     ORDER BY S DESC
+                     LIMIT 1);
+                     
+
+SELECT seller_id
+FROM Sales
+GROUP BY seller_id
+WHERE NOT EXISTS price < (
+                          SELECT SUM(price)
+                          FROM Sales
+                          GROUP BY seller_id);      /*DID NOT WORK*/
+                     
+                                  
+
+14) Find Customer Referee
 
 SELECT name
 FROM customer
 WHERE referee_id IS NULL OR referee_id <> 2;
 
+*redid 1 time on paper - did not flash
 
 15) Customer Placing the Largest Number of Orders - somewhat easy - REDO
 
