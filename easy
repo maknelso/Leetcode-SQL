@@ -74,38 +74,30 @@ SELECT MIN(ABS(p1.x-p2.x)) AS shortest
 FROM point p1 JOIN point p2 ON p1.x <> p2.x;   /*have to remember thsi part JOIN ON p1.x <> p2.x */
 
 
-
-8) Reformat Department Table - new thing to learn - IF function
-
+8) Reformat Department Table - new thing to learn - CASE(WHEN condition1 THEN result1 END)
 
 SELECT id,
-  MAX(IF(month = 'Jan', revenue, NULL)) AS Jan_Revenue,
-  MAX(IF(month = 'Feb', revenue, NULL)) AS Feb_Revenue,
-  MAX(IF(month = 'Mar', revenue, NULL)) AS Mar_Revenue,
-  MAX(IF(month = 'Apr', revenue, NULL)) AS Apr_Revenue,
-  MAX(IF(month = 'May', revenue, NULL)) AS May_Revenue,
-  MAX(IF(month = 'Jun', revenue, NULL)) AS Jun_Revenue,
-  MAX(IF(month = 'Jul', revenue, NULL)) AS Jul_Revenue,
-  MAX(IF(month = 'Aug', revenue, NULL)) AS Aug_Revenue,
-  MAX(IF(month = 'Sep', revenue, NULL)) AS Sep_Revenue,
-  MAX(IF(month = 'Oct', revenue, NULL)) AS Oct_Revenue,
-  MAX(IF(month = 'Nov', revenue, NULL)) AS Nov_Revenue,
-  MAX(IF(month = 'Dec', revenue, NULL)) AS Dec_Revenue,
-FROM department
+SUM(CASE WHEN month = 'Jan' THEN revenue END) AS Jan_Revenue,
+SUM(CASE WHEN month = 'Feb' THEN revenue END) AS Feb_Revenue,
+SUM(CASE WHEN month = 'Mar' THEN revenue END) AS Mar_Revenue,
+SUM(CASE WHEN month = 'Apr' THEN revenue END) AS Apr_Revenue,
+SUM(CASE WHEN month = 'May' THEN revenue END) AS May_Revenue,
+SUM(CASE WHEN month = 'Jun' THEN revenue END) AS Jun_Revenue,
+SUM(CASE WHEN month = 'Jul' THEN revenue END) AS Jul_Revenue,
+SUM(CASE WHEN month = 'Aug' THEN revenue END) AS Aug_Revenue,
+SUM(CASE WHEN month = 'Sep' THEN revenue END) AS Sep_Revenue,
+SUM(CASE WHEN month = 'Oct' THEN revenue END) AS Oct_Revenue,
+SUM(CASE WHEN month = 'Nov' THEN revenue END) AS Nov_Revenue,
+SUM(CASE WHEN month = 'Dec' THEN revenue END) AS Dec_Revenue
+FROM Department
 GROUP BY id;
 
-*MAX lets us combine each revenue with NULL and selects that 1 revenue for the cell
 
-IF() returns a value if a condition is TRUE, or another value if condition is FALSE.
-
-IF(condition, value_if_true, value_if_false)
-
-
-9) Number of Comments per Post - STILL DONT GET IT *RELEARN
+9) Number of Comments per Post - do not fully understand the strange JOIN of S1.sub_id = S2.parent_id
 
 SELECT S1.sub_id AS post_id, COUNT(DISTINCT S2.sub_id) AS number_of_comments
-FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id
-WHERE S1.parent_id IS NULL
+FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id     /*do not fully understand this JOIN*/
+WHERE S1.parent_id IS NULL      /*the question only wants answer from where S1.parent_id IS NULL*/
 GROUP BY S1.sub_id;
 
 
