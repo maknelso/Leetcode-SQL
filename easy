@@ -12,14 +12,14 @@ ORDER BY product_id DESC;           /*SQL orders by ASC by default*/
 *finished on paper 
 
 
-2) Product Sales Analysis I
+2) Product Sales Analysis I - common on test 
 
 SELECT product_name, year, price
 FROM product JOIN sales USING (product_id);
 
 *flashed on paper
 
-3) Product Sales Analysis II - database
+3) Product Sales Analysis II - database - common on test
 
 SELECT product_id, SUM(quantity) AS total_quantity
 FROM Sales JOIN Product USING(product_id)
@@ -35,7 +35,7 @@ ORDER By product_id DESC;
 *flashed on paper
 
 
-4) Game Play Analysis I
+4) Game Play Analysis I - common on test
 
 SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
@@ -43,7 +43,7 @@ GROUP BY player_id;
 
 *flashed on paper
 
-5) Big Countries
+5) Big Countries - veru cp,,pm pm test
 
 SELECT name, population, area
 FROM World
@@ -52,7 +52,7 @@ WHERE area > 3000000 OR population > 25000000;
 *flashed on paper
 
 
-6) Immediate Food Delivery I - learn AVG with conditional
+6) Immediate Food Delivery I - learn AVG with conditional - common on test
 
 SELECT ROUND(100*(AVG(order_date = customer_pref_delivery_date),2) AS immediate_percentage  /*seems like AVG with (condition)*/
 FROM delivery;
@@ -75,7 +75,7 @@ FROM point p1 JOIN point p2 ON p1.x <> p2.x;   /*have to remember thsi part JOIN
 
 *did on 2nd/3rd try on paper
 
-8) Reformat Department Table - new thing to learn - CASE(WHEN condition1 THEN result1 END)
+8) Reformat Department Table - new thing to learn - CASE(WHEN condition1 THEN result1 END) - very common on test
 
 SELECT id,
 SUM(CASE WHEN month = 'Jan' THEN revenue END) AS Jan_Revenue,
@@ -116,7 +116,7 @@ HAVING COUNT(*) >= 3;
 
 *did on 2nd try on paper
 
-11) Article Views I 
+11) Article Views I  - common on test
 
 SELECT DISTINCT author_id AS id
 FROM Views
@@ -132,7 +132,7 @@ HAVING COUNT(*) > 3;                         /*this did not work*/ why?
 
 *did it on 2nd try on paper
 
-12) Swap Salary - single UPDATE statement, IF statement
+12) Swap Salary - single UPDATE statement, IF statement - very common on test
 
 UPDATE salary
 SET sex = IF(sex = 'm', 'f', 'm');
@@ -162,7 +162,7 @@ WHERE NOT EXISTS price < (
                      
                                   
 
-14) Find Customer Referee
+14) Find Customer Referee - common on test
 
 SELECT name
 FROM customer
@@ -189,7 +189,7 @@ ORDER BY quality DESC;
 
 *need to redo - will take 2-3 tries
 
-17) Not Boring Movies
+17) Not Boring Movies - common on test
 
 SELECT id, movie, description, rating
 FROM cinema
@@ -198,7 +198,7 @@ ORDER BY rating DESC;
 
 *flashed it
 
-18) Triangle Judgement - IF or CASE statement
+18) Triangle Judgement - IF or CASE statement - VERY COMMON on test
 
 SELECT *
 IF (x + y > z, x + z > y, y + z > x, 'Yes', 'No') AS triangle     /*triangle here is the column display header*/
@@ -224,9 +224,19 @@ WHERE bonus < 1000 OR bonus IS NULL;
 
 20) Project Employees I
 
+SELECT project_id, ROUND(AVG(experience_year),2) AS average_years
+FROM Project JOIN Employee USING(employee_id)
+GROUP BY project_id;
+
+*flashed it on paper
+
+OR
+
 SELECT project_id, CAST(AVG(experience_years) AS DECIMAL (10,2)) AS average_years
 FROM Project JOIN Employee USING (employee_id)
 GROUP BY project_id;
+
+
 
 *****
 CAST AS DECIMAL (10,2) - means 10 digits in total, with 2 after the decimal.
@@ -245,18 +255,27 @@ Answer:
 123.00                                  12345.12000  
 
 
-21) Consecutive Available Seats - a bit harder
+21) Consecutive Available Seats - just have to understand the JOIN ON criteria, consecutive seating, and boolean
 
+SELECT DISTINCT C1.seat_id
+FROM cinema C1 JOiN cinema C2 ON ABS(C1.seat_id - C2.seat_id) = 1   /*to test consecutive seating*/ /*ON as criteria */
+AND C1.free = TRUE AND C2.free = TRUE       /*boolean */
+ORDER BY C1.seat_id;
 
-22) Reported Posts - redo - DISTINCT post_id - why do you need?
+*did on 2nd try on paper
+
+22) Reported Posts - VERY COMMON on test
 
 SELECT extra AS report_reason, COUNT(DISTINCT post_id) AS report_count
 FROM Actions
 WHERE action_date = '2019-07-04' AND action = 'report'
-GROUP BY extra;
+GROUP BY extra
+ORDER BY report_count ASC;
 
+*did on 2nd try on paper
 
-23) Sales Person - does not seem too hard.... REDO
+23) Sales Person - all salespeople who did not sell to company 'RED', i.e. com_id = 1 - a bit harder. Have to 
+really understand the logic and all the tables.
 
 SELECT salesperson.name
 FROM salesperson 
@@ -265,14 +284,16 @@ WHERE salesperson.sales_id NOT IN(
                                   FROM salesperson JOIN orders USING (sales_id) JOIN company USING (com_id)
                                   WHERE company.name = 'RED');
 
+*got it after 2nd, 3rd try of understanding relationship on paper
 
-24) Duplicate Emails
+24) Duplicate Emails - quite common on test
 
 SELECT Email
 FROM Person
 GROUP BY Email
 HAVING COUNT(*) > 1;
 
+*flashed on paper 
 
 25) Combine Two Tables
 
