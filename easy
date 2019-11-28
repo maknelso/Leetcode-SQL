@@ -1,5 +1,6 @@
 EASY ONLY - All Database
 
+*A good method to calculate MAX is to ORDER BY DESC and LIMIT 1
 
 1) Average Selling Price - not too bad - redo
 
@@ -295,31 +296,44 @@ HAVING COUNT(*) > 1;
 
 *flashed on paper 
 
-25) Combine Two Tables
+25) Combine Two Tables - VERY COMMON on tests
 
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);   /*LEFT JOIN - to keep the NULLS*/
 
+*messed up the using JOIN ON instead of USING - redo again
 
-26) Game Play Analysis II - need to redo. Study this
+
+26) Game Play Analysis II - need to redo - WHERE("1", "2") IN 
 
 SELECT player_id, device_id
 FROM Activity 
 WHERE (player_id, event_date) IN(
-                                 SELECT DISTINCT player_id, MIN(event_date)
+                                 SELECT player_id, MIN(event_date)
                                  FROM Activity
                                  GROUP BY player_id);
 
 
 27) User Activity for the Past 30 Days I - not too bad - study and REDO
 
-SELECT activity_date AS day, COUNT(DISTINCT(user_id)) AS active_users
+SELECT activity_date AS day, COUNT(DISTINCT(user_id) AS active_users
 FROM Activity
-WHERE activity_date BETWEEN '2019-06-28' AND  '2019-07-27'
+WHERE activity_date BETWEEN '2019-06-28' AND  '2019-07-27'          /*BETWEEN dates*/
 GROUP BY day;
 
+*got it after 1st try - activity_date BETWEEN the dates, not activity_date > 2019-07-20
 
-28) Sales Analysis III - medium difficulty? - involves dates - study this and REDO - CASE
+28) Sales Analysis III - quite common on test - DO NOT UNDERSTAND - NEED TO STUDY THIS - look at discussion for why the answer is the way 
+it is.
+
+SELECT product_id, product_name
+FROM product
+WHERE product_id IN(SELECT product_id
+                    FROM Sales
+                    GROUP BY product_id
+                    HAVING MIN(sale_date) >= '2019-01-01' AND MAX(sale_date) <= '2019-03-31');
+
+OR
 
 SELECT product_id, product_name
 FROM Product  JOIN Sales USING (product_id)
@@ -345,7 +359,11 @@ CASE
 END;
 
 
-29) Project Employees II - need to REDO
+OR
+ 
+
+
+29) Project Employees II - need to REDO - a bit harder
 
 SELECT project_id 
 FROM Project
