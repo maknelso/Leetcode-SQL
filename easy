@@ -376,31 +376,31 @@ HAVING COUNT(employee_id) = (
                              LIMIT 1);
 
 
-30) Employees Earning More Than Their Managers - a bit tricky, need to think about it after studying solution - REDO
+30) Employees Earning More Than Their Managers - Very common - redo
 
 SELECT E1.Name AS Employee 
-FROM Employee E1, Employee E2 
-WHERE E1.Salary > E2.Salary and E1.ManagerId = E2.Id;
+FROM Employee E1, Employee E2                           /*this type of JOIN - select information twice don't need JOIN USING
+WHERE E1.ManagerId = E2.Id AND E1.Salary > E2.Salary;   /*E1.Id = E2.ManagerId is the key here
 
+*got 2nd time on paper
 
-31) Sales Analysis II - not really sure 
+31) Sales Analysis II - REDO
 
 Select list who bought S8, select list who bought iphone. Select only list who bought S8 and not list who bought iPhone
 
-SELECT DISTINCT s.buyer_id
-FROM Sales s LEFT JOIN Product p           /*why do we need a LEFT JOIN?*/
-ON s.product_id = p.product_id
-WHERE p.product_name = "S8"
-AND s.buyer_id NOT IN 
-(
-    SELECT DISTINCT s.buyer_id
-    FROM sales s LEFT JOIN product p
-    ON s.product_id = p.product_id
-    WHERE p.product_name = "iPhone" 
-)
+SELECT DISTINCT buyer_id
+FROM Sales JOIN Product USING(product_id)
+WHERE product_name = 'S8'
+AND buyer_id NOT IN(SELECT buyer_id
+                    FROM Sales JOIN Product USING(product_id)
+                    WHERE product_name = 'iPhone');
 
 
-32) Customers Who Never Order
+*got on 2nd and 3rd try on paper
+
+
+
+32) Customers Who Never Order - quite common on test
 
 SELECT Name AS Customers
 FROM Customers 
@@ -408,10 +408,36 @@ WHERE Customers.Id NOT IN (
                             SELECT CustomerId
                             FROM Orders);
 
+*flashed on paper
 
-32) Friend Requests I: Overall Acceptance Rate - medium hard
+32) Friend Requests I: Overall Acceptance Rate - NEED TO REDO
+medium hard - quite common on test - IFNULL (expression, alt_value)
 
+IFNULL() function lets you return an alternative value if an expression if NULL
 
+1) Count the number of acceptance
+
+SELECT COUNT(*)
+FROM(SELECT DISTINCT requester_id, accepter_id
+     FROM request_accepted)
+     
+2) Count the total # of requests from friend_request
+
+SELECT COUNT(*)
+FROM(SELECT DISTINCT sender_id, send_to_id
+    FROM friend_request)
+    
+3) Divide 1/2. But divisor could be zero if friend_request table is empty. So we have to use IFNULL
+
+SELECT ROUND(
+IFNULL(
+       (SELECT COUNT(*)
+        FROM (SELECT DISTINCT requester_id, accepter_id FROM request_accepted)
+       /
+       (SELECT COUNT(*)
+        FROM (SELECT DISTINCT sender_id, send_to_id FROM friend_request)
+       , 0)
+,2) AS accepted_rate;
 
                       
 33) Biggest Single Number - medium hard - have to redo again... need to SUBQUERY THE FROM.... why?
