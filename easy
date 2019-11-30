@@ -13,14 +13,14 @@ ORDER BY product_id DESC;           /*SQL orders by ASC by default*/
 *finished on paper 
 
 
-2) Product Sales Analysis I - common on test 
+2) Product Sales Analysis I - somewhat common on test 
 
 SELECT product_name, year, price
 FROM product JOIN sales USING (product_id);
 
 *flashed on paper
 
-3) Product Sales Analysis II - database - common on test
+3) Product Sales Analysis II - database - somewhat common on test
 
 SELECT product_id, SUM(quantity) AS total_quantity
 FROM Sales JOIN Product USING(product_id)
@@ -44,7 +44,7 @@ GROUP BY player_id;
 
 *flashed on paper
 
-5) Big Countries - veru cp,,pm pm test
+5) Big Countries - VERY COMMON
 
 SELECT name, population, area
 FROM World
@@ -76,7 +76,7 @@ FROM point p1 JOIN point p2 ON p1.x <> p2.x;   /*have to remember thsi part JOIN
 
 *did on 2nd/3rd try on paper
 
-8) Reformat Department Table - new thing to learn - CASE(WHEN condition1 THEN result1 END) - very common on test
+8) Reformat Department Table - VERY COMMON - new thing to learn - CASE(WHEN condition1 THEN result1 END) - 
 
 SELECT id,
 SUM(CASE WHEN month = 'Jan' THEN revenue END) AS Jan_Revenue,
@@ -133,7 +133,7 @@ HAVING COUNT(*) > 3;                         /*this did not work*/ why?
 
 *did it on 2nd try on paper
 
-12) Swap Salary - single UPDATE statement, IF statement - very common on test
+12) Swap Salary - single UPDATE statement, IF statement - VERY COMMON - REMEMBER UPDATE SET 
 
 UPDATE salary
 SET sex = IF(sex = 'm', 'f', 'm');
@@ -199,7 +199,7 @@ ORDER BY rating DESC;
 
 *flashed it
 
-18) Triangle Judgement - IF or CASE statement - VERY COMMON on test
+18) Triangle Judgement - VERY COMMON on test - IF or CASE statement - 
 
 SELECT *
 IF (x + y > z, x + z > y, y + z > x, 'Yes', 'No') AS triangle     /*triangle here is the column display header*/
@@ -265,7 +265,7 @@ ORDER BY C1.seat_id;
 
 *did on 2nd try on paper
 
-22) Reported Posts - VERY COMMON on test
+22) Reported Posts - quite common on test
 
 SELECT extra AS report_reason, COUNT(DISTINCT post_id) AS report_count
 FROM Actions
@@ -287,7 +287,7 @@ WHERE salesperson.sales_id NOT IN(
 
 *got it after 2nd, 3rd try of understanding relationship on paper
 
-24) Duplicate Emails - quite common on test
+24) Duplicate Emails - Quite common on test
 
 SELECT Email
 FROM Person
@@ -296,7 +296,7 @@ HAVING COUNT(*) > 1;
 
 *flashed on paper 
 
-25) Combine Two Tables - VERY COMMON on tests
+25) Combine Two Tables - VERY COMMON
 
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);   /*LEFT JOIN - to keep the NULLS*/
@@ -376,7 +376,7 @@ HAVING COUNT(employee_id) = (
                              LIMIT 1);
 
 
-30) Employees Earning More Than Their Managers - Very common - redo
+30) Employees Earning More Than Their Managers - VERY COMMON
 
 SELECT E1.Name AS Employee 
 FROM Employee E1, Employee E2                           /*this type of JOIN - select information twice don't need JOIN USING
@@ -400,7 +400,7 @@ AND buyer_id NOT IN(SELECT buyer_id
 
 
 
-32) Customers Who Never Order - quite common on test
+32) Customers Who Never Order - very common
 
 SELECT Name AS Customers
 FROM Customers 
@@ -410,8 +410,9 @@ WHERE Customers.Id NOT IN (
 
 *flashed on paper
 
-32) Friend Requests I: Overall Acceptance Rate - NEED TO REDO
-medium hard - quite common on test - IFNULL (expression, alt_value)
+32) Friend Requests I: Overall Acceptance Rate - Quite common - NEED TO REDO - kind of hard 
+
+/*IFNULL (expression, alt_value)*/
 
 IFNULL() function lets you return an alternative value if an expression if NULL
 
@@ -440,32 +441,52 @@ IFNULL(
 ,2) AS accepted_rate;
 
                       
-33) Biggest Single Number - medium hard - have to redo again... need to SUBQUERY THE FROM.... why?
+33) Biggest Single Number - REDO
+
+SELECT MAX(num) AS num                  /*select the largest number from the subquery of distinct numbers*/
+FROM my_numbers
+WHERE num IN(SELECT num
+             FROM my_numbers
+             GROUP BY num
+             HAVING COUNT(*) <= 1);       /*sub-query selects only distinct numbers*/
+
+OR
 
 SELECT MAX(num) AS num
 FROM (SELECT num
       FROM my_numbers
       GROUP BY num
       HAVING COUNT(*) <= 1) AS a;
+      
+
+*took 2-3 tries on paper. but didn't really need to look at answer key
 
 
-34) Classes More Than 5 Students - need to COUNT(DISTINCT student) to avoid duplication
+34) Classes More Than 5 Students 
 
 SELECT class
 FROM courses
 GROUP BY class
 HAVING COUNT(DISTINCT student) >= 5;
 
-35) Rising Temperature - involves dates - DATEDIFF() function to compare two date type values 
+*flashed it on paper
+
+35) Rising Temperature - somewhat common - involves dates - DATEDIFF() function to compare two date type values 
+
+SELECT W1.Id
+FROM Weather W1, Weather W2                       /*don't need to particularly join anything, just self join itself - cannot use JOIN USING*/
+WHERE DATEDIFF(W1.RecordDate, W2.RecordDate) = 1 
+AND W1.Temperature > W2.Temperature
+
+*took 2 tries to get it - but understand answer
+
+36) Delete Duplicate Emails - quite common
 
 
-36) Delete Duplicate Emails - sort of easy
+37) User Activity for the Past 30 Days II - somewhat common
 
 
-37) User Activity for the Past 30 Days II
-
-
-38) Second Highest Salary
+38) Second Highest Salary - VERY COMMON
 
 SELECT MAX(Salary) AS SecondHighestSalary
 FROM Employee E1
