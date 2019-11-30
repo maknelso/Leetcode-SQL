@@ -480,21 +480,51 @@ AND W1.Temperature > W2.Temperature
 
 *took 2 tries to get it - but understand answer
 
-36) Delete Duplicate Emails - quite common
+
+36) Delete Duplicate Emails - quite common - need to redo - WHAT DOES A SELF-JOIN TABLE LOOK LIKE? Depends on the WHERE condition
+*Have to upload on SQLITE and try it out....
+
+DELETE P1                                     /*remember this DELETE syntax*/
+FROM Person P1, Person P2                     /*self-join - just stacks itself horizontally?*/
+WHERE P1.Email = P2.Email AND P1.Id > P2.Id   /*has to be P1.Id GREATER THAN, not GREATER AND EQUAL TO */
+
+FROM the conditions the self-join table should look like this??:
+
+1 john@example.com    NULL
+2 bob@example.com     NULL
+3 john@example.com    1 john@example.com
 
 
-37) User Activity for the Past 30 Days II - somewhat common
+37) User Activity for the Past 30 Days II - somewhat common - need to redo - need to figure out the AVG and COUNT
+
+SELECT IFNULL(ROUND(AVG(num),2),0.00) AS average_sessions_per_user    /*figure out the AVG and COUNT later*/
+FROM(SELECT COUNT(DISTINCT session_id) AS num
+     FROM Activity
+     WHERE DATEDIFF('2019-07-27', activity_date) < 30               /*DATEDIFF - activity_date less 2019-07-27 is less than 30 */
+     GROUP BY user_id) AS c;                                        /*need the AS c for SQL purposes only
+
+
+*DATEDIFF example:
+
+CASE 
+    WHEN DATEDIFF(day, required_date, shipped_date) < 0
+    THEN 'Late'
+    ELSE 'OnTime'
+   
+*if required_date = shipped_date then, difference is 0 => OnTime
+if required date (2016-01-04) is > shipped_date (2016-01-03) then, difference is less than 0 => Late (implies shipped_date LESS required_date)
+if required date (2016-01-04) is < shipped_date (2016-01-05) then, difference is positive => OnTime   
+
 
 
 38) Second Highest Salary - VERY COMMON
 
 SELECT MAX(Salary) AS SecondHighestSalary
-FROM Employee E1
-WHERE E1.Salary < (
-                   SELECT MAX(Salary)
-                   FROM Employee E2);
-
-
+FROM Employee 
+WHERE Salary < (SELECT MAX (salary)
+                FROM Employee);
+                   
+*flashed it on paper 
 
 DONE! THAT IS ALL THE EASY LEETCODE QUESTIONS - CONGRATULATIONS!
 
