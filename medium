@@ -18,4 +18,24 @@ FROM Events E1 JOIN
  FROM Events GROUP BY event_type) E2
 ON E1.event_type = E2.event_type
 GROUP BY business_id
-HAVING SUM(CASE WHEN E1.occurences > E2.events_avg THEN 1 ELSE 0 END) > 1;
+HAVING SUM(CASE WHEN E1.occurences > E2.events_avg THEN 1 ELSE 0 END) > 1;     /*don't really get this part*/
+
+4. Last Person to Ft in the Elevator - REDO - medium hard - somewhat common
+
+SELECT person_name
+FROM(SELECT Q1.person_name, SUM(Q2.weight) AS weight_cumulated
+     FROM Queue AS Q1
+     LEFT JOIN Queue AS Q2 ON Q2.turn <= Q1.turn
+     GROUP BY Q1.person_id
+     ORDER BY Q1.turn DESC) AS q
+WHERE weight_cumulated <= 1000
+LIMIT 1;
+
+5. Game Play Analysis III - somewhat common - need to redo
+
+SELECT A1.player_id, A1.event_date, SUM(A2.games_played) AS games_played_so_far
+FROM Activity A1 JOIN Activity A2 ON (A1.player_id = A2.player_id AND A2.event_date <= A1.event_date)
+GROUP BY A1.player_id, A1.event_date; 
+
+
+
