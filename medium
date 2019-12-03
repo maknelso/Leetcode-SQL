@@ -38,4 +38,35 @@ FROM Activity A1 JOIN Activity A2 ON (A1.player_id = A2.player_id AND A2.event_d
 GROUP BY A1.player_id, A1.event_date; 
 
 
+6. Customers Who Bought All Products - need to redo
+
+SELECT customer_id
+FROM Customer
+GROUP By customer_id
+HAVING COUNT(DISTINCT product_key) = (SELECT COUNT(*) FROM product);   /*don't get this last line*/
+
+7. Monthly Transactions I - SQL substring, trans_date
+
+SELECT SUBSTRING(trans_date, 1, 7) AS month, country, COUNT(*) AS trans_count, 
+SUM(CASE WHEN state = 'approved' THEN 1 ELSE 0 END) AS approved_count,
+SUM(amount) AS trans_total_amount
+SUM(CASE WHEN state = 'approved' THEN SUM ELSE 0 END) AS approved_total_amount,
+FROM Transactions
+GROUP BY country, month;
+
+8. Managers with at least 5 Direct Reports - FROM subquery is a temporary table
+
+SELECT Name
+FROM Employee AS E1 JOIN(SELECT ManagerId
+                         FROM Employee
+                         GROUP BY ManagerId
+                         HAVING COUNT(ManagerId) >= 5) AS E2
+ON E1.Id = E2.ManagerId;
+
+
+
+
+
+
+
 
