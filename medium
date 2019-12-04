@@ -1,5 +1,13 @@
+1. All People Report to the Given Manager - REDO
 
+SELECT E1.employee_id
+FROM Employees E1, Employees E2,Employees E3
+WHERE E1.manager_id = E2.employee_id
+  AND E2.manager_id = E3.employee_id
+  AND E3.manager_id = 1 
+  AND E1.employee_id <> 1;
 
+*need to figure out the E1, E2, E3s...
 
 2. Project Employees III
 
@@ -54,7 +62,7 @@ SUM(CASE WHEN state = 'approved' THEN SUM ELSE 0 END) AS approved_total_amount,
 FROM Transactions
 GROUP BY country, month;
 
-8. Page Recommendations
+8. Page Recommendations - REDO - understood the solution
 
 SELECT DISTINCT page_id AS recommended_page
 FROM Likes
