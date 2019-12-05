@@ -84,7 +84,63 @@ FROM Employee AS E1 JOIN(SELECT ManagerId
 ON E1.Id = E2.ManagerId;
 
 
+10. Highest Grade For Each Student - REDO
 
+SELECT student_id, MIN(course_id) AS 'course_id', grade AS 'grade'
+FROM Enrollments
+WHERE (student_id, grade) IN(SELECT student_id, MAX(grade)            /*WHERE with two conditions*/
+                             FROM Enrollments
+                             GROUP BY student_id)
+GROUP BY student_id
+ORDER BY student_id ASC;
+
+11. Tree Node
+
+12. Product Price at a Given Date
+
+13. Exchange Seats
+
+14. Shortest Distance in a Plane
+
+15. Immediate Food Delivery II
+
+16. Market Analysis I
+
+17. Team Scores in Football Tournament
+
+18. Investments in 2016
+
+19. Friend Requests II: Who Has the Most Friends
+
+20. Product Sales Analysis III
+
+21. Article Views II
+
+22. Monthly Transactions II
+
+23. Count Student Number in Departments
+
+24. Game Play Analysis IV
+
+25. New Users Daily Count
+
+26. Unpopular Books
+
+27. Rank Scores
+
+28. Winning Candidate
+
+29. Consecutive Numbers
+
+30. Get Highest Answer Rate Question
+
+31. Reported Posts II
+
+32. Department Highest Salary
+
+33. Nth Highest Salary
+
+34. Second Degree Follower
 
 
 
