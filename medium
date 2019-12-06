@@ -94,8 +94,26 @@ WHERE (student_id, grade) IN(SELECT student_id, MAX(grade)            /*WHERE wi
 GROUP BY student_id
 ORDER BY student_id ASC;
 
-11. Tree Node - kind of common - need to take time to understand on weekend
+11. Tree Node - kind of common - REDO - not too hard
 
+Can do with UNION, CASE or IF
+
+SELECT id,
+CASE 
+    WHEN p_id IS NULL THEN 'Root'
+    WHEN id IN (SELECT p_id FROM tree) THEN 'Inner'
+    ELSE 'Leaf'
+    END AS 'Type'                                     /*END AS - you are calling the column "Type"*/
+FROM tree;
+
+
+IF /*IF(condition, value_if_true, value_if_false)*/:
+
+SELECT id, IF(ISNULL(p_id), 'Root',                           /*first IF, if it's null - then Root
+IF(id IN (SELECT p_id FROM tree), 'Inner','Leaf')) AS Type    /*second IF, if id is in p_id, then Inner, otherwise Leaf - calling column Type*/
+
+FROM Tree
+ORDER BY id;
 
 
 12. Product Price at a Given Date
