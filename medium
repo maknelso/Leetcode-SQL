@@ -94,11 +94,39 @@ WHERE (student_id, grade) IN(SELECT student_id, MAX(grade)            /*WHERE wi
 GROUP BY student_id
 ORDER BY student_id ASC;
 
-11. Tree Node
+11. Tree Node - kind of common - need to take time to understand on weekend
+
+
 
 12. Product Price at a Given Date
 
-13. Exchange Seats
+SELECT product_id, new_price AS price
+FROM Products
+WHERE(product_id, change_date) IN(SELECT product_id, MAX(change_date)
+                                  FROM Products
+                                  WHERE change_date <= '2019-08-16'
+                                  GROUP BY product_id)
+UNION
+SELECT product_id, 10 AS price                                            /*do not fully understand the 2nd half of the UNION*/
+FROM Products
+WHERE Product_id NOT IN(SELECT product_id
+                        FROM Products
+                        WHERE change_date <= '2018-08-16');           
+
+
+13. Exchange Seats - quite common - need to study more 
+
+SELECT(CASE
+        WHEN MOD(id, 2) <> 0 AND counts <> id THEN id + 1
+        WHEN MOD(id, 2) <> 0 AND counts = id THEN id
+        ELSE id - 1
+      END) AS id, student
+FROM seat, (SELECT
+              COUNT(*) AS counts
+            FROM seat) AS seat_counts
+ORDER BY id ASC;
+      
+
 
 14. Shortest Distance in a Plane
 
