@@ -155,13 +155,39 @@ FROM point_2d p1 JOIN point_2d p2 ON p1.x <> p2.x OR p1.y <> p2.y;
 So in order to get the distances, we can join this table with itself, and then utilize the built-in function POW() and SQRT() like below.*/
 
 
-15. Immediate Food Delivery II
+15. Immediate Food Delivery II - sometimes show up
+
+*need to figure out if the 1st order is scheduled or not.
+
+/*first line gives you 2/4 or 0.50, but we want 50.00, so we have to *100, and then ROUND it by 2*/
+
+SELECT ROUND(AVG(CASE(WHEN order_date = customer_pref_delivery_date THEN 1 ELSE 0 END)*100, 2) AS 'immediate_percentage'
+FROM Delivery
+WHERE (customer_id, order_date) IN (SELECT customer_id, MIN(order_date)     /*SELECT first order */
+                                    FROM Delivery 
+                                    GROUP BY customer_id);      
 
 
+16. Market Analysis I - need to figure out LEFT JOIN EXAMPLE - might need it because there are 2 requirements, if first requirement
+is not met, then it becomes NULL, but we want to keep the NULL
 
-16. Market Analysis I
+SELECT user_id AS buyer_id, join_date, COUNT(order_id) AS orders_in_2019
+FROM Users LEFT JOIN Orders ON Users.user_id = Orders.buyer_id AND YEAR(order_date) = '2019'    /*not 100% sure why we need LEFT JOIN*/
+GROUP BY user_id
+ORDER BY user_id;               /*implicit ASC*/
 
-17. Team Scores in Football Tournament
+
+17. Team Scores in Football Tournament - LEFT JOIN REASON might be same as above - two requirements, don't want to lose if NULL..?
+
+SELECT team_id, team_name, 
+SUM(CASE WHEN team_id = host_team AND host_goals > guest goals THEN 3 ELSE 0 END) + 
+SUM(CASE WHEN team_id = guest_team AND guest_goals > host_goals THEN 3 ELSE 0 END) +
+SUM(CASE WHEN team_id = host_team AND host_goals = guest_goals THEN 1 ELSE 0 END) +
+SUM(CASE WHEN team_id = guest_team AND guest_goals = host_goals THEN 1 ELSE 0 END)
+AS num_points
+FROM Teams LEFT JOIN Matches ON team_id = host_team OR team_id = guest_team
+GROUP BY team_id
+ORDER BY num_points DESC, team_id;
 
 18. Investments in 2016
 
