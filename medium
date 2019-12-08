@@ -1,19 +1,18 @@
 1. All People Report to the Given Manager - REDO
 
 SELECT E1.employee_id
-FROM Employees E1, Employees E2,Employees E3
-WHERE E1.manager_id = E2.employee_id
-  AND E2.manager_id = E3.employee_id
-  AND E3.manager_id = 1 
+FROM Employees E1, Employees E2, Employees E3
+WHERE E1.manager_id = E2.employee_id            /*Where E1 is the employees of the E2 managers*/
+  AND E2.manager_id = E3.employee_id            /*Where E2 is the employees of the E3 managers*/
+  AND E3.manager_id = 1                         /*E3 is the boss*/
   AND E1.employee_id <> 1;
 
-*need to figure out the E1, E2, E3s...
 
 2. Project Employees III
 
 SELECT project_id, employee_id
 FROM Project JOIN Employee USING(employee_id)
-WHERE(project_id, experience_years) IN(SELECT project_id, MAX(experience_years)       /*need to group project_id, experience_years together*/
+WHERE(project_id, experience_years) IN(SELECT project_id, MAX(experience_years)  /*need to group project_id, experience_years together*/
                                        FROM Employee JOIN Project USING(employee_id)
                                        GROUP BY project_id);
 
@@ -21,12 +20,11 @@ WHERE(project_id, experience_years) IN(SELECT project_id, MAX(experience_years) 
 3. Active Business - harder
 
 SELECT business_id
-FROM Events E1 JOIN
-(SELECT event_type, AVG(occurences) AS events_avg
- FROM Events GROUP BY event_type) E2
+FROM Events E1 JOIN (SELECT event_type, AVG(occurences) AS events_avg FROM Events GROUP BY event_type) E2
 ON E1.event_type = E2.event_type
 GROUP BY business_id
-HAVING SUM(CASE WHEN E1.occurences > E2.events_avg THEN 1 ELSE 0 END) > 1;     /*don't really get this part*/
+HAVING SUM(CASE WHEN E1.occurences > E2.events_avg THEN 1 ELSE 0 END) > 1;   /*don't really get this part - active business have occurrences greater than avg*/
+
 
 4. Last Person to Ft in the Elevator - REDO - medium hard - somewhat common
 
@@ -38,6 +36,7 @@ FROM(SELECT Q1.person_name, SUM(Q2.weight) AS weight_cumulated
      ORDER BY Q1.turn DESC) AS q
 WHERE weight_cumulated <= 1000
 LIMIT 1;
+
 
 5. Game Play Analysis III - somewhat common - need to redo
 
@@ -53,6 +52,7 @@ FROM Customer
 GROUP By customer_id
 HAVING COUNT(DISTINCT product_key) = (SELECT COUNT(*) FROM product);   /*don't get this last line*/
 
+
 7. Monthly Transactions I - SQL substring, trans_date
 
 SELECT SUBSTRING(trans_date, 1, 7) AS month, country, COUNT(*) AS trans_count, 
@@ -61,6 +61,7 @@ SUM(amount) AS trans_total_amount
 SUM(CASE WHEN state = 'approved' THEN SUM ELSE 0 END) AS approved_total_amount,
 FROM Transactions
 GROUP BY country, month;
+
 
 8. Page Recommendations - REDO - understood the solution
 
@@ -94,6 +95,7 @@ WHERE (student_id, grade) IN(SELECT student_id, MAX(grade)            /*WHERE wi
 GROUP BY student_id
 ORDER BY student_id ASC;
 
+
 11. Tree Node - kind of common - REDO - not too hard
 
 Can do with UNION, CASE or IF
@@ -125,7 +127,7 @@ WHERE(product_id, change_date) IN(SELECT product_id, MAX(change_date)
                                   WHERE change_date <= '2019-08-16'
                                   GROUP BY product_id)
 UNION
-SELECT product_id, 10 AS price                                            /*do not fully understand the 2nd half of the UNION*/
+SELECT product_id, 10 AS price          /*do not fully understand the 2nd half of the UNION - why does the 2 2019-08-17 not show up?*/
 FROM Products
 WHERE Product_id NOT IN(SELECT product_id
                         FROM Products
@@ -144,7 +146,6 @@ FROM seat, (SELECT
             FROM seat) AS seat_counts
 ORDER BY id ASC;
       
-
 
 14. Shortest Distance in a Plane - need to restudy
 
@@ -188,6 +189,7 @@ AS num_points
 FROM Teams LEFT JOIN Matches ON team_id = host_team OR team_id = guest_team
 GROUP BY team_id
 ORDER BY num_points DESC, team_id;
+
 
 18. Investments in 2016
 
