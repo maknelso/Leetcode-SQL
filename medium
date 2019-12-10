@@ -55,6 +55,8 @@ HAVING COUNT(DISTINCT product_key) = (SELECT COUNT(*) FROM product);   /*don't g
 
 7. Monthly Transactions I - SQL substring, trans_date
 
+/*SUBSTRING(string, start, length)*/
+
 SELECT SUBSTRING(trans_date, 1, 7) AS month, country, COUNT(*) AS trans_count, 
 SUM(CASE WHEN state = 'approved' THEN 1 ELSE 0 END) AS approved_count,
 SUM(amount) AS trans_total_amount
@@ -191,15 +193,66 @@ GROUP BY team_id
 ORDER BY num_points DESC, team_id;
 
 
-18. Investments in 2016
+18. Investments in 2016 - not too hard - REDO
 
-19. Friend Requests II: Who Has the Most Friends
+/*can use GROUP BY and COUNT to check whether a value in a column is unique*/
+/*check whether the value of TIV_2015 is unique, and if its location is unique*/
 
-20. Product Sales Analysis III
+SELECT SUM(insurance.TIV_2016) AS TIV_2016
+FROM insurance
+WHERE TIV_2015 IN (SELECT TIV_2015
+                   FROM insurance
+                   GROUP BY TIV_2015
+                   HAVING COUNT(*) > 1)
+AND (LAT,LON) IN (SELECT LAT, LON
+                  FROM insurance
+                  GROUP BY LAT, LON
+                  HAVING COUNT(*) = 1);
+                   
+                   
+19. Friend Requests II: Who Has the Most Friends - quite common on exam - not too hard either
+
+SELECT ids AS id , COUNT(*) as num
+FROM (SELECT requester_id AS ids FROM request_accepted
+      UNION ALL                                                 /*keeps all the values, UNION deletes non-distinct values*/
+      SELECT accepter_id AS ids FROM request_accepted) AS u
+GROUP BY ids
+ORDER BY COUNT(*) DESC
+LIMIT 1;
+
+
+20. Product Sales Analysis III - not that hard - shows up on exam
+
+SELECT product_id, year AS first_year, quantity, price
+FROM Sales
+WHERE (product_id, year) IN (SELECT product_id, MIN(year) AS year
+                             FROM Sales
+                             GROUP BY product_id);   
+
 
 21. Article Views II
 
-22. Monthly Transactions II
+SELECT DISTINCT viewer_id AS id
+FROM Views
+GROUP BY viewer_id, view_date
+HAVING COUNT(DISTINCT article_id) > 1
+ORDER BY id;
+
+
+22. Monthly Transactions II - seems difficult - skipped it
+
+SELECT month, country, SUM(CASE WHEN state = "approved" THEN 1 ELSE 0 END) AS approved_count, SUM(CASE WHEN state = "approved" THEN amount ELSE 0 END) AS approved_amount, SUM(CASE WHEN state = "back" THEN 1 ELSE 0 END) AS chargeback_count, SUM(CASE WHEN state = "back" THEN amount ELSE 0 END) AS chargeback_amount
+
+FROM (SELECT LEFT(chargebacks.trans_date, 7) AS month, country, "back" AS state, amount
+      FROM chargebacks
+      JOIN transactions ON chargebacks.trans_id = transactions.id
+      UNION ALL
+      SELECT LEFT(trans_date, 7) AS month, country, state, amount
+      FROM transactions
+      WHERE state = "approved"
+) s
+GROUP BY month, country;
+
 
 23. Count Student Number in Departments
 
