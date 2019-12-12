@@ -254,11 +254,36 @@ FROM (SELECT LEFT(chargebacks.trans_date, 7) AS month, country, "back" AS state,
 GROUP BY month, country;
 
 
-23. Count Student Number in Departments
+23. Count Student Number in Departments - pretty easy, got it by myself
 
-24. Game Play Analysis IV
+SELECT dept_name, COUNT(student_id) AS student_number
+FROM department LEFT JOIN student USING (dept_id)
+GROUP BY dept_id
+ORDER BY student_number DESC, dept_name;
 
-25. New Users Daily Count
+
+24. Game Play Analysis IV - not too bad... medium hardish... (more medium than hard)
+
+SELECT ROUND(SUM(CASE WHEN ABS(A1.event_date - A2.event_date) = 1 THEN 1 ELSE 0 END)/COUNT(DISTINCT A1.player_id), 2) AS fraction
+
+FROM (SELECT player_id, MIN(event_date) AS event_date
+      FROM Activity
+      GROUP BY player_id) AS A1                         /*Have A1 contain only the MIN event_date per GROUPED player_id*/
+JOIN Activity A2 USING (player_id);
+
+
+25. New Users Daily Count - need to study it more REDO
+
+/*DATEDIFF(date 1, date 2)
+
+SELECT login_date, COUNT(user_id) AS user_count
+FROM (SELECT user_id, MIN(activity_date) AS login_date        /*SELECT only the MIN activity date as login_date*/
+      FROM Traffic
+      WHERE activity = 'login'
+      GROUP BY user_id) A
+WHERE DATEDIFF ('2019-06-30', login_date) <= 90
+GROUP BY login_date;
+      
 
 26. Unpopular Books
 
