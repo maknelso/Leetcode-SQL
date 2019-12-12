@@ -274,7 +274,7 @@ JOIN Activity A2 USING (player_id);
 
 25. New Users Daily Count - need to study it more REDO
 
-/*DATEDIFF(date 1, date 2)
+/*DATEDIFF(date 1, date 2)*/
 
 SELECT login_date, COUNT(user_id) AS user_count
 FROM (SELECT user_id, MIN(activity_date) AS login_date        /*SELECT only the MIN activity date as login_date*/
@@ -285,23 +285,61 @@ WHERE DATEDIFF ('2019-06-30', login_date) <= 90
 GROUP BY login_date;
       
 
-26. Unpopular Books
+26. Unpopular Books - understand solution
 
-27. Rank Scores
+/*TIMESTAMPDIFF */
 
-28. Winning Candidate
+SELECT DISTINCT book_id, name
+FROM Books 
+WHERE book_id NOT IN (SELECT book_id
+                      FROM books
+                      WHERE TIMESTAMPDIFF(month, available_from, '2019-06-23') <= 1)
+AND book_id NOT IN (SELECT book_id
+                    FROM Orders
+                    WHERE dispatch_date >= '2018-06-23' AND dispatch_date < '2019-06-23'
+                    GROUP BY Orders.book_id
+                    HAVING SUM(quantity) >= 10); 
 
-29. Consecutive Numbers
+
+27. Rank Scores - very common - need to look and examine, not really querying question
+
+SELECT Score, (SELECT COUNT(DISTINCT Score) 
+               FROM Scores 
+               WHERE Score >= s.Score) AS Rank
+FROM Scores s
+ORDER BY Score DESC;
+
+
+28. Winning Candidate - understood it. got most of the code correctly on first try.
+
+SELECT DISTINCT Name
+FROM Candidate JOIN Vote ON Candidate.id = Vote.CandidateId
+WHERE Candidate.id = (SELECT CandidateId
+                           FROM Vote
+                           GROUP BY CandidateId
+                           ORDER BY COUNT(*) DESC
+                           LIMIT 1);
+
+
+29. Consecutive Numbers - quite common - need to study how to calculate consecutive
+
+SELECT DISTINCT l1.Num AS ConsecutiveNums
+FROM Logs l1, Logs l2, Logs l3
+WHERE 
+l1.Id = l2.Id - 1
+AND l2.Id = l3.Id - 1
+AND l1.Num = l2.Num
+AND l2.Num = l3.Num;
 
 30. Get Highest Answer Rate Question
 
 31. Reported Posts II
 
-32. Department Highest Salary
+32. Department Highest Salary - very common
 
-33. Nth Highest Salary
+33. Nth Highest Salary - very, very common
 
-34. Second Degree Follower
+34. Second Degree Follower - quite common
 
 
 
