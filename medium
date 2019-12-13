@@ -331,10 +331,13 @@ AND l2.Id = l3.Id - 1
 AND l1.Num = l2.Num
 AND l2.Num = l3.Num;
 
-30. Get Highest Answer Rate Question
+30. Get Highest Answer Rate Question - understood answer 
 
-
-
+SELECT question_id AS survey_log
+FROM survey_log 
+GROUP BY question_id
+ORDER BY (COUNT(answer_id)/COUNT(IF(action = 'answer', 1, 0))) DESC
+LIMIT 1;
 
 
 31. Reported Posts II
