@@ -381,7 +381,7 @@ GROUP BY f1.follower
 ORDER BY f1.follower;
 
 
-*Find the Start and End Number of Continuous Ranges new question - should be number 1 - need to figure out solution
+1.??*Find the Start and End Number of Continuous Ranges new question - should be number 1 - need to figure out solution
 
 SELECT l1.log_id AS START_ID, MIN(l2.log_id) AS END_ID
 FROM (SELECT log_id 
