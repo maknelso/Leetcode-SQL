@@ -340,9 +340,18 @@ ORDER BY (COUNT(answer_id)/COUNT(IF(action = 'answer', 1, 0))) DESC
 LIMIT 1;
 
 
-31. Reported Posts II
+31. Reported Posts II - need to figure out answer more in-depth. Understand the gist of it
+
+SELECT ROUND(SUM(percent)/COUNT(DISTINCT action_date), 2) AS average_daily_percent
+FROM (SELECT Actions.action_date, COUNT(DISTINCT Removals.post_id)/COUNT(DISTINCT Actions.post_id)*100 AS percent
+      FROM Actions LEFT JOIN Removals USING (post_id)
+      WHERE extra = 'spam'
+      GROUP BY action_date) AS temp;
+
 
 32. Department Highest Salary - very common
+
+
 
 33. Nth Highest Salary - very, very common
 
