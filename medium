@@ -351,11 +351,49 @@ FROM (SELECT Actions.action_date, COUNT(DISTINCT Removals.post_id)/COUNT(DISTINC
 
 32. Department Highest Salary - very common
 
+SELECT Department.name AS Department, Employee.name AS Employee, Salary
+FROM Employee JOIN Department ON Employee.DepartmentId = Department.Id
+WHERE (DepartmentId, Salary) IN (SELECT DepartmentId, MAX(salary)         /*need the combination of DepartmentId, Salary to check*/
+                                 FROM Employee
+                                 GROUP BY DepartmentId);
 
 
-33. Nth Highest Salary - very, very common
+33. Nth Highest Salary - very, very common - need to study, probably not querying
 
-34. Second Degree Follower - quite common
+/*CREATE FUNCTION*/
+
+CREATE FUNCTION getNthHighestSalary (N INT) RETURNS INT
+BEGIN
+DECLARE M INT;
+SET M = N - 1;
+RETURN (SELECT DISTINCT Salary
+        FROM Employee
+        ORDER BY Salary DESC
+        LIMIT M, 1);
+END
+
+
+34. Second Degree Follower - quite common - need to study, doesn't seem too bad
+
+SELECT f1.follower, COUNT(DISTINCT f2.follower) AS num
+FROM follow f1 JOIN follow f2 ON f1.follower = f2.followee
+GROUP BY f1.follower
+ORDER BY f1.follower;
+
+
+*Find the Start and End Number of Continuous Ranges new question - should be number 1 - need to figure out solution
+
+SELECT l1.log_id AS START_ID, MIN(l2.log_id) AS END_ID
+FROM (SELECT log_id 
+      FROM Logs
+      WHERE log_id - 1 NOT IN (SELECT log_id FROM Logs)) L1,
+     (SELECT log_id FROM Logs
+      WHERE log_id + 1 NOT IN (SELECT log_id FROM Logs)) L2
+WHERE l1.log_id <= l2.log_id
+GROUP BY l1.log_id;
+
+
+
 
 
 
