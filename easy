@@ -76,6 +76,12 @@ Calculate the distance between 2 points first, then display the minimum one.
 
 To get the distances of each two points, we need to join this table with itself and use ABS() function.
 
+SELECT MIN(ABS(p1.x-p2.x)) AS shortest
+FROM point p1 JOIN point p2 
+WHERE p1.x <> p2.x;
+
+previous answer:
+
 SELECT MIN(ABS(P1.x-P2.x)) AS shortest
 FROM point P1 JOIN point P2 ON P1.x != P2.x;   /*self-join and NOT equal*/
 
