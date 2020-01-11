@@ -9,9 +9,16 @@ FROM Employee JOIN (SELECT team_id, COUNT(employee_id) AS team_size
                     FROM Employee
                     GROUP BY team_id) A USING (team_id);
                     
-1280. Students and Examinations
+1280. Students and Examinations - do not fully understand
 
+SELECT stu.student_id, stu.student_name, sbj.subject_name, COUNT(exam.subject_name) AS attended_exams
+FROM Students stu CROSS JOIN Subjects sbj  /*does not establish relationship - combine everything*/
+LEFT JOIN Examinations exam
 
+ON exam.student_id = stu.student_id AND sbj.subject_name = exam.subject_name
+
+GROUP BY stu.student_id, sbj.subject_name
+ORDER BY stu.student_id, sbj.subject_name;
 
 
 *A good method to calculate MAX is to ORDER BY DESC and LIMIT 1
