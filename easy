@@ -26,26 +26,31 @@ ORDER BY stu.student_id, sbj.subject_name;
 *A good method to calculate MAX is to ORDER BY DESC and LIMIT 1
 
 
-1) Average Selling Price - not too bad - redo
+1) Average Selling Price - DID NOT FLASH - this question requires some thinking
 
-SELECT product_id, ROUND(SUM(price*units)/SUM(units),2) AS average_price    /*the SUM part is the difficult part*/
+SUM(price*units) IS THE IMPORTANT PART. purchase_date BETWEEN start_date AND end_date is important too.
+
+SELECT product_id, ROUND(SUM(price*units)/SUM(units),2) AS average_price    /*the SUM(price*units)*/
 FROM prices JOIN UnitsSold USING (product_id)
 WHERE purchase_date BETWEEN start_date AND end_date
 GROUP BY product_id
-ORDER BY product_id DESC;           /*SQL orders by ASC by default*/
-
-*finished on paper 
+ORDER BY product_id;
 
 
-2) Product Sales Analysis I - somewhat common on test 
+2) Product Sales Analysis I - somewhat common on test  - FLASHED
 
 SELECT product_name, year, price
 FROM product JOIN sales USING (product_id);
 
-*flashed on paper
 
+3) Product Sales Analysis II - somewhat common on test - FLASHED
 
-3) Product Sales Analysis II - database - somewhat common on test
+SELECT product_id, SUM(quantity) AS total_quantity
+FROM Sales LEFT JOIN Product USING(product_id)
+GROUP BY product_id
+ORDER BY product_id;
+
+OR
 
 SELECT product_id, SUM(quantity) AS total_quantity
 FROM Sales JOIN Product USING(product_id)
@@ -58,16 +63,12 @@ FROM Sales
 GROUP BY product_id
 ORDER By product_id DESC;
 
-*flashed on paper
 
-
-4) Game Play Analysis I - common on test
+4) Game Play Analysis I - common on test - FLASHED
 
 SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
 GROUP BY player_id;
-
-*flashed on paper
 
 
 5) Big Countries - VERY COMMON - FLASHED
