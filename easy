@@ -11,6 +11,8 @@ FROM Employee JOIN (SELECT team_id, COUNT(employee_id) AS team_size
                     
 1280. Students and Examinations - do not fully understand
 
+cross-join just joins everything between two tables (brute force)
+
 SELECT stu.student_id, stu.student_name, sbj.subject_name, COUNT(exam.subject_name) AS attended_exams
 FROM Students stu CROSS JOIN Subjects sbj  /*does not establish relationship - combine everything*/
 LEFT JOIN Examinations exam
@@ -22,6 +24,7 @@ ORDER BY stu.student_id, sbj.subject_name;
 
 
 *A good method to calculate MAX is to ORDER BY DESC and LIMIT 1
+
 
 1) Average Selling Price - not too bad - redo
 
@@ -40,6 +43,7 @@ SELECT product_name, year, price
 FROM product JOIN sales USING (product_id);
 
 *flashed on paper
+
 
 3) Product Sales Analysis II - database - somewhat common on test
 
@@ -65,6 +69,7 @@ GROUP BY player_id;
 
 *flashed on paper
 
+
 5) Big Countries - VERY COMMON - FLASHED
 
 SELECT name, population, area
@@ -80,6 +85,7 @@ SELECT ROUND(100*(AVG(order_date = customer_pref_delivery_date),2) AS immediate_
 FROM delivery;
 
 *did 2nd/3rd try on paper
+
 
 7) Shortest Distance in a Line - DID NOT FLASH
 
@@ -103,6 +109,7 @@ FROM point p1 JOIN point p2 ON p1.x <> p2.x;   /*have to remember thsi part JOIN
 
 *did on 2nd/3rd try on paper
 
+
 8) Reformat Department Table - VERY COMMON - DID NOT FLASH
 
 SELECT id,
@@ -123,6 +130,7 @@ GROUP BY id;
 
 *did on 2nd/3rd try on paper
 
+
 9) Number of Comments per Post - a bit confusing, but the answer actually makes sense - DID NOT FLASH
 
 first - we only care about the sub_id that have parent_id that is NULL
@@ -133,6 +141,7 @@ WHERE S1.parent_id IS NULL      /*the question only wants answer from where S1.p
 GROUP BY S1.sub_id;
 
 *did on 3rd try on paper
+
 
 10) Actors and Directors Who Cooperated At Least Three Times - DID NOT FLASH
 
@@ -145,6 +154,7 @@ HAVING COUNT(*) >= 3;
 *GROUP BY actor_id, director_id - put all those with the same values for BOTH x and y in the one group
 
 *did on 2nd try on paper
+
 
 11) Article Views I  - common on test - FLASHED
 
@@ -169,6 +179,7 @@ SET sex = IF(sex = 'm', 'f', 'm');
 
 *did it on 2nd try on paper 
 
+
 13) Sales Analysis I - DID NOT FLASH
 
 SELECT seller_id
@@ -190,9 +201,8 @@ WHERE NOT EXISTS price < (
                           FROM Sales
                           GROUP BY seller_id);      /*DID NOT WORK*/
                      
-                                  
-
-14) Find Customer Referee - common on test
+                                 
+14) Find Customer Referee - common on test - FLASHED
 
 SELECT name
 FROM customer
@@ -200,24 +210,26 @@ WHERE referee_id IS NULL OR referee_id <> 2;
 
 *redid 1 time on paper - did not flash
 
-15) Customer Placing the Largest Number of Orders - somewhat easy - REDO
+
+15) Customer Placing the Largest Number of Orders - DID NOT FLASH
 
 SELECT customer_number
 FROM orders
 GROUP BY customer_number
-ORDER BY COUNT(*) DESC      /*customer number 3 COUNTS two times*/
+ORDER BY COUNT(customer_number) DESC      /*customer number 3 COUNTS two times*/
 LIMIT 1;
 
-*took 2 tries on paper - it was easy though.... just have to remember concept
+*took 2 tries on paper - it was somewhat easy though.... just have to remember concept hm
 
-16) Queries Quality and Percentage - AVG(rating < 3) -> AVG condition   - REDO
+16) Queries Quality and Percentage - AVG(rating < 3) -> AVG condition   - REDO - this one is a little bit weird. Remember
+AVG(rating < 3). AVG(rating/position) on SQLiteStudio seems to give a different answer...
 
 SELECT query_name, ROUND(AVG(rating/position),2) AS quality, ROUND(AVG(rating <3)*100, 2) AS poor_query_percentage
 FROM Queries
 GROUP BY query_name
 ORDER BY quality DESC;
 
-*need to redo - will take 2-3 tries
+
 
 17) Not Boring Movies - common on test
 
