@@ -1,5 +1,10 @@
 EASY ONLY - All Database
 
+Summary of EASY SQL insights:
+
+- A good method to calculate MAX is to ORDER BY DESC and LIMIT 1
+- To get the distances of each two points, we need to join this table with itself and use ABS() function.
+
 new questions:
 
 1303. Find the Team Size
