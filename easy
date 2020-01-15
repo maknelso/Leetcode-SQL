@@ -4,6 +4,9 @@ Summary of EASY SQL insights:
 
 - A good method to calculate MAX is to ORDER BY DESC and LIMIT 1
 - To get the distances of each two points, we need to join this table with itself and use ABS() function.
+- AVG(order_date = customer_pref_delivery_date) - average on condition (average only if condition inside bracket is true)
+
+
 
 new questions:
 
@@ -85,7 +88,7 @@ WHERE area > 3000000 OR population > 25000000;
 *flashed on paper
 
 
-6) Immediate Food Delivery I - learn AVG with conditional - common on test
+6) Immediate Food Delivery I - learn AVG with conditional - common on test - DID NOT FLASH
 
 SELECT ROUND(100*(AVG(order_date = customer_pref_delivery_date),2) AS immediate_percentage  /*seems like AVG with (condition)*/
 FROM delivery;
@@ -93,7 +96,7 @@ FROM delivery;
 *did 2nd/3rd try on paper
 
 
-7) Shortest Distance in a Line - DID NOT FLASH
+7) Shortest Distance in a Line - DID NOT FLASH - got it the 2nd time
 
 Calculate the distance between 2 points first, then display the minimum one.
 
@@ -116,7 +119,7 @@ FROM point p1 JOIN point p2 ON p1.x <> p2.x;   /*have to remember thsi part JOIN
 *did on 2nd/3rd try on paper
 
 
-8) Reformat Department Table - VERY COMMON - DID NOT FLASH
+8) Reformat Department Table - VERY COMMON - DID NOT FLASH.... SUM(CASE WHEN month = 'Jan' THEN revenue END) AS
 
 SELECT id,
 SUM(CASE WHEN month = 'Jan' THEN revenue END) AS Jan_Revenue,
