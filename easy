@@ -140,12 +140,12 @@ GROUP BY id;
 *did on 2nd/3rd try on paper
 
 
-9) Number of Comments per Post - a bit confusing, but the answer actually makes sense - DID NOT FLASH
+9) Number of Comments per Post - a bit more difficult - answer makes sense now - DID NOT FLASH
 
 first - we only care about the sub_id that have parent_id that is NULL
 
 SELECT S1.sub_id AS post_id, COUNT(DISTINCT S2.sub_id) AS number_of_comments
-FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id     /*do not fully understand this JOIN*/
+FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id     /*need LEFT JOIN otherwise S2.parent_id has no "12"*/
 WHERE S1.parent_id IS NULL      /*the question only wants answer from where S1.parent_id IS NULL*/
 GROUP BY S1.sub_id;
 
