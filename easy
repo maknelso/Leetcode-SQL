@@ -194,13 +194,24 @@ SET sex = IF(sex = 'm', 'f', 'm');
 SELECT seller_id
 FROM Sales
 GROUP BY seller_id
-HAVING SUM(price) = (
-                     SELECT SUM(price) AS S
+HAVING SUM(price) = (SELECT SUM(price)
                      FROM Sales
                      GROUP BY seller_id
-                     ORDER BY S DESC
-                     LIMIT 1);
-                     
+                     ORDER BY SUM(price) DESC
+                     LIMIT 1)
+ORDER BY seller_id;
+
+
+SELECT seller_id
+FROM (SELECT seller_id
+      FROM Sales
+      GROUP BY seller_id
+      ORDER BY SUM(price) DESC
+      LIMIT 1) as a
+GROUP BY seller_id
+ORDER BY seller_id;  /*DID NOT WORK - this will only return 1 seller_id
+                       you have to compare SUM(price)*/
+
 
 SELECT seller_id
 FROM Sales
