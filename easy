@@ -301,7 +301,7 @@ WHERE NOT EXISTS price < (
                           GROUP BY seller_id);      /*DID NOT WORK*/
                      
                                  
-14) Find Customer Referee - common on test - FLASHED
+14) Find Customer Referee - common on test - need IS NULL OR <> 2 (just <> 2 does not work because NULL is special)
 
 SELECT name
 FROM customer
