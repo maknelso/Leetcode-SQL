@@ -139,6 +139,12 @@ ORDER By product_id DESC;
 
 4) Game Play Analysis I - common on test - FLASHED
 
+Window Function:
+
+SELECT DISTINCT player_id, MIN(event_date) OVER (PARTITION BY player_id) AS first_login
+FROM Activity;
+
+
 SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
 GROUP BY player_id;
