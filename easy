@@ -10,6 +10,12 @@ Summary of EASY SQL insights:
 
 new questions:
 
+1350. Students With Invalid Departments
+
+SELECT id, name
+FROM Students
+WHERE Students.department_id NOT IN (SELECT id FROM Departments);
+
 1303. Find the Team Size
 
 SELECT employee_id, team_size
