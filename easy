@@ -117,7 +117,7 @@ FROM product JOIN sales USING (product_id);
 I seem to be more comfortable with - LEFT JOIN...
 
 
-3) Product Sales Analysis II - somewhat common on test - FLASHED
+3) Product II - somewhat common on test - FLASHED
 
 Window function:
 
@@ -269,6 +269,17 @@ SET sex = IF(sex = 'm', 'f', 'm');
 
 
 13) Sales Analysis I - DID NOT FLASH
+
+Window function:
+
+SELECT DISTINCT seller_id
+FROM (SELECT *, 
+      DENSE_RANK()OVER(ORDER BY SUM(price)DESC)r	#has to have no spaces, cannot say rank, has to be r
+      FROM Sales 
+      GROUP BY seller_id)sub				#subqueries have to have name
+WHERE r = 1;
+
+
 
 SELECT seller_id
 FROM Sales
