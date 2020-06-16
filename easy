@@ -272,6 +272,14 @@ SET sex = IF(sex = 'm', 'f', 'm');
 
 Window function:
 
+SELECT seller_id						#just select seller_id within the subquery
+FROM (SELECT *,							#subquery gives entire table
+      DENSE_RANK()OVER(ORDER BY SUM(price) DESC) AS r
+      FROM Sales
+      GROUP BY seller_id) subquery
+WHERE r = 1;
+
+
 SELECT DISTINCT seller_id
 FROM (SELECT *, 
       DENSE_RANK()OVER(ORDER BY SUM(price)DESC)r	#has to have no spaces, cannot say rank, has to be r
