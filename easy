@@ -10,6 +10,56 @@ Summary of EASY SQL insights:
 
 new questions:
 
+1407. Top Travellers 
+-> IFNULL, name ASC (Elvis, Lee, ->>>> gets later in the alphabet)
+-> different type of JOIN => Users.id = Rides.user_id
+
+SELECT name, IFNULL(SUM(distance), 0) AS travelled_distance
+FROM Users LEFT JOIN Rides ON Users.id = Rides.user_id
+GROUP BY name
+ORDER BY travelled_distance DESC, name ASC;
+
+1303. Find the Team Size - USED WINDOW FUNCTION
+
+# Count only gives you the first line..., have to use Window functions to keep all the rows
+# COUNT() is an aggregation query. An aggregation query with no GROUP BY always returns 1 row. 
+# Even with GROUP BY it didn't work.
+
+SELECT employee_id, COUNT(team_id) OVER (PARTITION BY team_id) AS team_size
+FROM Employee;
+
+Below doesn't work - because it counts each employee_id once.
+
+SELECT employee_id, COUNT(team_id)
+FROM Employee
+GROUP BY employee_idl;
+
+This would work - seems a lot more complicated than Window function....:
+
+SELECT e.employee_id, t1.team_size
+FROM (SELECT team_id, COUNT(team_id) AS team_size
+FROM Employee
+GROUP BY team_id) t1, Employee e
+WHERE e.team_id = t1.team_id;
+
+or 
+
+select employee.employee_id, team_size
+from Employee
+	left join (
+		select team_id, count(*) as team_size
+		from Employee
+		group by team_id
+	) a
+on employee.team_id = a.team_id;
+
+
+1378. Replace Employee ID With The Unique Identifier
+
+SELECT unique_id, name
+FROM Employees LEFT JOIN EmployeeUNI USING (id);
+
+
 1350. Students With Invalid Departments
 
 SELECT id, name
@@ -42,7 +92,7 @@ ORDER BY stu.student_id, sbj.subject_name;
 
 1) Average Selling Price - DID NOT FLASH - this question requires some thinking
 
-SUM(price*units) IS THE IMPORTANT PART. purchase_date BETWEEN start_date AND end_date is important too.
+SUM(price*units) IS THE IMPORTANT PART. purchase_date BETWEEN start_date AND end_date is important too (not exactly sure why)...
 
 SELECT product_id, ROUND(SUM(price*units)/SUM(units),2) AS average_price    /*the SUM(price*units)*/
 FROM prices JOIN UnitsSold USING (product_id)
@@ -56,8 +106,17 @@ ORDER BY product_id;
 SELECT product_name, year, price
 FROM product JOIN sales USING (product_id);
 
+I seem to be more comfortable with - LEFT JOIN...
+
 
 3) Product Sales Analysis II - somewhat common on test - FLASHED
+
+Window function:
+
+SELECT DISTINCT product_id, SUM(quantity) OVER (PARTITION BY product_id) AS total_quantity
+FROM Sales;
+
+Non-window function answer (timed out...):
 
 SELECT product_id, SUM(quantity) AS total_quantity
 FROM Sales LEFT JOIN Product USING(product_id)
