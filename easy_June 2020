@@ -279,6 +279,12 @@ FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id
 WHERE S1.parent_id IS NULL   
 GROUP BY S1.sub_id;
 
-
-
+**1251. Average Selling Price => Need WHERE purchase_date BETWEEN start_date AND end_date to make sure the correct SUM(units * price)
+pairing is used!!
+# Write your MySQL query statement below
+SELECT product_id, ROUND(SUM(units * price) / SUM(units) , 2) AS average_price
+FROM Prices JOIN UnitsSold USING (product_id)
+WHERE purchase_date BETWEEN start_date AND end_date
+GROUP BY Prices.product_id
+ORDER BY Prices.product_id;
 
