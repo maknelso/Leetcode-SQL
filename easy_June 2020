@@ -6,20 +6,17 @@ Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
 #   Title
 175 - Combine Two Tables
-
 # Write your MySQL query statement below
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);
 
 *176 - Second Highest Salary - DID NOT FLASH
-
 # Write your MySQL query statement below
 SELECT MAX(Salary) AS SecondHighestSalary
 FROM Employee
 WHERE Salary < (SELECT MAX(Salary) FROM Employee);
 
 *181 - Employees Earning More Than Their Managers - DID NOT FLASH (have to draw it out on pen and paper)
-
 # Write your MySQL query statement below
 SELECT e1.Name AS Employee
 FROM Employee e1 JOIN Employee e2 ON e1.ManagerId = e2.Id
@@ -96,7 +93,7 @@ FROM courses
 GROUP BY class
 HAVING COUNT(DISTINCT student) >= 5;
 
-**597. Friend Requests I: Overall Acceptance Rate (skipped)
+S*597. Friend Requests I: Overall Acceptance Rate (skipped)
 
 **603. Consecutive Available Seats (skipped) - Window function
 # Write your MySQL query statement below
@@ -109,9 +106,9 @@ WHERE (free = 1 AND free_lag = 1)
 OR (free = 1 AND free_lead = 1)
 ORDER BY seat_id ASC;
 
-*607. Sales Person -> feeling tired, did not get
+S*607. Sales Person -> feeling tired, did not get
 
-*610. Triangle Judgment -> feeling tired, skipped
+S*610. Triangle Judgment -> feeling tired, skipped
 # Write your MySQL query statement below
 SELECT *, 
 IF(x + y > z AND x + z > y AND y + z > x, 'Yes', 'No') AS whatever
@@ -172,6 +169,83 @@ GROUP BY product_id;
 SELECT project_id, ROUND(AVG(experience_years), 2) AS average_years
 FROM Project JOIN Employee USING (employee_id)
 GROUP BY project_id;
+
+**1076. Project Employees II => DID NOT FLASH - WINDOW FUNCTION => need to review carefully
+=> trick: ORDER BY COUNT(DISTINCT employee_id) 
+# Write your MySQL query statement below
+#report all projects with most employees
+SELECT project_id
+FROM (SELECT project_id, 
+      RANK() OVER(ORDER BY COUNT(DISTINCT employee_id)DESC) AS ranks
+      FROM Project
+      GROUP BY project_id) AS subquery
+WHERE ranks = 1;
+
+**1082. Sales Analysis I => half-flashed 
+# Write your MySQL query statement below
+# Can probably use a window function here
+SELECT seller_id
+FROM (SELECT *,
+      DENSE_RANK()OVER(ORDER BY SUM(price) DESC) AS r
+      FROM Sales
+      GROUP BY seller_id) AS subquery
+WHERE r = 1;
+
+**1083. Sales Analysis II => DID NOT FLASH -> did not fully understand redo
+# Write your MySQL query statement below
+SELECT DISTINCT buyer_id
+FROM Sales JOIN Product USING(product_id)
+WHERE product_name = 'S8'
+AND buyer_id NOT IN(SELECT buyer_id
+                    FROM Sales JOIN Product USING(product_id)
+                    WHERE product_name = 'iPhone');
+
+*1084. Sales Analysis III - don't really understand question.... my answer should be correct
+# Write your MySQL query statement below
+# report products sold between 2019-01-01 and 2019-03-31 inclusive
+select product_id, product_name
+from product
+where product_id not in
+(select product_id
+from sales
+where sale_date <'2019-01-01'or sale_date>'2019-03-31')
+
+*1113. Reported Posts => DID NOT FLASH => DISTINCT does not need ()
+# Write your MySQL query statement below
+SELECT extra AS report_reason, COUNT(DISTINCT post_id) AS report_count
+FROM Actions
+WHERE action_date = '2019-07-04' AND action = 'report'
+GROUP BY extra;
+
+*1141. User Activity for the Past 30 Days I => DID NOT FLASH: Use DATEDIFF
+# Write your MySQL query statement below
+SELECT activity_date AS day, COUNT(DISTINCT user_id) AS active_users
+FROM Activity
+WHERE DATEDIFF('2019-07-27', activity_date) < 30
+GROUP BY activity_date;
+
+S*1142. User Activity for the Past 30 Days II => SKIPPED
+# Write your MySQL query statement below
+SELECT IFNULL(ROUND(AVG(num),2),0.00) AS average_sessions_per_user    
+FROM(SELECT COUNT(DISTINCT session_id) AS num
+     FROM Activity
+     WHERE DATEDIFF('2019-07-27', activity_date) < 30               
+     GROUP BY user_id) AS c;     
+
+1148. Article Views I
+# Write your MySQL query statement below
+# Find all authors that viewed at least one of their own articles
+# Sort in ASC order by their id
+SELECT author_id AS id
+FROM Views
+WHERE author_id = viewer_id
+GROUP BY author_id 
+ORDER BY author_id ASC;
+
+1173. Immediate Food Delivery I => half flashed => To find percentage just use AVG(order_date = customer_pref_delivery_date)
+# Write your MySQL query statement below
+SELECT ROUND(AVG(order_date = customer_pref_delivery_date)*100 ,2) AS immediate_percentage
+FROM Delivery;
 
 
 
