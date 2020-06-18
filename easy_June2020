@@ -10,7 +10,8 @@ S - skipped
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);
 
-*176 - Second Highest Salary - DID NOT FLASH => OFFSET excludes the first set of records
+**COMMON (Might have to memorize) - 176 - Second Highest Salary
+- DID NOT FLASH => OFFSET excludes the first set of records
 => IFNULL(expression1, expression2) => IFNULL returns expression1 if expression1 is NOT NULL, otherwise it returns expression2
 
 This answer gives you NULL (correct answer) => is expression1 NULL? If not, return expression1. If it is NULL, return NULL.
@@ -20,6 +21,13 @@ SELECT IFNULL(
 FROM Employee
 ORDER BY Salary DESC
 LIMIT 1 OFFSET 1), NULL) AS SecondHighestSalary;
+
+This subquery: 
+(SELECT DISTINCT Salary
+FROM Employee
+ORDER BY Salary DESC
+LIMIT 1 OFFSET 1) gives you the 200 already
+
 
 This answer DOES NOT give you the NULL
 # Write your MySQL query statement below
@@ -60,6 +68,7 @@ FROM Person p1, Person p2
 WHERE p1.Email = p2.Email AND p1.Id > p2.Id;
 
 *197. Rising Temperature - DID NOT FLASH (DATEDIFF function) - DATE DIFF
+*Has to be w1.Temperature > w2.Temperature DATEDIFF(w1, w2).... not sure why
 # Write your MySQL query statement below
 SELECT w1.Id AS Id
 FROM Weather w1 JOIN Weather w2
@@ -71,7 +80,9 @@ SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
 GROUP BY player_id;
 
-**harder - 512. Game Play Analysis II - DID NOT FLASH => Think about what you need/ what you are getting from your subquery first
+**512. Game Play Analysis II - DID NOT FLASH => Think about what you need/ what you are getting from your subquery first
+*WHERE () - needs parentheses
+
 # Write your MySQL query statement below
 SELECT player_id, device_id
 FROM Activity
@@ -91,6 +102,7 @@ WHERE referee_id != 2 OR referee_id IS NULL;
 
 *586. Customer Placing the Largest Number of Orders - DID NOT FLASH => IMPORTANT*: Have to aggregate (via GROUP BY) data first,
 then ORDER BY COUNT(*) 
+=> COUNT returns "before aggregation COUNT" even after GROUP BY
 # Write your MySQL query statement below
 SELECT customer_number
 FROM orders
@@ -148,27 +160,28 @@ WHERE
         WHERE
             c.name = 'RED');
 
-S*610. Triangle Judgment -> feeling tired, skipped
+*610. Triangle Judgment 
 # Write your MySQL query statement below
-SELECT *, 
-IF(x + y > z AND x + z > y AND y + z > x, 'Yes', 'No') AS whatever
-FROM triangle;
+SELECT *, IF(x + y > z AND x + z > y AND y + z > x, 'Yes', 'No') AS triangle 
+FROM triangle;;
 
-*613. Shortest Distance in a Line -> DID NOT FLASH
+*613. Shortest Distance in a Line
 # Write your MySQL query statement below
 SELECT MIN(ABS(p1.x - p2.x)) AS shortest
 FROM point p1 join point p2
 WHERE p1.x != p2.x;
 
 *619. Biggest Single Number => DID NOT FLASH. Use subquery to get unique num, then MAX the num from it.
+-- The subquery gives you the list of nums with COUNT of only 1. The outter query, selects the MAX num from that list.
+-- Cannot SELECT MAX(num) FROM my_numbers GROUP BY num HAVING COUNT (num) = 1 for some reason
+-- MAX(num) takes care of NULL
 # Write your MySQL query statement below
 SELECT MAX(subquery.num) AS num
-FROM
-(SELECT num
- FROM my_numbers
- GROUP BY num
- HAVING COUNT(num) = 1
-) AS subquery;
+FROM (SELECT num
+      FROM my_numbers
+      GROUP BY num
+      HAVING COUNT(num) = 1
+      ) AS subquery;
 
 620. Not Boring Movies => modulo is fine, != to replace <> is fine
 # Write your MySQL query statement below
@@ -178,6 +191,7 @@ WHERE id%2 != 0 AND description !='boring'
 ORDER BY rating DESC;
 
 *627. Swap Salary -> tired skipped -> remember - UPDATE clause
+-- SET sex = IF()
 # Write your MySQL query statement below
 UPDATE salary 
 SET sex = IF(sex = "m", "f", "m");
@@ -221,7 +235,7 @@ FROM (SELECT project_id,
       GROUP BY project_id) AS subquery
 WHERE ranks = 1;
 
-**1082. Sales Analysis I => half-flashed 
+W**1082. Sales Analysis I => half-flashed 
 # Write your MySQL query statement below
 # Can probably use a window function here
 SELECT seller_id
@@ -250,7 +264,9 @@ where product_id not in
 from sales
 where sale_date <'2019-01-01'or sale_date>'2019-03-31')
 
-*1113. Reported Posts => DID NOT FLASH => DISTINCT does not need ()
+*1113. Reported Posts => DID NOT FLASH => DISTINCT does not need () 
+=> WHERE goes before GROUP BY
+=> HAVING is for filtering aggregate function
 # Write your MySQL query statement below
 SELECT extra AS report_reason, COUNT(DISTINCT post_id) AS report_count
 FROM Actions
@@ -319,8 +335,8 @@ FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id
 WHERE S1.parent_id IS NULL   
 GROUP BY S1.sub_id;
 
-**1251. Average Selling Price => Need WHERE purchase_date BETWEEN start_date AND end_date to make sure the correct SUM(units * price)
-pairing is used!!
+**1251. Average Selling Price 
+=> Need WHERE purchase_date BETWEEN start_date AND end_date to make sure the correct SUM(units * price) pairing is used!!
 # Write your MySQL query statement below
 SELECT product_id, ROUND(SUM(units * price) / SUM(units) , 2) AS average_price
 FROM Prices JOIN UnitsSold USING (product_id)
@@ -348,7 +364,7 @@ ON c.country_id = w.country_id
 WHERE day LIKE '2019-11%'
 GROUP BY c.country_id;
 
-**1303. Find the Team Size => DID NOT FLASH => Window Function
+W*1303. Find the Team Size => DID NOT FLASH => Window Function
 # Write your MySQL query statement below
 SELECT employee_id, COUNT(*) OVER (PARTITION BY team_id) AS team_size
 FROM Employee;
@@ -359,7 +375,7 @@ FROM Ads
 GROUP BY ad_id
 ORDER BY ctr DESC, ad_id ASC;
 
-**1327. List the Products Ordered in a Period => WHERE, then GROUP BY, then HAVING. Cannot have two conditions for HAVING
+*1327. List the Products Ordered in a Period => WHERE, then GROUP BY, then HAVING. Cannot have two conditions for HAVING
 # Write your MySQL query statement below
 SELECT product_name, SUM(unit) AS unit
 FROM Products JOIN Orders USING (product_id)
@@ -367,7 +383,7 @@ WHERE order_date BETWEEN '2020-02-01' AND '2020-02-29'
 GROUP BY product_id
 HAVING SUM(unit) >= 100;
 
-**1350. Students with Invalid Departments
+*1350. Students with Invalid Departments
 # Write your MySQL query statement below
 SELECT id, name
 FROM Students
@@ -378,14 +394,14 @@ WHERE department_id NOT IN (SELECT id FROM Departments);
 SELECT unique_id, name
 FROM EmployeeUNI RIGHT JOIN Employees USING (id);
 
-**1407. Top Travellers => LEFT JOIN to get NULL, IFNULL( , 0)
+*1407. Top Travellers => LEFT JOIN to get NULL, IFNULL( , 0)
 # Write your MySQL query statement below
 SELECT name, IFNULL(SUM(distance), 0) AS travelled_distance
 FROM Users LEFT JOIN Rides ON Users.id = Rides.user_id
 GROUP BY user_id
 ORDER BY travelled_distance DESC, name ASC;
 
-**1435. Create a Session Bar Chart => skip, not sure how to do
+*1435. Create a Session Bar Chart => skip, not sure how to do
 # Write your MySQL query statement below
 With tiers (MIN, MAX, bin) AS
 (
@@ -401,7 +417,7 @@ SELECT tiers.bin, COUNT(session_id) AS total
 FROM tiers LEFT JOIN Sessions on duration BETWEEN MIN AND MAX
 GROUP BY bin;
 
-**1484. Groups Sold Products By The Date => trick: GROUP_CONCAT(product ORDER BY product ASC SEPARATOR ',')
+*1484. Groups Sold Products By The Date => trick: GROUP_CONCAT(product ORDER BY product ASC SEPARATOR ',')
 # Write your MySQL query statement below
 SELECT sell_date, COUNT(DISTINCT product) AS num_sold, 
 GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
