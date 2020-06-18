@@ -5,6 +5,7 @@ https://leetcode.com/problemset/database/
 
 A - Amazon question
 C - common (green, yellow, and really large blue)
+D - do as well
 W - window function
 S - skipped
 
@@ -340,7 +341,7 @@ FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id
 WHERE S1.parent_id IS NULL   
 GROUP BY S1.sub_id;
 
-**1251. Average Selling Price 
+*1251. Average Selling Price 
 => Need WHERE purchase_date BETWEEN start_date AND end_date to make sure the correct SUM(units * price) pairing is used!!
 # Write your MySQL query statement below
 SELECT product_id, ROUND(SUM(units * price) / SUM(units) , 2) AS average_price
@@ -357,11 +358,12 @@ ON student.student_id = exam.student_id AND subject.subject_name = exam.subject_
 GROUP BY student.student_id, subject.subject_name
 ORDER BY student_id, subject_name;
 
-S*1294. Weather Type in Each Country => SKIP
+D, S*1294. Weather Type in Each Country => skipped -> CASE WHEN ELSE, END fx
 # Write your MySQL query statement below
-SELECT country_name, (CASE WHEN AVG(weather_state)<=15 THEN 'Cold'
-WHEN AVG(weather_state)>=25 THEN 'Hot'
-ELSE 'Warm'
+SELECT country_name, 
+(CASE WHEN AVG(weather_state)<=15 THEN 'Cold' 
+      WHEN AVG(weather_state)>=25 THEN 'Hot'
+      ELSE 'Warm'
 END) AS weather_type
 FROM Countries c
 LEFT JOIN Weather w
@@ -380,7 +382,8 @@ FROM Ads
 GROUP BY ad_id
 ORDER BY ctr DESC, ad_id ASC;
 
-*1327. List the Products Ordered in a Period => WHERE, then GROUP BY, then HAVING. Cannot have two conditions for HAVING
+*1327. List the Products Ordered in a Period
+=> WHERE is for NON-AGGREGATE filter, HAVING is for AGGREGATE filter. SUM is an aggregate!!!
 # Write your MySQL query statement below
 SELECT product_name, SUM(unit) AS unit
 FROM Products JOIN Orders USING (product_id)
@@ -388,7 +391,7 @@ WHERE order_date BETWEEN '2020-02-01' AND '2020-02-29'
 GROUP BY product_id
 HAVING SUM(unit) >= 100;
 
-A,C*1350. Students with Invalid Departments
+A,C*1350. Students with Invalid Departments => actually very easy
 # Write your MySQL query statement below
 SELECT id, name
 FROM Students
@@ -399,14 +402,21 @@ WHERE department_id NOT IN (SELECT id FROM Departments);
 SELECT unique_id, name
 FROM EmployeeUNI RIGHT JOIN Employees USING (id);
 
-*1407. Top Travellers => LEFT JOIN to get NULL, IFNULL( , 0)
+*1407. Top Travellers 
+=> LEFT JOIN to get NULL, IFNULL( , 0)
+=> The IFNULL( ) fx takes two arguments. 
+If the first argument is not NULL, the function returns the first argument. 
+Otherwise, the second argument is returned. 
+This function is commonly used to REPLACE NULL value with another value (second value).
+
 # Write your MySQL query statement below
 SELECT name, IFNULL(SUM(distance), 0) AS travelled_distance
 FROM Users LEFT JOIN Rides ON Users.id = Rides.user_id
 GROUP BY user_id
 ORDER BY travelled_distance DESC, name ASC;
 
-*1435. Create a Session Bar Chart => skip, not sure how to do
+D*1435. Create a Session Bar Chart => skipped
+=> tiers, UNION
 # Write your MySQL query statement below
 With tiers (MIN, MAX, bin) AS
 (
@@ -422,7 +432,8 @@ SELECT tiers.bin, COUNT(session_id) AS total
 FROM tiers LEFT JOIN Sessions on duration BETWEEN MIN AND MAX
 GROUP BY bin;
 
-*1484. Groups Sold Products By The Date => trick: GROUP_CONCAT(product ORDER BY product ASC SEPARATOR ',')
+D*1484. Groups Sold Products By The Date 
+=> trick: GROUP_CONCAT(product ORDER BY product ASC SEPARATOR ',')
 # Write your MySQL query statement below
 SELECT sell_date, COUNT(DISTINCT product) AS num_sold, 
 GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
