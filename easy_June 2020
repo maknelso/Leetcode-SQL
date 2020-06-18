@@ -95,7 +95,7 @@ HAVING COUNT(DISTINCT student) >= 5;
 
 S*597. Friend Requests I: Overall Acceptance Rate (skipped)
 
-**603. Consecutive Available Seats (skipped) - Window function
+W**603. Consecutive Available Seats (skipped) - Window function
 # Write your MySQL query statement below
 SELECT seat_id
 FROM (SELECT seat_id, free,
@@ -170,7 +170,7 @@ SELECT project_id, ROUND(AVG(experience_years), 2) AS average_years
 FROM Project JOIN Employee USING (employee_id)
 GROUP BY project_id;
 
-**1076. Project Employees II => DID NOT FLASH - WINDOW FUNCTION => need to review carefully
+W**1076. Project Employees II => DID NOT FLASH - WINDOW FUNCTION => need to review carefully
 => trick: ORDER BY COUNT(DISTINCT employee_id) 
 # Write your MySQL query statement below
 #report all projects with most employees
