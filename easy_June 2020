@@ -288,3 +288,37 @@ WHERE purchase_date BETWEEN start_date AND end_date
 GROUP BY Prices.product_id
 ORDER BY Prices.product_id;
 
+*1280. Students and Examinatinos
+# Write your MySQL query statement below
+SELECT student.student_id, student.student_name, subject.subject_name, COUNT(exam.subject_name) AS attended_exams
+FROM Students as student JOIN Subjects as subject LEFT JOIN Examinations as exam
+ON student.student_id = exam.student_id AND subject.subject_name = exam.subject_name
+GROUP BY student.student_id, subject.subject_name
+ORDER BY student_id, subject_name;
+
+S*1294. Weather Type in Each Country => SKIP
+
+**1303. Find the Team Size => DID NOT FLASH => Window Function
+# Write your MySQL query statement below
+SELECT employee_id, COUNT(*) OVER (PARTITION BY team_id) AS team_size
+FROM Employee;
+
+S*1322. Ads Performance => SKIP
+
+**1327. List the Products Ordered in a Period => WHERE, then GROUP BY, then HAVING. Cannot have two conditions for HAVING
+# Write your MySQL query statement below
+SELECT product_name, SUM(unit) AS unit
+FROM Products JOIN Orders USING (product_id)
+WHERE order_date BETWEEN '2020-02-01' AND '2020-02-29'
+GROUP BY product_id
+HAVING SUM(unit) >= 100;
+
+**1350. Students with Invalid Departments
+# Write your MySQL query statement below
+SELECT id, name
+FROM Students
+WHERE department_id NOT IN (SELECT id FROM Departments);
+
+1378. Replace Employee ID with The Unique Identifier
+
+
