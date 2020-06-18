@@ -320,5 +320,36 @@ FROM Students
 WHERE department_id NOT IN (SELECT id FROM Departments);
 
 1378. Replace Employee ID with The Unique Identifier
+# Write your MySQL query statement below
+SELECT unique_id, name
+FROM EmployeeUNI RIGHT JOIN Employees USING (id);
 
+**1407. Top Travellers => LEFT JOIN to get NULL, IFNULL( , 0)
+# Write your MySQL query statement below
+SELECT name, IFNULL(SUM(distance), 0) AS travelled_distance
+FROM Users LEFT JOIN Rides ON Users.id = Rides.user_id
+GROUP BY user_id
+ORDER BY travelled_distance DESC, name ASC;
 
+**1435. Create a Session Bar Chart => skip, not sure how to do
+# Write your MySQL query statement below
+With tiers (MIN, MAX, bin) AS
+(
+    SELECT 0, 299, '[0-5>'
+    UNION ALL
+    SELECT 300, 599, '[5-10>'
+    UNION
+    SELECT 600, 899, '[10-15>'
+    UNION ALL
+    SELECT 900, 100000, '15 or more'
+)
+SELECT tiers.bin, COUNT(session_id) AS total 
+FROM tiers LEFT JOIN Sessions on duration BETWEEN MIN AND MAX
+GROUP BY bin;
+
+**1484. Groups Sold Products By The Date => trick: GROUP_CONCAT(product ORDER BY product ASC SEPARATOR ',')
+# Write your MySQL query statement below
+SELECT sell_date, COUNT(DISTINCT product) AS num_sold, 
+GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
+FROM Activities
+GROUP BY sell_date;
