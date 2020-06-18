@@ -1,16 +1,34 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
-- see which ones can use Window function to apply
+W - window function
+S - skipped
 
 48 questions so far => half way point is 1069 - Product Sales Analysis II
 
-#   Title
 175 - Combine Two Tables
 # Write your MySQL query statement below
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);
 
-*176 - Second Highest Salary - DID NOT FLASH
+*176 - Second Highest Salary - DID NOT FLASH => OFFSET excludes the first set of records
+=> IFNULL(expression1, expression2) => IFNULL returns expression1 if expression1 is NOT NULL, otherwise it returns expression2
+
+This answer gives you NULL (correct answer) => is expression1 NULL? If not, return expression1. If it is NULL, return NULL.
+# Write your MySQL query statement below
+SELECT IFNULL(
+(SELECT DISTINCT Salary
+FROM Employee
+ORDER BY Salary DESC
+LIMIT 1 OFFSET 1), NULL) AS SecondHighestSalary;
+
+This answer DOES NOT give you the NULL
+# Write your MySQL query statement below
+SELECT DISTINCT Salary AS SecondHighestSalary
+FROM Employee
+ORDER BY Salary DESC
+LIMIT 1 OFFSET 1;
+
+This answer gets you the correct result, but the wrong thinking:
 # Write your MySQL query statement below
 SELECT MAX(Salary) AS SecondHighestSalary
 FROM Employee
@@ -35,7 +53,7 @@ SELECT Name AS Customers
 FROM Customers
 WHERE Customers.Id NOT IN (SELECT CustomerId FROM Orders);
 
-*196. Delete Duplicate Emails - DID NOT FLASH (need a self-join for this question: FROM table1 T1, table1 T2)
+*196. Delete Duplicate Emails - DID NOT FLASH (need a self-join for this question: FROM table1 T1, table1 T2), DELETE p1.*
 # Write your MySQL query statement below
 DELETE p1.*
 FROM Person p1, Person p2
@@ -53,7 +71,7 @@ SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
 GROUP BY player_id;
 
-*512. Game Play Analysis II - DID NOT FLASH => Think about what you need/ what you are getting from your subquery first
+**harder - 512. Game Play Analysis II - DID NOT FLASH => Think about what you need/ what you are getting from your subquery first
 # Write your MySQL query statement below
 SELECT player_id, device_id
 FROM Activity
@@ -94,6 +112,15 @@ GROUP BY class
 HAVING COUNT(DISTINCT student) >= 5;
 
 S*597. Friend Requests I: Overall Acceptance Rate (skipped)
+# Write your MySQL query statement below
+select
+round(
+    ifnull(
+    (select count(*) from (select distinct requester_id, accepter_id from request_accepted) as A)
+    /
+    (select count(*) from (select distinct sender_id, send_to_id from friend_request) as B),
+    0)
+, 2) as accept_rate;
 
 W**603. Consecutive Available Seats (skipped) - Window function
 # Write your MySQL query statement below
@@ -107,6 +134,19 @@ OR (free = 1 AND free_lead = 1)
 ORDER BY seat_id ASC;
 
 S*607. Sales Person -> feeling tired, did not get
+SELECT
+    s.name
+FROM
+    salesperson s
+WHERE
+    s.sales_id NOT IN (SELECT
+            o.sales_id
+        FROM
+            orders o
+                LEFT JOIN
+            company c ON o.com_id = c.com_id
+        WHERE
+            c.name = 'RED');
 
 S*610. Triangle Judgment -> feeling tired, skipped
 # Write your MySQL query statement below
@@ -142,7 +182,7 @@ ORDER BY rating DESC;
 UPDATE salary 
 SET sex = IF(sex = "m", "f", "m");
 
-*1050. Actors and Directors Who Cooperated At Least Three Times => what does GROUP BY actor_id, director_id do? Do not need parenthesis!
+*1050. Actors and Directors Who Cooperated At Least Three Times => what does GROUP BY actor_id, director_id do?
 # Write your MySQL query statement below
 SELECT actor_id, director_id
 FROM ActorDirector
@@ -297,6 +337,16 @@ GROUP BY student.student_id, subject.subject_name
 ORDER BY student_id, subject_name;
 
 S*1294. Weather Type in Each Country => SKIP
+# Write your MySQL query statement below
+SELECT country_name, (CASE WHEN AVG(weather_state)<=15 THEN 'Cold'
+WHEN AVG(weather_state)>=25 THEN 'Hot'
+ELSE 'Warm'
+END) AS weather_type
+FROM Countries c
+LEFT JOIN Weather w
+ON c.country_id = w.country_id
+WHERE day LIKE '2019-11%'
+GROUP BY c.country_id;
 
 **1303. Find the Team Size => DID NOT FLASH => Window Function
 # Write your MySQL query statement below
@@ -304,6 +354,10 @@ SELECT employee_id, COUNT(*) OVER (PARTITION BY team_id) AS team_size
 FROM Employee;
 
 S*1322. Ads Performance => SKIP
+SELECT ad_id, ROUND(IFNULL(100*(SUM(IF(action='Clicked',1,0))/SUM(IF(action='Clicked' OR action='Viewed',1,0))),0),2) AS ctr
+FROM Ads
+GROUP BY ad_id
+ORDER BY ctr DESC, ad_id ASC;
 
 **1327. List the Products Ordered in a Period => WHERE, then GROUP BY, then HAVING. Cannot have two conditions for HAVING
 # Write your MySQL query statement below
