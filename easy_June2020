@@ -11,13 +11,14 @@ S - skipped
 
 48 questions so far => half way point is 1069 - Product Sales Analysis II
 
-A,C*175 - Combine Two Tables
+A,C*175 - Combine Two Tables -> done 1x
 # Write your MySQL query statement below
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);
 
-A,C*176 - Second Highest Salary
+A,C*176 - Second Highest Salary -> done 1x
 - DID NOT FLASH => OFFSET excludes the first set of records
+- HAS TO BE LIMIT 1 OFFSET 1 (cannot do OFFSET 1 LIMIT 1)
 => IFNULL(expression1, expression2) => IFNULL returns expression1 if expression1 is NOT NULL, otherwise it returns expression2
 
 This answer gives you NULL (correct answer) => is expression1 NULL? If not, return expression1. If it is NULL, return NULL.
@@ -34,7 +35,6 @@ FROM Employee
 ORDER BY Salary DESC
 LIMIT 1 OFFSET 1) gives you the 200 already
 
-
 This answer DOES NOT give you the NULL
 # Write your MySQL query statement below
 SELECT DISTINCT Salary AS SecondHighestSalary
@@ -48,45 +48,50 @@ SELECT MAX(Salary) AS SecondHighestSalary
 FROM Employee
 WHERE Salary < (SELECT MAX(Salary) FROM Employee);
 
-A,C*181 - Employees Earning More Than Their Managers - DID NOT FLASH (have to draw it out on pen and paper)
+A,C*181 - Employees Earning More Than Their Managers -> done 1X 
+=> Have to draw it out on pen and paper
 # Write your MySQL query statement below
 SELECT e1.Name AS Employee
 FROM Employee e1 JOIN Employee e2 ON e1.ManagerId = e2.Id
 WHERE e1.salary > e2.salary;
 
-A,C*182. Duplicate Emails - FLASHED (need GROUP BY before HAVING)
+A,C*182. Duplicate Emails - FLASHED - done 1x
+=> need GROUP BY before HAVING
 # Write your MySQL query statement below
 SELECT Email
 FROM Person
 GROUP BY Email
 HAVING COUNT(Email) > 1;
 
-A,C*183. Customer Who Never Order
+A,C*183. Customer Who Never Order -> done 1x
+--> ORDER BY Name ASC; -> means A is on top, Z is on bottom. ASCII code for A is smaller than Z.
 # Write your MySQL query statement below
 SELECT Name AS Customers
 FROM Customers
 WHERE Customers.Id NOT IN (SELECT CustomerId FROM Orders);
 
-A,C*196. Delete Duplicate Emails - DID NOT FLASH (need a self-join for this question: FROM table1 T1, table1 T2), DELETE p1.*
+A,C*196. Delete Duplicate Emails - done 1x
+=> DID NOT FLASH (need a self-join for this question: FROM table1 T1, table1 T2), DELETE p1.*
 # Write your MySQL query statement below
 DELETE p1.*
 FROM Person p1, Person p2
 WHERE p1.Email = p2.Email AND p1.Id > p2.Id;
 
-A,C*197. Rising Temperature - DID NOT FLASH (DATEDIFF function) - DATE DIFF
-*Has to be w1.Temperature > w2.Temperature DATEDIFF(w1, w2).... not sure why
+A,C*197. Rising Temperature - done 1x
+=> DID NOT FLASH (DATEDIFF function) - DATE DIFF
 # Write your MySQL query statement below
 SELECT w1.Id AS Id
 FROM Weather w1 JOIN Weather w2
 WHERE w1.Temperature > w2.Temperature AND DATEDIFF(w1.RecordDate, w2.RecordDate) = 1;
 
-A*511. Game Play Analysis I
+A*511. Game Play Analysis I -> did 1x
 # Write your MySQL query statement below
 SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
 GROUP BY player_id;
 
-A*512. Game Play Analysis II - DID NOT FLASH => Think about what you need/ what you are getting from your subquery first
+A*512. Game Play Analysis II - did 1x - did not flash.. think about why WHERE (player_id) IN (player_id)
+*DID NOT FLASH => Think about what you need/ what you are getting from your subquery first
 *WHERE () - needs parentheses
 
 # Write your MySQL query statement below
@@ -94,20 +99,20 @@ SELECT player_id, device_id
 FROM Activity
 WHERE (player_id, event_date) IN (SELECT player_id, MIN(event_date) FROM Activity GROUP BY player_id);
 
-A*577. Employee Bonus - HALF FLASHED => You need LEFT JOIN to generate the NULLs, otherwise JOIN will not produce NULL
+A*577. Employee Bonus - done 1x (half-flashed). Need LEFT JOIN (not inner JOIN) to generate NULLs
 # Write your MySQL query statement below
 SELECT name, bonus
 FROM Employee LEFT JOIN Bonus USING(empId)
 WHERE bonus < 1000 OR bonus IS NULL;
 
-A,C*584. Find Customer Referee
+A,C*584. Find Customer Referee - done 1x
 # Write your MySQL query statement below
 SELECT name
 FROM customer 
 WHERE referee_id != 2 OR referee_id IS NULL;
 
-A*586. Customer Placing the Largest Number of Orders - DID NOT FLASH => IMPORTANT*: Have to aggregate (via GROUP BY) data first,
-then ORDER BY COUNT(*) 
+A*586. Customer Placing the Largest Number of Orders - done 1x 
+=> DID NOT FLASH IMPORTANT*: Have to aggregate (via GROUP BY) data first, then ORDER BY COUNT(*) 
 => COUNT returns "before aggregation COUNT" even after GROUP BY
 # Write your MySQL query statement below
 SELECT customer_number
@@ -122,7 +127,8 @@ SELECT name, population, area
 FROM World 
 WHERE area > 3000000 OR population > 25000000;
 
-A*596. Classes More Than 5 Students => DID NOT FLASH => HAVING condition (HAVING is for WHERE but for aggregates)
+A*596. Classes More Than 5 Students - done 1x
+=> DID NOT FLASH => HAVING condition (HAVING is for WHERE but for aggregates)
 # Write your MySQL query statement below
 SELECT class
 FROM courses
@@ -130,6 +136,26 @@ GROUP BY class
 HAVING COUNT(DISTINCT student) >= 5;
 
 A,C,S*597. Friend Requests I: Overall Acceptance Rate (skipped)
+-- distinct number of accepted request from request_accepted / distinct number of requests from friend_request
+
+
+
+
+
+i) To get distinct number of accepted request from request_accepted table:
+SELECT COUNT(*)
+FROM (SELECT DISTINCT requester_id, accepter_id
+      FROM request_accepted)
+      
+ii) To get distinct number of requests from friend_request table:
+SELECT COUNT(*)
+FROM (SELECT DISTINCT sender_id, send_to_id
+      FROM friend_request); 
+      
+- Divide i) / ii), and ROUND ( ,2) 
+- need IFNULL, as the divisor can be 0 -> need it to deal with the special case
+
+
 # Write your MySQL query statement below
 select
 round(
