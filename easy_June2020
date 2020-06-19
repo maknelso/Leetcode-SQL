@@ -314,7 +314,7 @@ HAVING SUM(price) >= ALL(SELECT SUM(price)
                          GROUP BY seller_id);
 
 
-A*1083. Sales Analysis II -> Need to redo (did not flash), done 1x
+A*1083. Sales Analysis II -> Need to redo (did not flash), done 1x -> buyer_id IN or NOT IN, if we are looking for buyer_id
 # Write your MySQL query statement below
 SELECT DISTINCT buyer_id
 FROM Sales JOIN Product USING(product_id)
