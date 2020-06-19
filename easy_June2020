@@ -1,6 +1,6 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
-Need to redo: 597, 603, 607, 1076 (window function)
+Need to redo: 597, 603, 607, 1076 (window function), 1083
 
 Notes:
 -- MAX(num) takes care of NULL. SELECT MAX(NULL) gives you NULL
@@ -251,7 +251,7 @@ A*627. Swap Salary -> FLASHED
 UPDATE salary 
 SET sex = IF(sex = "m", "f", "m");
 
-A*1050. Actors and Directors Who Cooperated At Least Three Times
+A*1050. Actors and Directors Who Cooperated At Least Three Times -> done 1x
 => Group By X means put all those with the same value for X in the one group.
 => Group By X, Y means put all those with the same values for both X and Y in the one group.
 # Write your MySQL query statement below
@@ -260,7 +260,7 @@ FROM ActorDirector
 GROUP BY actor_id, director_id
 HAVING COUNT(actor_id) >= 3;
    
-A*1068. Product Sales Analysis I 
+A*1068. Product Sales Analysis I  -> done 1x
 => seems a bit too easy.... JOIN = INNER JOIN (returns records that have matching values in BOTH tables)
 # Write your MySQL query statement below
 SELECT product_name, year, price
@@ -293,7 +293,7 @@ FROM (SELECT project_id,
       GROUP BY project_id) AS subquery
 WHERE ranks = 1;
 
-A, W**1082. Sales Analysis I => half-flashed 
+A, W**1082. Sales Analysis I => done 1x
 # Write your MySQL query statement below
 # Window function answer:
 SELECT seller_id
@@ -314,7 +314,7 @@ HAVING SUM(price) >= ALL(SELECT SUM(price)
                          GROUP BY seller_id);
 
 
-A*1083. Sales Analysis II => DID NOT FLASH -> did not fully understand redo
+A*1083. Sales Analysis II -> Need to redo (did not flash), done 1x
 # Write your MySQL query statement below
 SELECT DISTINCT buyer_id
 FROM Sales JOIN Product USING(product_id)
