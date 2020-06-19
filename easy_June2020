@@ -323,7 +323,8 @@ AND buyer_id NOT IN(SELECT buyer_id
                     FROM Sales JOIN Product USING(product_id)
                     WHERE product_name = 'iPhone');
 
-A*1084. Sales Analysis III - don't really understand question.... my answer should be correct
+A*1084. Sales Analysis III -- this is a weird question.... should skip 
+-- don't really understand question.... my answer should be correct
 # Write your MySQL query statement below
 # report products sold between 2019-01-01 and 2019-03-31 inclusive
 select product_id, product_name
