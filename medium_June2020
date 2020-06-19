@@ -1,10 +1,29 @@
 Difficulty: Medium
 48 questions
-half-way point: 24th question -> Reported Posts II
 
-Just do Amazon database questions, medium difficulty, highest frequency:
-https://leetcode.com/problemset/database/?difficulty=Medium
+Do: 19 questions
 
-Maybe first 10-15 (probably 15 to be safe).
+Amazon tag medium - 9:
+177. Nth Highest Salary (Amazon tag)
+178. Rank Scores (Amazon tag)
+180. Consecutive Numbers (Amazon tag)
+184. Department Highest Salary (Amazon tag)
+570. Managers with at Least 5 Direct Reports (Amazon tag)
+626. Exchange Seats (Amazon tag)
+1045. Customers Who Bought All Products (Amazon tag)
+1070. Product Sales Analysis III (Amazon tag)
+1421. NPV Queries (Amazon tag)
 
+Amazon tag hard - 5:
+185. Department Top Three Salaries
+262. Trips and Users
+579. Find Cumulative Salary of an Employee
+601. Human Traffic of Stadium
+618. Students Report by Geography
 
+Other common medium - 5:
+608. Tree Node (no Amazon tag)
+1132. Reported Posts II (no Amazon tag)
+1212. Team Scores in Football Tournament (no Amazon tag)
+1270. All People Report to the Given Manager (no Amazon tag)
+1341. Moving Rating (no Amazon tag)
