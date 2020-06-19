@@ -297,11 +297,12 @@ A, W**1082. Sales Analysis I => half-flashed
 # Write your MySQL query statement below
 # Window function answer:
 SELECT seller_id
-FROM (SELECT *,
-      DENSE_RANK()OVER(ORDER BY SUM(price) DESC) AS r
+FROM (SELECT seller_id,
+      RANK() OVER(ORDER BY SUM(price) DESC) AS r
       FROM Sales
       GROUP BY seller_id) AS subquery
-WHERE r = 1;
+WHERE r = 1
+ORDER BY seller_id ASC;
 
 # Write your MySQL query statement below
 # Non-window function answer:
