@@ -1,5 +1,20 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
+Need to redo: 597, 603, 607, 1076 (window function)
+
+Notes:
+-- MAX(num) takes care of NULL. SELECT MAX(NULL) gives you NULL
+-- WHERE __ IN (subquery) - this subquery does not need to add a subquery name
+-- FROM (subquery) - this subquery needs a subquery name
+-- WHERE (x, y) - needs parenthesis
+-- IFNULL(expression1, expression2) => IFNULL returns expression1 if expression1 is NOT NULL, otherwise it returns expression2
+-- ORDER BY Name ASC; -> means A is on top, Z is on bottom. ASCII code for A is smaller than Z.
+-- Look at questions carefully and see do we need any ORDER BY
+-- UPDATE table_name, SET sex = IF ( )
+-- ROUND(AVG(experience_years), 2) with GROUP BY project_id
+-- 1076. RANK() OVER(ORDER BY COUNT(DISTINCT employee_id)DESC) AS ranks
+-- SELECT x, y, SUM(order_amount) OVER(PARTITION BY city) AS grand_total
+
 Amazon database questions:
 https://leetcode.com/problemset/database/
 
@@ -56,7 +71,6 @@ FROM Employee e1 JOIN Employee e2 ON e1.ManagerId = e2.Id
 WHERE e1.salary > e2.salary;
 
 A,C*182. Duplicate Emails - FLASHED - done 1x
-=> need GROUP BY before HAVING
 # Write your MySQL query statement below
 SELECT Email
 FROM Person
@@ -84,13 +98,13 @@ SELECT w1.Id AS Id
 FROM Weather w1 JOIN Weather w2
 WHERE w1.Temperature > w2.Temperature AND DATEDIFF(w1.RecordDate, w2.RecordDate) = 1;
 
-A*511. Game Play Analysis I -> did 1x
+A*511. Game Play Analysis I -> done 1x
 # Write your MySQL query statement below
 SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
 GROUP BY player_id;
 
-A*512. Game Play Analysis II - did 1x - did not flash.. think about why WHERE (player_id) IN (player_id)
+A*512. Game Play Analysis II - did 1x
 *DID NOT FLASH => Think about what you need/ what you are getting from your subquery first
 *WHERE () - needs parentheses
 
@@ -99,7 +113,7 @@ SELECT player_id, device_id
 FROM Activity
 WHERE (player_id, event_date) IN (SELECT player_id, MIN(event_date) FROM Activity GROUP BY player_id);
 
-A*577. Employee Bonus - done 1x (half-flashed). Need LEFT JOIN (not inner JOIN) to generate NULLs
+A*577. Employee Bonus - done 1x
 # Write your MySQL query statement below
 SELECT name, bonus
 FROM Employee LEFT JOIN Bonus USING(empId)
@@ -135,11 +149,22 @@ FROM courses
 GROUP BY class
 HAVING COUNT(DISTINCT student) >= 5;
 
-A,C,S*597. Friend Requests I: Overall Acceptance Rate (skipped)
+A,C,S*597. Friend Requests I: Overall Acceptance Rate -> NEED TO REDO
 -- distinct number of accepted request from request_accepted / distinct number of requests from friend_request
 
-
-
+SELECT
+ROUND(
+IFNULL(
+-- numerator 
+(SELECT COUNT(*)
+FROM (SELECT DISTINCT requester_id, accepter_id
+      FROM request_accepted) AS a)
+/     
+-- denominator
+(SELECT COUNT(*)
+FROM (SELECT DISTINCT sender_id, send_to_id
+      FROM friend_request) AS b),
+0), 2) AS accept_rate;
 
 
 i) To get distinct number of accepted request from request_accepted table:
@@ -155,18 +180,19 @@ FROM (SELECT DISTINCT sender_id, send_to_id
 - Divide i) / ii), and ROUND ( ,2) 
 - need IFNULL, as the divisor can be 0 -> need it to deal with the special case
 
+A,C,W*603. Consecutive Available Seats - can use Window Function -> NEED TO REDO
 
+JOIN and ABS():
 # Write your MySQL query statement below
-select
-round(
-    ifnull(
-    (select count(*) from (select distinct requester_id, accepter_id from request_accepted) as A)
-    /
-    (select count(*) from (select distinct sender_id, send_to_id from friend_request) as B),
-    0)
-, 2) as accept_rate;
+SELECT DISTINCT c1.seat_id
+FROM cinema c1 JOIN cinema c2
+-- seats right next to each other
+ON ABS(c1.seat_id - c2.seat_id) = 1
+-- and seats have to be free
+AND c1.free = TRUE AND c2.free = TRUE
+ORDER BY c1.seat_id ASC; 
 
-A,C,W*603. Consecutive Available Seats (skipped) - Window function
+Window function:
 # Write your MySQL query statement below
 SELECT seat_id
 FROM (SELECT seat_id, free,
@@ -177,86 +203,86 @@ WHERE (free = 1 AND free_lag = 1)
 OR (free = 1 AND free_lead = 1)
 ORDER BY seat_id ASC;
 
-A,S*607. Sales Person -> feeling tired, did not get
-SELECT
-    s.name
-FROM
-    salesperson s
-WHERE
-    s.sales_id NOT IN (SELECT
-            o.sales_id
-        FROM
-            orders o
-                LEFT JOIN
-            company c ON o.com_id = c.com_id
-        WHERE
-            c.name = 'RED');
-
-A,C*610. Triangle Judgment 
+A,S*607. Sales Person => redo
+-- SUBQUERY => SELECT sales_id where company is RED
+-- WHERE XX IN or NOT IN (subquery), this subquery does not need a name
 # Write your MySQL query statement below
-SELECT *, IF(x + y > z AND x + z > y AND y + z > x, 'Yes', 'No') AS triangle 
-FROM triangle;;
+SELECT name
+FROM salesperson
+WHERE sales_id NOT IN (SELECT sales_id
+                       FROM orders JOIN company USING (com_id)
+                       WHERE company.name = 'RED');
 
-A*613. Shortest Distance in a Line
+A,C*610. Triangle Judgment -> done 1x
+# Write your MySQL query statement below
+SELECT x, y, z,
+IF (x + y > z AND x + z > y AND y + z > x, 'Yes', 'No') AS triangle
+FROM triangle;
+
+A*613. Shortest Distance in a Line -> done 1x
 # Write your MySQL query statement below
 SELECT MIN(ABS(p1.x - p2.x)) AS shortest
 FROM point p1 join point p2
 WHERE p1.x != p2.x;
 
-A*619. Biggest Single Number => DID NOT FLASH. Use subquery to get unique num, then MAX the num from it.
+A*619. Biggest Single Number -> done 1x
 -- The subquery gives you the list of nums with COUNT of only 1. The outter query, selects the MAX num from that list.
--- Cannot SELECT MAX(num) FROM my_numbers GROUP BY num HAVING COUNT (num) = 1 for some reason
--- MAX(num) takes care of NULL
+-- MAX(num) takes care of NULL. SELECT MAX(NULL) gives you NULL
+-- WHERE __ IN (subquery) - this subquery does not need to add a subquery name
+-- FROM (subquery) - this subquery needs a subquery name
 # Write your MySQL query statement below
-SELECT MAX(subquery.num) AS num
-FROM (SELECT num
-      FROM my_numbers
-      GROUP BY num
-      HAVING COUNT(num) = 1
-      ) AS subquery;
+SELECT MAX(num) as num
+FROM my_numbers
+WHERE num IN (SELECT num
+              FROM my_numbers
+              GROUP BY num
+              HAVING COUNT(num) = 1);
 
-A*620. Not Boring Movies => modulo is fine, != to replace <> is fine
+A*620. Not Boring Movies - FLASHED (look at the questions carefully and see is there any ORDER BY)
+=> modulo is fine, != to replace <> is fine
 # Write your MySQL query statement below
 SELECT id, movie, description, rating
 FROM cinema
 WHERE id%2 != 0 AND description !='boring'
 ORDER BY rating DESC;
 
-A*627. Swap Salary -> tired skipped -> remember - UPDATE clause
--- SET sex = IF()
+A*627. Swap Salary -> FLASHED
 # Write your MySQL query statement below
 UPDATE salary 
 SET sex = IF(sex = "m", "f", "m");
 
-A*1050. Actors and Directors Who Cooperated At Least Three Times => what does GROUP BY actor_id, director_id do?
+A*1050. Actors and Directors Who Cooperated At Least Three Times
+=> Group By X means put all those with the same value for X in the one group.
+=> Group By X, Y means put all those with the same values for both X and Y in the one group.
 # Write your MySQL query statement below
 SELECT actor_id, director_id
 FROM ActorDirector
 GROUP BY actor_id, director_id
 HAVING COUNT(actor_id) >= 3;
-
-=> Group By X means put all those with the same value for X in the one group.
-   Group By X, Y means put all those with the same values for both X and Y in the one group.
    
-A*1068. Product Sales Analysis I => seems a bit too easy.... JOIN = INNER JOIN (returns records that have matching values in BOTH tables)
+A*1068. Product Sales Analysis I 
+=> seems a bit too easy.... JOIN = INNER JOIN (returns records that have matching values in BOTH tables)
 # Write your MySQL query statement below
 SELECT product_name, year, price
-FROM Sales JOIN Product USING (product_id);
+FROM Product JOIN Sales USING (product_id)
+ORDER BY year ASC;
 
-A*1069. Product Sales Analysis II 
+A*1069. Product Sales Analysis II -> FLASHED
 # Write your MySQL query statement below
 -- Reports total quantity sold for every product id
 SELECT product_id, SUM(quantity) AS total_quantity
-FROM Sales JOIN Product USING (product_id)
-GROUP BY product_id;
+FROM Product RIGHT JOIN Sales USING (product_id)
+GROUP BY product_id
+ORDER BY product_id ASC;
 
-A*1075. Project Employees I 
+A*1075. Project Employees I -> NEED TO REDO (half flashed)
 # Write your MySQL query statement below
 SELECT project_id, ROUND(AVG(experience_years), 2) AS average_years
 FROM Project JOIN Employee USING (employee_id)
 GROUP BY project_id;
 
-A,W**1076. Project Employees II => DID NOT FLASH - WINDOW FUNCTION => need to review carefully
+A,W**1076. Project Employees II => REDO
+=> DID NOT FLASH - WINDOW FUNCTION => need to review carefully
 => trick: ORDER BY COUNT(DISTINCT employee_id) 
 # Write your MySQL query statement below
 #report all projects with most employees
@@ -269,13 +295,23 @@ WHERE ranks = 1;
 
 A, W**1082. Sales Analysis I => half-flashed 
 # Write your MySQL query statement below
-# Can probably use a window function here
+# Window function answer:
 SELECT seller_id
 FROM (SELECT *,
       DENSE_RANK()OVER(ORDER BY SUM(price) DESC) AS r
       FROM Sales
       GROUP BY seller_id) AS subquery
 WHERE r = 1;
+
+# Write your MySQL query statement below
+# Non-window function answer:
+SELECT seller_id
+FROM Sales
+GROUP BY seller_id
+HAVING SUM(price) >= ALL(SELECT SUM(price)
+                         FROM Sales
+                         GROUP BY seller_id);
+
 
 A*1083. Sales Analysis II => DID NOT FLASH -> did not fully understand redo
 # Write your MySQL query statement below
