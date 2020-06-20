@@ -1,8 +1,13 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
-Need to redo: 597, 603, 607, 1076 (window function), 1083, 1113, 1141, 1142, 1280 (skipped - too tired), 1294, 1303, 1327, 1322
+Need to redo: 
+597, 603, 607 (easy)
+1076 (window function - relatively easy), 1083 (easy), 1113 (easy), 1141 (easy), 1142 (easy), 1280 (relatively easy - 3 way join table), 1294 (easy), 
+1303 (window function - easy), 1322 (relatively easy - odd case need to read and think long), 1327 (easy), 1435 (weird one), 1484 (easy)
 
 Notes:
+-- Double check the JOIN tables to ensure it is what you need. That is very important 
+-- Have to thoroughly think through the case to ensure it yields the correct answer during exam
 -- MAX(num) takes care of NULL. SELECT MAX(NULL) gives you NULL
 -- WHERE __ IN (subquery) - this subquery does not need to add a subquery name
 -- FROM (subquery) - this subquery needs a subquery name
@@ -14,6 +19,8 @@ Notes:
 -- UPDATE table_name, SET sex = IF ( )
 -- ROUND(AVG(experience_years), 2) with GROUP BY project_id -> GROUP BY affects the AVG denominator count
 -- **WHERE first, then GROUP BY
+-- 1484. GROUP_CONCAT, SEPARATOR
+         => GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
 -- 1322. Multiple ORDER BY: ORDER BY ctr DESC, ad_id ASC;
 -- 1173. AVG(order_date = customer_pref_delivery_date)
 -- 1211. AVG(rating/position), ROUND(AVG(rating < 3)        
@@ -246,7 +253,7 @@ WHERE (free = 1 AND free_lag = 1)
 OR (free = 1 AND free_lead = 1)
 ORDER BY seat_id ASC;
 
-S*607. Sales Person => redo
+S*607. Sales Person => redo -> test the case before submitting
 -- SUBQUERY => SELECT sales_id where company is RED
 -- WHERE XX IN or NOT IN (subquery), this subquery does not need a name
 # Write your MySQL query statement below
@@ -523,7 +530,9 @@ FROM Users LEFT JOIN Rides ON Users.id = Rides.user_id
 GROUP BY user_id
 ORDER BY travelled_distance DESC, name ASC;
 
-D*1435. Create a Session Bar Chart => skipped
+D*1435. Create a Session Bar Chart 
+=> Cannot use CASE WHEN, ELSE, END because there is no count for [10-15>
+=> Need a left JOIN to create a NULL
 => tiers, UNION
 # Write your MySQL query statement below
 With tiers (MIN, MAX, bin) AS
