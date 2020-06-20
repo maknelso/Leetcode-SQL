@@ -1,6 +1,6 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
-Need to redo: 597, 603, 607, 1076 (window function), 1083, 1113, 1141, 1142, 1280 (skipped - too tired), 1294, 1303, 1327
+Need to redo: 597, 603, 607, 1076 (window function), 1083, 1113, 1141, 1142, 1280 (skipped - too tired), 1294, 1303, 1327, 1322
 
 Notes:
 -- MAX(num) takes care of NULL. SELECT MAX(NULL) gives you NULL
@@ -12,8 +12,9 @@ Notes:
 -- ORDER BY Name ASC; -> means A is on top, Z is on bottom. ASCII code for A is smaller than Z.
 -- Look at questions carefully and see do we need any ORDER BY
 -- UPDATE table_name, SET sex = IF ( )
--- ROUND(AVG(experience_years), 2) with GROUP BY project_id
--- WHERE first, then GROUP BY
+-- ROUND(AVG(experience_years), 2) with GROUP BY project_id -> GROUP BY affects the AVG denominator count
+-- **WHERE first, then GROUP BY
+-- 1322. Multiple ORDER BY: ORDER BY ctr DESC, ad_id ASC;
 -- 1173. AVG(order_date = customer_pref_delivery_date)
 -- 1211. AVG(rating/position), ROUND(AVG(rating < 3)        
 -- 1251. Need WHERE purchase_date BETWEEN start_date AND end_date
@@ -47,6 +48,18 @@ GROUP BY id;
     WHEN AVG(weather_state) >= 25 THEN 'Hot'
     ELSE 'Warm'
  END) AS weather_type
+ 
+ -- 1322. -> the GROUP BY clause affects AVG. GROUP BY column affects AVG denominator (because it is a count).
+# Write your MySQL query statement below
+SELECT ad_id,
+IFNULL(ROUND(AVG(CASE
+                    WHEN action = 'Clicked' THEN 1
+                    WHEN action = 'Viewed' THEN 0
+                    ELSE NULL
+                  END)*100, 2), 0) AS ctr
+FROM Ads
+GROUP BY ad_id
+ORDER BY ctr DESC, ad_id ASC;
 
 A - Amazon question
 C - common (green, yellow, and really large blue)
@@ -467,12 +480,18 @@ FROM Employee
 ORDER BY employee_id ASC;
 
 S*1322. Ads Performance => SKIP
-SELECT ad_id, ROUND(IFNULL(100*(SUM(IF(action='Clicked',1,0))/SUM(IF(action='Clicked' OR action='Viewed',1,0))),0),2) AS ctr
+# Write your MySQL query statement below
+SELECT ad_id, 
+IFNULL(ROUND(AVG(CASE 
+                    WHEN action = 'Clicked' THEN 1
+                    WHEN action = 'Viewed' THEN 0
+                    ELSE NULL 
+                  END)*100,2),0) AS ctr
 FROM Ads
 GROUP BY ad_id
 ORDER BY ctr DESC, ad_id ASC;
 
-A1327. List the Products Ordered in a Period=> WHERE is for NON-AGGREGATE filter, HAVING is for AGGREGATE filter. SUM is an aggregate!!!
+A*1327. List the Products Ordered in a Period=> WHERE is for NON-AGGREGATE filter, HAVING is for AGGREGATE filter. SUM is an aggregate!!!
 # Write your MySQL query statement below
 SELECT product_name, SUM(unit) AS unit
 FROM Products JOIN Orders USING (product_id)
