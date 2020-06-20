@@ -1,24 +1,52 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
-Need to redo: 597, 603, 607, 1076 (window function), 1083, 1113, 1141
+Need to redo: 597, 603, 607, 1076 (window function), 1083, 1113, 1141, 1142, 1280 (skipped - too tired), 1294, 1303, 1327
 
 Notes:
 -- MAX(num) takes care of NULL. SELECT MAX(NULL) gives you NULL
 -- WHERE __ IN (subquery) - this subquery does not need to add a subquery name
 -- FROM (subquery) - this subquery needs a subquery name
+-- GROUP BY x, y - does not need parenthesis
 -- WHERE (x, y) - needs parenthesis
 -- IFNULL(expression1, expression2) => IFNULL returns expression1 if expression1 is NOT NULL, otherwise it returns expression2
 -- ORDER BY Name ASC; -> means A is on top, Z is on bottom. ASCII code for A is smaller than Z.
 -- Look at questions carefully and see do we need any ORDER BY
 -- UPDATE table_name, SET sex = IF ( )
 -- ROUND(AVG(experience_years), 2) with GROUP BY project_id
--- 1076. RANK() OVER(ORDER BY COUNT(DISTINCT employee_id)DESC) AS ranks
--- SELECT x, y, SUM(order_amount) OVER(PARTITION BY city) AS grand_total
 -- WHERE first, then GROUP BY
--- 1141. makes a difference the order for DATEDIFF(date1, date2) -> signs will change. => date2 less date 1. 
+-- 1173. AVG(order_date = customer_pref_delivery_date)
+-- 1211. AVG(rating/position), ROUND(AVG(rating < 3)        
+-- 1251. Need WHERE purchase_date BETWEEN start_date AND end_date
 
-Amazon database questions:
-https://leetcode.com/problemset/database/
+-- 1076. SELECT project_id, 
+         RANK() OVER(ORDER BY COUNT(DISTINCT employee_id)DESC) AS ranks
+         
+-- 1303. SELECT employee_id, 
+         COUNT(employee_id) OVER(PARTITION BY team_id) AS team_size
+         
+-- 1179. 
+SELECT id,
+SUM(CASE WHEN month = 'Jan' THEN revenue END) AS Jan_Revenue,
+SUM(CASE WHEN month = 'Feb' THEN revenue END) AS Feb_Revenue,
+SUM(CASE WHEN month = 'Mar' THEN revenue END) AS Mar_Revenue,
+SUM(CASE WHEN month = 'Apr' THEN revenue END) AS Apr_Revenue,
+SUM(CASE WHEN month = 'May' THEN revenue END) AS May_Revenue,
+SUM(CASE WHEN month = 'Jun' THEN revenue END) AS Jun_Revenue,
+SUM(CASE WHEN month = 'Jul' THEN revenue END) AS Jul_Revenue,
+SUM(CASE WHEN month = 'Aug' THEN revenue END) AS Aug_Revenue,
+SUM(CASE WHEN month = 'Sep' THEN revenue END) AS Sep_Revenue,
+SUM(CASE WHEN month = 'Oct' THEN revenue END) AS Oct_Revenue,
+SUM(CASE WHEN month = 'Nov' THEN revenue END) AS Nov_Revenue,
+SUM(CASE WHEN month = 'Dec' THEN revenue END) AS Dec_Revenue
+FROM Department
+GROUP BY id;
+
+-- 1294. -> WHERE day LIKE '2019-11-%'
+(CASE
+    WHEN AVG(weather_state) <= 15 THEN 'Cold'
+    WHEN AVG(weather_state) >= 25 THEN 'Hot'
+    ELSE 'Warm'
+ END) AS weather_type
 
 A - Amazon question
 C - common (green, yellow, and really large blue)
@@ -28,7 +56,7 @@ S - skipped
 
 48 questions so far => half way point is 1069 - Product Sales Analysis II
 
-A,C*175 - Combine Two Tables -> done 1x
+C*175 - Combine Two Tables -> done 1x
 # Write your MySQL query statement below
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);
@@ -72,7 +100,7 @@ SELECT e1.Name AS Employee
 FROM Employee e1 JOIN Employee e2 ON e1.ManagerId = e2.Id
 WHERE e1.salary > e2.salary;
 
-A,C*182. Duplicate Emails - FLASHED - done 1x
+C*182. Duplicate Emails - FLASHED - done 1x
 # Write your MySQL query statement below
 SELECT Email
 FROM Person
@@ -93,20 +121,20 @@ DELETE p1.*
 FROM Person p1, Person p2
 WHERE p1.Email = p2.Email AND p1.Id > p2.Id;
 
-A,C*197. Rising Temperature - done 1x
+C*197. Rising Temperature - done 1x
 => DID NOT FLASH (DATEDIFF function) - DATE DIFF
 # Write your MySQL query statement below
 SELECT w1.Id AS Id
 FROM Weather w1 JOIN Weather w2
 WHERE w1.Temperature > w2.Temperature AND DATEDIFF(w1.RecordDate, w2.RecordDate) = 1;
 
-A*511. Game Play Analysis I -> done 1x
+*511. Game Play Analysis I -> done 1x
 # Write your MySQL query statement below
 SELECT player_id, MIN(event_date) AS first_login
 FROM Activity
 GROUP BY player_id;
 
-A*512. Game Play Analysis II - did 1x
+*512. Game Play Analysis II - did 1x
 *DID NOT FLASH => Think about what you need/ what you are getting from your subquery first
 *WHERE () - needs parentheses
 
@@ -115,13 +143,13 @@ SELECT player_id, device_id
 FROM Activity
 WHERE (player_id, event_date) IN (SELECT player_id, MIN(event_date) FROM Activity GROUP BY player_id);
 
-A*577. Employee Bonus - done 1x
+*577. Employee Bonus - done 1x
 # Write your MySQL query statement below
 SELECT name, bonus
 FROM Employee LEFT JOIN Bonus USING(empId)
 WHERE bonus < 1000 OR bonus IS NULL;
 
-A,C*584. Find Customer Referee - done 1x
+C*584. Find Customer Referee - done 1x
 # Write your MySQL query statement below
 SELECT name
 FROM customer 
@@ -137,13 +165,13 @@ GROUP BY customer_number
 ORDER BY COUNT(customer_number) DESC
 LIMIT 1;
 
-A*595. Big Countries
+*595. Big Countries
 # Write your MySQL query statement below
 SELECT name, population, area
 FROM World 
 WHERE area > 3000000 OR population > 25000000;
 
-A*596. Classes More Than 5 Students - done 1x
+*596. Classes More Than 5 Students - done 1x
 => DID NOT FLASH => HAVING condition (HAVING is for WHERE but for aggregates)
 # Write your MySQL query statement below
 SELECT class
@@ -151,7 +179,7 @@ FROM courses
 GROUP BY class
 HAVING COUNT(DISTINCT student) >= 5;
 
-A,C,S*597. Friend Requests I: Overall Acceptance Rate -> NEED TO REDO
+C,S*597. Friend Requests I: Overall Acceptance Rate -> NEED TO REDO
 -- distinct number of accepted request from request_accepted / distinct number of requests from friend_request
 
 SELECT
@@ -182,7 +210,7 @@ FROM (SELECT DISTINCT sender_id, send_to_id
 - Divide i) / ii), and ROUND ( ,2) 
 - need IFNULL, as the divisor can be 0 -> need it to deal with the special case
 
-A,C,W*603. Consecutive Available Seats - can use Window Function -> NEED TO REDO
+C,W*603. Consecutive Available Seats - can use Window Function -> NEED TO REDO
 
 JOIN and ABS():
 # Write your MySQL query statement below
@@ -205,7 +233,7 @@ WHERE (free = 1 AND free_lag = 1)
 OR (free = 1 AND free_lead = 1)
 ORDER BY seat_id ASC;
 
-A,S*607. Sales Person => redo
+S*607. Sales Person => redo
 -- SUBQUERY => SELECT sales_id where company is RED
 -- WHERE XX IN or NOT IN (subquery), this subquery does not need a name
 # Write your MySQL query statement below
@@ -215,19 +243,19 @@ WHERE sales_id NOT IN (SELECT sales_id
                        FROM orders JOIN company USING (com_id)
                        WHERE company.name = 'RED');
 
-A,C*610. Triangle Judgment -> done 1x
+C*610. Triangle Judgment -> done 1x
 # Write your MySQL query statement below
 SELECT x, y, z,
 IF (x + y > z AND x + z > y AND y + z > x, 'Yes', 'No') AS triangle
 FROM triangle;
 
-A*613. Shortest Distance in a Line -> done 1x
+*613. Shortest Distance in a Line -> done 1x
 # Write your MySQL query statement below
 SELECT MIN(ABS(p1.x - p2.x)) AS shortest
 FROM point p1 join point p2
 WHERE p1.x != p2.x;
 
-A*619. Biggest Single Number -> done 1x
+*619. Biggest Single Number -> done 1x
 -- The subquery gives you the list of nums with COUNT of only 1. The outter query, selects the MAX num from that list.
 -- MAX(num) takes care of NULL. SELECT MAX(NULL) gives you NULL
 -- WHERE __ IN (subquery) - this subquery does not need to add a subquery name
@@ -240,7 +268,7 @@ WHERE num IN (SELECT num
               GROUP BY num
               HAVING COUNT(num) = 1);
 
-A*620. Not Boring Movies - FLASHED (look at the questions carefully and see is there any ORDER BY)
+*620. Not Boring Movies - FLASHED (look at the questions carefully and see is there any ORDER BY)
 => modulo is fine, != to replace <> is fine
 # Write your MySQL query statement below
 SELECT id, movie, description, rating
@@ -248,7 +276,7 @@ FROM cinema
 WHERE id%2 != 0 AND description !='boring'
 ORDER BY rating DESC;
 
-A*627. Swap Salary -> FLASHED
+*627. Swap Salary -> FLASHED
 # Write your MySQL query statement below
 UPDATE salary 
 SET sex = IF(sex = "m", "f", "m");
@@ -277,13 +305,13 @@ FROM Product RIGHT JOIN Sales USING (product_id)
 GROUP BY product_id
 ORDER BY product_id ASC;
 
-A*1075. Project Employees I -> NEED TO REDO (half flashed)
+*1075. Project Employees I -> NEED TO REDO (half flashed)
 # Write your MySQL query statement below
 SELECT project_id, ROUND(AVG(experience_years), 2) AS average_years
 FROM Project JOIN Employee USING (employee_id)
 GROUP BY project_id;
 
-A,W**1076. Project Employees II => REDO
+W**1076. Project Employees II => REDO
 => DID NOT FLASH - WINDOW FUNCTION => need to review carefully
 => trick: ORDER BY COUNT(DISTINCT employee_id) 
 # Write your MySQL query statement below
@@ -325,18 +353,9 @@ AND buyer_id NOT IN(SELECT buyer_id
                     FROM Sales JOIN Product USING(product_id)
                     WHERE product_name = 'iPhone');
 
-A*1084. Sales Analysis III -- this is a weird question.... should skip 
--- don't really understand question.... my answer should be correct
-# Write your MySQL query statement below
-# report products sold between 2019-01-01 and 2019-03-31 inclusive
-select product_id, product_name
-from product
-where product_id not in
-(select product_id
-from sales
-where sale_date <'2019-01-01'or sale_date>'2019-03-31')
+A*1084. Sales Analysis III -- this is a weird question.... skip 
 
-A*1113. Reported Posts -> NEED TO REDO. GROUP BY extra. Then COUNT (DISTINCT post_id) WITHIN the aggregated extra.
+*1113. Reported Posts -> NEED TO REDO. GROUP BY extra. Then COUNT (DISTINCT post_id) WITHIN the aggregated extra.
 -> Within aggregated extra, there is 1 DISTINCT post_id for spam, and 2 DISTINCT post_id for racism
 => DID NOT FLASH => DISTINCT does not need () 
 => WHERE goes before GROUP BY
@@ -347,7 +366,7 @@ FROM Actions
 WHERE action_date = '2019-07-04' AND action = 'report'
 GROUP BY extra;
 
-A*1141. User Activity for the Past 30 Days I -> REDO - makes a difference the order for DATEDIFF(date1, date2)
+*1141. User Activity for the Past 30 Days I -> REDO - makes a difference the order for DATEDIFF(date1, date2)
 => DID NOT FLASH: Use DATEDIFF
 # Write your MySQL query statement below
 SELECT activity_date AS day, COUNT(DISTINCT user_id) AS active_users
@@ -355,30 +374,28 @@ FROM Activity
 WHERE ABS(DATEDIFF('2019-07-27', activity_date)) < 30
 GROUP BY activity_date;
 
-A,C,S*1142. User Activity for the Past 30 Days II => SKIPPED
+C,S*1142. User Activity for the Past 30 Days II -> need to redo
 # Write your MySQL query statement below
-SELECT IFNULL(ROUND(AVG(num),2),0.00) AS average_sessions_per_user    
-FROM(SELECT COUNT(DISTINCT session_id) AS num
-     FROM Activity
-     WHERE DATEDIFF('2019-07-27', activity_date) < 30               
-     GROUP BY user_id) AS c;     
+SELECT IFNULL(ROUND(COUNT(DISTINCT session_id)/COUNT(DISTINCT user_id), 2), 0.00) AS average_sessions_per_user
+FROM Activity
+WHERE ABS(DATEDIFF('2019-07-27', activity_date)) < 30; 
 
-A*1148. Article Views I
+*1148. Article Views I
 # Write your MySQL query statement below
 # Find all authors that viewed at least one of their own articles
 # Sort in ASC order by their id
 SELECT author_id AS id
 FROM Views
 WHERE author_id = viewer_id
-GROUP BY author_id 
 ORDER BY author_id ASC;
 
-A,C*1173. Immediate Food Delivery I => half flashed => To find percentage just use AVG(order_date = customer_pref_delivery_date)
+*1173. Immediate Food Delivery I 
+=> half flashed => To find percentage just use AVG(order_date = customer_pref_delivery_date)
 # Write your MySQL query statement below
 SELECT ROUND(AVG(order_date = customer_pref_delivery_date)*100 ,2) AS immediate_percentage
 FROM Delivery;
 
-A,C,S**1179. Reformat Department Table => IMPORTANT, and I skipped
+S*1179. Reformat Department Table
 SELECT id,
 SUM(CASE WHEN month = 'Jan' THEN revenue END) AS Jan_Revenue,
 SUM(CASE WHEN month = 'Feb' THEN revenue END) AS Feb_Revenue,
@@ -395,7 +412,7 @@ SUM(CASE WHEN month = 'Dec' THEN revenue END) AS Dec_Revenue
 FROM Department
 GROUP BY id;
 
-S*1211. Queries Quality and Percentage
+1211. Queries Quality and Percentage -> redo (not too bad)
 # Write your MySQL query statement below
 # query to find query_name, quality, and poor_query_percentage
 SELECT query_name, ROUND(AVG(rating/position), 2) AS quality, ROUND(AVG(rating < 3) * 100, 2) AS poor_query_percentage
@@ -403,23 +420,24 @@ FROM Queries
 GROUP BY query_name
 ORDER BY quality DESC;
 
-C,S*1241. Number of Comments per Post => Do not fully understand - need to take a look again
+C*1241. Number of Comments per Post -> this is a weird question with strange table to join
+=> Do not fully understand - need to take a look again
 # Write your MySQL query statement below
 SELECT S1.sub_id AS post_id, COUNT(DISTINCT S2.sub_id) AS number_of_comments
 FROM Submissions S1 LEFT JOIN Submissions S2 ON S1.sub_id = S2.parent_id    
 WHERE S1.parent_id IS NULL   
 GROUP BY S1.sub_id;
 
-*1251. Average Selling Price 
+*1251. Average Selling Price - redo
 => Need WHERE purchase_date BETWEEN start_date AND end_date to make sure the correct SUM(units * price) pairing is used!!
 # Write your MySQL query statement below
-SELECT product_id, ROUND(SUM(units * price) / SUM(units) , 2) AS average_price
+SELECT product_id, ROUND(SUM(units * price)/ SUM(units), 2) AS average_price
 FROM Prices JOIN UnitsSold USING (product_id)
 WHERE purchase_date BETWEEN start_date AND end_date
-GROUP BY Prices.product_id
-ORDER BY Prices.product_id;
+GROUP BY product_id
+ORDER BY product_id ASC;
 
-*1280. Students and Examinatinos
+S*1280. Students and Examinations
 # Write your MySQL query statement below
 SELECT student.student_id, student.student_name, subject.subject_name, COUNT(exam.subject_name) AS attended_exams
 FROM Students as student JOIN Subjects as subject LEFT JOIN Examinations as exam
@@ -427,23 +445,26 @@ ON student.student_id = exam.student_id AND subject.subject_name = exam.subject_
 GROUP BY student.student_id, subject.subject_name
 ORDER BY student_id, subject_name;
 
-D, S*1294. Weather Type in Each Country => skipped -> CASE WHEN ELSE, END fx
+D 1294. Weather Type in Each Country -> not too bad actually
+=> CASE WHEN ELSE, END fx
 # Write your MySQL query statement below
-SELECT country_name, 
-(CASE WHEN AVG(weather_state)<=15 THEN 'Cold' 
-      WHEN AVG(weather_state)>=25 THEN 'Hot'
-      ELSE 'Warm'
-END) AS weather_type
-FROM Countries c
-LEFT JOIN Weather w
-ON c.country_id = w.country_id
-WHERE day LIKE '2019-11%'
-GROUP BY c.country_id;
-
-W*1303. Find the Team Size => DID NOT FLASH => Window Function
+SELECT country_name,
+(CASE
+    WHEN AVG(weather_state) <= 15 THEN 'Cold'
+    WHEN AVG(weather_state) >= 25 THEN 'Hot'
+    ELSE 'Warm'
+ END) AS weather_type
+ FROM Countries JOIN Weather USING (country_id)
+ WHERE day LIKE '2019-11-%'
+ GROUP BY country_id;
+           
+W*1303. Find the Team Size -> REDO
+=> DID NOT FLASH => Window Function
 # Write your MySQL query statement below
-SELECT employee_id, COUNT(*) OVER (PARTITION BY team_id) AS team_size
-FROM Employee;
+SELECT employee_id, 
+COUNT(employee_id) OVER (PARTITION BY team_id) AS team_size 
+FROM Employee
+ORDER BY employee_id ASC;
 
 S*1322. Ads Performance => SKIP
 SELECT ad_id, ROUND(IFNULL(100*(SUM(IF(action='Clicked',1,0))/SUM(IF(action='Clicked' OR action='Viewed',1,0))),0),2) AS ctr
@@ -451,8 +472,7 @@ FROM Ads
 GROUP BY ad_id
 ORDER BY ctr DESC, ad_id ASC;
 
-*1327. List the Products Ordered in a Period
-=> WHERE is for NON-AGGREGATE filter, HAVING is for AGGREGATE filter. SUM is an aggregate!!!
+A1327. List the Products Ordered in a Period=> WHERE is for NON-AGGREGATE filter, HAVING is for AGGREGATE filter. SUM is an aggregate!!!
 # Write your MySQL query statement below
 SELECT product_name, SUM(unit) AS unit
 FROM Products JOIN Orders USING (product_id)
