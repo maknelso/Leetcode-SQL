@@ -1,9 +1,12 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
 Need to redo: 
-597, 603, 607 (easy)
-1076 (window function - relatively easy), 1083 (easy), 1113 (easy), 1141 (easy), 1142 (easy), 1280 (relatively easy - 3 way join table), 1294 (easy), 
-1303 (window function - easy), 1322 (relatively easy - odd case need to read and think long), 1327 (easy), 1435 (weird one), 1484 (easy)
+597, 603, 607 (easy - done but do again),
+1083 (easy - done but do again), 1142 (easy - COUNT(DISTINCT session_id)/COUNT(DISTINCT user_id) - done 1x), 
+1280 (weird 3-way join table),
+1435 (weird one), 1484 (easy -> do again for GROUP_CONCAT)
+1076 (window function - relatively easy) -> redo again
+1303 (window function - easy) -> redo again
 
 Notes:
 -- Double check the JOIN tables to ensure it is what you need. That is very important 
@@ -13,11 +16,10 @@ Notes:
 -- FROM (subquery) - this subquery needs a subquery name
 -- GROUP BY x, y - does not need parenthesis
 -- WHERE (x, y) - needs parenthesis
--- IFNULL(expression1, expression2) => IFNULL returns expression1 if expression1 is NOT NULL, otherwise it returns expression2
--- ORDER BY Name ASC; -> means A is on top, Z is on bottom. ASCII code for A is smaller than Z.
--- Look at questions carefully and see do we need any ORDER BY
 -- UPDATE table_name, SET sex = IF ( )
 -- ROUND(AVG(experience_years), 2) with GROUP BY project_id -> GROUP BY affects the AVG denominator count
+-- 1484. GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
+-- 1142. COUNT(DISTINCT session_id)/COUNT(DISTINCT user_id)
 -- **WHERE first, then GROUP BY
 -- 1484. GROUP_CONCAT, SEPARATOR
          => GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
