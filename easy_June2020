@@ -1,6 +1,6 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
-Need to redo: 597, 603, 607, 1076 (window function), 1083
+Need to redo: 597, 603, 607, 1076 (window function), 1083, 1113, 1141
 
 Notes:
 -- MAX(num) takes care of NULL. SELECT MAX(NULL) gives you NULL
@@ -14,6 +14,8 @@ Notes:
 -- ROUND(AVG(experience_years), 2) with GROUP BY project_id
 -- 1076. RANK() OVER(ORDER BY COUNT(DISTINCT employee_id)DESC) AS ranks
 -- SELECT x, y, SUM(order_amount) OVER(PARTITION BY city) AS grand_total
+-- WHERE first, then GROUP BY
+-- 1141. makes a difference the order for DATEDIFF(date1, date2) -> signs will change. => date2 less date 1. 
 
 Amazon database questions:
 https://leetcode.com/problemset/database/
@@ -334,7 +336,9 @@ where product_id not in
 from sales
 where sale_date <'2019-01-01'or sale_date>'2019-03-31')
 
-A*1113. Reported Posts => DID NOT FLASH => DISTINCT does not need () 
+A*1113. Reported Posts -> NEED TO REDO. GROUP BY extra. Then COUNT (DISTINCT post_id) WITHIN the aggregated extra.
+-> Within aggregated extra, there is 1 DISTINCT post_id for spam, and 2 DISTINCT post_id for racism
+=> DID NOT FLASH => DISTINCT does not need () 
 => WHERE goes before GROUP BY
 => HAVING is for filtering aggregate function
 # Write your MySQL query statement below
@@ -343,11 +347,12 @@ FROM Actions
 WHERE action_date = '2019-07-04' AND action = 'report'
 GROUP BY extra;
 
-A*1141. User Activity for the Past 30 Days I => DID NOT FLASH: Use DATEDIFF
+A*1141. User Activity for the Past 30 Days I -> REDO - makes a difference the order for DATEDIFF(date1, date2)
+=> DID NOT FLASH: Use DATEDIFF
 # Write your MySQL query statement below
 SELECT activity_date AS day, COUNT(DISTINCT user_id) AS active_users
 FROM Activity
-WHERE DATEDIFF('2019-07-27', activity_date) < 30
+WHERE ABS(DATEDIFF('2019-07-27', activity_date)) < 30
 GROUP BY activity_date;
 
 A,C,S*1142. User Activity for the Past 30 Days II => SKIPPED
