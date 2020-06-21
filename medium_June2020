@@ -67,14 +67,25 @@ WHERE (Employee.DepartmentId, Salary) IN
 
 A*570. Managers with at Least 5 Direct Reports (Amazon tag) -> not too bad
 # Write your MySQL query statement below
-SELECT Name 
+SELECT Name
 FROM Employee e1 JOIN (SELECT ManagerId
                        FROM Employee
                        GROUP BY ManagerId
-                       HAVING COUNT(ManagerId) >= 5) AS e2
-                  ON e1.Id = e2.ManagerId;
+                       HAVING COUNT(ManagerId) >= 5) e2 ON e1.Id = e2.ManagerId;
 
 A*626. Exchange Seats (Amazon tag) -> need to redo
+=> CASE solution
+# Write your MySQL query statement below
+SELECT (CASE
+            WHEN id%2 != 0 AND counts != id THEN id + 1
+            WHEN id%2 != 0 AND counts = id THEN id
+            ELSE id - 1
+        END) AS id, student
+FROM seat, (SELECT COUNT(*) AS counts
+            FROM seat) AS seat_counts
+ORDER BY id ASC;
+
+=> bit manipulation expression - NOT A FAN OF THIS because it's not practical I would know this q going in exam
 => COALESCE(expression) - Evaluates the arguments in order and returns the first expression that doesn't evaluate to NULL
 => COALESCE is for seat 5 -> seat 5 does not exchange
 => bit manipulation expression (id+1)^1-1
@@ -87,21 +98,7 @@ FROM
     seat s2 ON ((s1.id + 1) ^ 1) - 1 = s2.id
 ORDER BY s1.id;
 
-=> CASE solution
-SELECT
-    (CASE
-        WHEN MOD(id, 2) != 0 AND counts != id THEN id + 1
-        WHEN MOD(id, 2) != 0 AND counts = id THEN id
-        ELSE id - 1
-    END) AS id,
-    student
-FROM
-    seat,
-    (SELECT
-        COUNT(*) AS counts
-    FROM
-        seat) AS seat_counts
-ORDER BY id ASC;
+
 
 A*1045. Customers Who Bought All Products (Amazon tag) -> not too difficult, using the COUNT(DISTINCT product_key) to compare both tables
 # Write your MySQL query statement below
