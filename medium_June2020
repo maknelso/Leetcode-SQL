@@ -3,6 +3,10 @@ Difficulty: Medium
 
 Do: 14 medium questions (29%)
 
+Notes:
+-- RANK() OVER(PARTITION BY 1ST ORDER BY 2ND) => 184. RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS num
+
+
 Amazon tag medium - 9:
 
 A*177. Nth Highest Salary -> Looks like you have to memorize this one
