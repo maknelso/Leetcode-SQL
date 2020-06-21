@@ -1,18 +1,37 @@
 Difficulty: Medium
 48 questions
 
-Do: 19 questions
+Do: 14 medium questions (29%)
 
 Amazon tag medium - 9:
-177. Nth Highest Salary (Amazon tag)
-178. Rank Scores (Amazon tag)
-180. Consecutive Numbers (Amazon tag)
-184. Department Highest Salary (Amazon tag)
-570. Managers with at Least 5 Direct Reports (Amazon tag)
-626. Exchange Seats (Amazon tag)
-1045. Customers Who Bought All Products (Amazon tag)
-1070. Product Sales Analysis III (Amazon tag)
-1421. NPV Queries (Amazon tag)
+
+A*177. Nth Highest Salary
+# Write your MySQL query statement below
+CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+BEGIN
+  DECLARE M INT;
+  SET M = N - 1;
+  RETURN (
+    SELECT DISTINCT Salary FROM Employee
+    ORDER BY Salary DESC
+    LIMIT 1 OFFSET M
+  );
+END
+
+A*178. Rank Scores (Amazon tag)
+# Write your MySQL query statement below
+SELECT score,
+DENSE_RANK()OVER(ORDER BY Score DESC) AS Rank
+FROM Scores
+ORDER BY score DESC, Rank ASC;
+
+A*180. Consecutive Numbers (Amazon tag)
+A*184. Department Highest Salary (Amazon tag)
+A*570. Managers with at Least 5 Direct Reports (Amazon tag)
+A*626. Exchange Seats (Amazon tag)
+A*1045. Customers Who Bought All Products (Amazon tag)
+A*1070. Product Sales Analysis III (Amazon tag)
+A*1421. NPV Queries (Amazon tag)
 
 Amazon tag hard - 5:
 185. Department Top Three Salaries
