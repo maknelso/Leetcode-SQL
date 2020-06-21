@@ -76,13 +76,19 @@ FROM Employee e1 JOIN (SELECT ManagerId
 A*626. Exchange Seats (Amazon tag) -> need to redo
 => CASE solution
 # Write your MySQL query statement below
+#number of student is odd, no need to  change id 5
 SELECT (CASE
+            #when id is odd, and not last id, then id + 1
             WHEN id%2 != 0 AND counts != id THEN id + 1
+            #when id is odd, and last id (5), then id stays the same
             WHEN id%2 != 0 AND counts = id THEN id
+            #else (id is even), then id - 1
             ELSE id - 1
         END) AS id, student
-FROM seat, (SELECT COUNT(*) AS counts
-            FROM seat) AS seat_counts
+FROM seat, 
+#count number of seats (to get the last seat id)
+(SELECT COUNT(*) AS counts
+FROM seat) AS seat_counts
 ORDER BY id ASC;
 
 => bit manipulation expression - NOT A FAN OF THIS because it's not practical I would know this q going in exam
