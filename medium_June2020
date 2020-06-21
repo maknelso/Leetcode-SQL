@@ -4,8 +4,9 @@ Difficulty: Medium
 Do: 14 medium questions (29%)
 
 Notes:
--- RANK() OVER(PARTITION BY 1ST ORDER BY 2ND) => 184. RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS num
-
+-- 184. RANK() OVER(PARTITION BY 1ST ORDER BY 2ND) => 184. RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS num
+-- 184. have to RANK OVER(PARTITION BY DepartmentId), then DepartmentId next line -> otherwise error
+-- 184. likely if you PARTITION BY DepartmentId, then DepartmentId must come AFTER
 
 Amazon tag medium - 9:
 
@@ -41,6 +42,7 @@ AND l1.Num = l2.Num AND l2.Num = l3.num;
 
 A*184. Department Highest Salary (Amazon tag) -> not too bad, I like the Window function.
 => have to RANK OVER(PARTITION BY DepartmentId), then DepartmentId next line -> otherwise error
+=> likely if you PARTITION BY DepartmentId, then DepartmentId must come AFTER
 
 -- Window function
 # Write your MySQL query statement below
