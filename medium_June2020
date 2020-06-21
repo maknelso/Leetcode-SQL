@@ -3,24 +3,44 @@ Difficulty: Medium
 
 Do: 14 medium questions (29%)
 
+REDO: All
+Memorize: 177 (CREATE FUNCTION) -> CREATE, BEGIN, DECLARE, SET1, SET2, SET3,... RETURN
+
 Notes:
+-- writing pseudocode helps
 -- 184. RANK() OVER(PARTITION BY 1ST ORDER BY 2ND) => 184. RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS num
 -- 184. have to RANK OVER(PARTITION BY DepartmentId), then DepartmentId next line -> otherwise error
 -- 184. likely if you PARTITION BY DepartmentId, then DepartmentId must come AFTER
+-- 1421. => USING(column1, column2) => FROM Queries LEFT JOIN NPV USING(id, year);
 
 Amazon tag medium - 9:
 
-A*177. Nth Highest Salary -> Looks like you have to memorize this one
+A*177. Nth Highest Salary -> CREATE FUNCTION
+                             BEGIN
+                                DECLARE
+                                SET
+                                SET
+                                RETURN
+                             END                  -> looks like SELECT DISTINCT Salary returns NULL
 # Write your MySQL query statement below
-CREATE FUNCTION getNthHighestSalary(N INT) RETURNS INT
+CREATE FUNCTION getNthHighestSalary(n INT) RETURNS INT
 BEGIN
-  DECLARE M INT;
-  SET M = N - 1;
+  DECLARE offsetvariable INT;
+  SET offsetvariable = n - 1;
   RETURN (SELECT DISTINCT Salary 
           FROM Employee
           ORDER BY Salary DESC
-          LIMIT 1 OFFSET M);
+          LIMIT 1 OFFSET offsetvariable);
 END
+#algorithm: n as input = 2
+#SELECT DISTINCT Salary
+#FROM Employee
+#ORDER BY Salary DESC
+#LIMIT 1 OFFSET (how many?)
+
+#if we want to get 2nd highest salary, offset 1
+#if we want 3rd highest salary, offset 2
+#set offset variable to be (n - 1)
 
 A, W*178. Rank Scores (Amazon tag) -> sometimes have to use MS SQL Server
 /* Write your T-SQL query statement below */
@@ -64,7 +84,6 @@ WHERE (Employee.DepartmentId, Salary) IN
  FROM Employee 
  GROUP BY DepartmentId);
 
-
 A*570. Managers with at Least 5 Direct Reports (Amazon tag) -> not too bad
 # Write your MySQL query statement below
 SELECT Name
@@ -73,40 +92,26 @@ FROM Employee e1 JOIN (SELECT ManagerId
                        GROUP BY ManagerId
                        HAVING COUNT(ManagerId) >= 5) e2 ON e1.Id = e2.ManagerId;
 
-A*626. Exchange Seats (Amazon tag) -> need to redo
+A*626. Exchange Seats (Amazon tag) -> the CASE ordering has to be below probably because it depends if last id is odd...
 => CASE solution
 # Write your MySQL query statement below
-#number of student is odd, no need to  change id 5
+#number of student is odd, no need to  change id 
 SELECT (CASE
-            #when id is odd, and not last id, then id + 1
-            WHEN id%2 != 0 AND counts != id THEN id + 1
-            #when id is odd, and last id (5), then id stays the same
-            WHEN id%2 != 0 AND counts = id THEN id
-            #else (id is even), then id - 1
-            ELSE id - 1
+            #id is odd and id is not 5
+            WHEN id % 2 != 0 AND id != last_id THEN id + 1
+            #id is odd but id is last id, then stay the same
+            WHEN id % 2 != 0 AND id = last_id THEN id
+            #else id is even
+            ELSE id - 1 
         END) AS id, student
-FROM seat, 
-#count number of seats (to get the last seat id)
-(SELECT COUNT(*) AS counts
-FROM seat) AS seat_counts
+FROM seat,
+#count last id (id 5)
+(SELECT COUNT(id) AS last_id
+FROM seat) AS subquery
 ORDER BY id ASC;
 
-=> bit manipulation expression - NOT A FAN OF THIS because it's not practical I would know this q going in exam
-=> COALESCE(expression) - Evaluates the arguments in order and returns the first expression that doesn't evaluate to NULL
-=> COALESCE is for seat 5 -> seat 5 does not exchange
-=> bit manipulation expression (id+1)^1-1
-# Write your MySQL query statement below
-SELECT
-    s1.id, COALESCE(s2.student, s1.student) AS student
-FROM
-    seat s1
-        LEFT JOIN
-    seat s2 ON ((s1.id + 1) ^ 1) - 1 = s2.id
-ORDER BY s1.id;
-
-
-
-A*1045. Customers Who Bought All Products (Amazon tag) -> not too difficult, using the COUNT(DISTINCT product_key) to compare both tables
+A*1045. Customers Who Bought All Products (Amazon tag) 
+-> not too difficult, using the COUNT(DISTINCT product_key) to compare both tables
 # Write your MySQL query statement below
 SELECT customer_id
 FROM Customer 
@@ -122,11 +127,10 @@ WHERE (product_id, year) IN (SELECT product_id, MIN(year) AS year
                              FROM Sales
                              GROUP BY product_id);
 
-S, A*1421. NPV Queries (Amazon tag) -> does not seem too bad
+A*1421. NPV Queries (Amazon tag) -> seems easy
 # Write your MySQL query statement below
-SELECT t1.id, t1.year, IFNULL(npv, 0) AS npv
-FROM queries AS t1 LEFT JOIN NPV AS t2
-ON t1.id = t2.id AND t1.year = t2.year;
+SELECT id, year, IFNULL(npv, 0) AS npv
+FROM Queries LEFT JOIN NPV USING(id, year);
 
 
 Other common medium - 5:
