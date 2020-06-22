@@ -15,7 +15,7 @@ Notes:
 
 Amazon tag medium - 9:
 
-A*177. Nth Highest Salary -> CREATE FUNCTION
+A*177. Nth Highest Salary -> CREATE FUNCTION    -> easy
                              BEGIN
                                 DECLARE
                                 SET
@@ -37,19 +37,18 @@ END
 #FROM Employee
 #ORDER BY Salary DESC
 #LIMIT 1 OFFSET (how many?)
+#->if we want to get 2nd highest salary, offset 1
+#->if we want 3rd highest salary, offset 2
+#->set offset variable to be (n - 1)
 
-#if we want to get 2nd highest salary, offset 1
-#if we want 3rd highest salary, offset 2
-#set offset variable to be (n - 1)
-
-A, W*178. Rank Scores (Amazon tag) -> sometimes have to use MS SQL Server
+A, W*178. Rank Scores -> easy
 /* Write your T-SQL query statement below */
 SELECT score,
 DENSE_RANK() OVER(ORDER BY Score DESC) AS Rank
 FROM Scores
 ORDER BY score DESC, Rank ASC;
 
-A*180. Consecutive Numbers (Amazon tag) -> does not seem that bad
+A*180. Consecutive Numbers -> easy
 /* Write your T-SQL query statement below */
 -- Consecutive means ID of Num are next to each other.
 -- Use 3 aliases for this table Logs and then check whether 3 consecutive numbers are all the same
@@ -60,7 +59,7 @@ FROM Logs l1, Logs l2, Logs l3
 WHERE l1.Id = l2.Id - 1 AND l2.Id = l3.Id - 1
 AND l1.Num = l2.Num AND l2.Num = l3.num;
 
-A*184. Department Highest Salary (Amazon tag) -> not too bad, I like the Window function.
+A*184. Department Highest Salary -> not too bad, I like the Window function.
 => have to RANK OVER(PARTITION BY DepartmentId), then DepartmentId next line -> otherwise error
 => likely if you PARTITION BY DepartmentId, then DepartmentId must come AFTER
 
@@ -84,7 +83,7 @@ WHERE (Employee.DepartmentId, Salary) IN
  FROM Employee 
  GROUP BY DepartmentId);
 
-A*570. Managers with at Least 5 Direct Reports (Amazon tag) -> not too bad
+A*570. Managers with at Least 5 Direct Reports -> not too bad
 # Write your MySQL query statement below
 SELECT Name
 FROM Employee e1 JOIN (SELECT ManagerId
@@ -92,7 +91,7 @@ FROM Employee e1 JOIN (SELECT ManagerId
                        GROUP BY ManagerId
                        HAVING COUNT(ManagerId) >= 5) e2 ON e1.Id = e2.ManagerId;
 
-A*626. Exchange Seats (Amazon tag) -> the CASE ordering has to be below probably because it depends if last id is odd...
+A*626. Exchange Seats -> the CASE ordering has to be below probably because it depends if last id is odd...
 => CASE solution
 # Write your MySQL query statement below
 #number of student is odd, no need to  change id 
@@ -110,8 +109,7 @@ FROM seat,
 FROM seat) AS subquery
 ORDER BY id ASC;
 
-A*1045. Customers Who Bought All Products (Amazon tag) 
--> not too difficult, using the COUNT(DISTINCT product_key) to compare both tables
+A*1045. Customers Who Bought All Products -> not too difficult, using the COUNT(DISTINCT product_key) to compare both tables
 # Write your MySQL query statement below
 SELECT customer_id
 FROM Customer 
@@ -135,53 +133,66 @@ FROM Queries LEFT JOIN NPV USING(id, year);
 
 Other common medium - 5:
 
-S*608. Tree Node (no Amazon tag)
+S*608. Tree Node (no Amazon tag) -> do not fully understand WHERE p_id IS NOT NULL AND p_id IS NOT NULL
 # Write your MySQL query statement below
-SELECT id, IF(ISNULL(p_id), 'Root',
-IF(id IN (SELECT p_id FROM tree), 'Inner','Leaf')) AS Type
-FROM Tree
-ORDER BY id;
+# Write your MySQL query statement below
+# root - no parent node
+# inner - parent node of some node, NOT NULL parent 
+# leaf - rest of the cases
+SELECT DISTINCT t1.id,(CASE
+                            WHEN t1.p_id IS NULL THEN 'Root'
+                            WHEN t1.p_id IS NOT NULL AND t2.id IS NOT NULL THEN 'Inner'
+                            WHEN t1.p_id IS NOT NULL AND t2.id IS NULL THEN 'Leaf'
+                        END) AS type
+FROM tree t1 LEFT JOIN tree t2 ON t1.id = t2.p_id
+ORDER BY id ASC;
 
-S*1132. Reported Posts II (no Amazon tag)
+S*1132. Reported Posts II (no Amazon tag) -> have to read question carefully to understand question
+# Write your MySQL query statement below
+# find the average for daily percentage of posts that got removed after being reported as spam, rounded to 2 decimal places
+SELECT ROUND(SUM(percent)/COUNT(DISTINCT action_date), 2) AS average_daily_percent
+FROM (SELECT action_date, COUNT(DISTINCT Removals.post_id)/COUNT(DISTINCT Actions.post_id) * 100 AS percent
+      FROM Actions LEFT JOIN Removals USING (post_id)
+      WHERE extra = 'spam'
+      GROUP BY action_date) temp;
 
-S*1212. Team Scores in Football Tournament (no Amazon tag)
+S*1212. Team Scores in Football Tournament (no Amazon tag) -> Answer makes sense -> not too hard
 # Write your MySQL query statement below
 SELECT team_id, team_name,
-SUM(CASE WHEN team_id=host_team AND host_goals>guest_goals THEN 3 ELSE 0 END)+
-SUM(CASE WHEN team_id=guest_team AND guest_goals>host_goals THEN 3 ELSE 0 END)+
-SUM(CASE WHEN team_id=host_team AND host_goals=guest_goals THEN 1 ELSE 0 END)+
-SUM(CASE WHEN team_id=guest_team AND guest_goals=host_goals THEN 1 ELSE 0 END)
-AS num_points
+SUM(CASE WHEN team_id = host_team AND host_goals > guest_goals THEN 3 ELSE 0 END) +
+SUM(CASE WHEN team_id = guest_team AND guest_goals > host_goals THEN 3 ELSE 0 END) +
+SUM(CASE WHEN team_id = host_team AND host_goals = guest_goals THEN 1 ELSE 0 END) +
+SUM(CASE WHEN team_id = guest_team AND guest_goals = host_goals THEN 1 ELSE 0 END) AS num_points
 FROM Teams LEFT JOIN Matches ON team_id = host_team OR team_id = guest_team
 GROUP BY team_id
-ORDER BY num_points DESC, team_id;
+ORDER BY num_points DESC, team_id ASC;
 
-S*1270. All People Report to the Given Manager (no Amazon tag)
+S*1270. All People Report to the Given Manager (no Amazon tag) -> Answer kind of makes sense I guess
+=> JOIN all 3 table, get e1.employee_id. WHERE e3.manager_id = 1 and e1.employee_id != 1
 # Write your MySQL query statement below
+# Write an SQL query to find employee_id of all employees that directly or indirectly report their work to the head of the company.
 SELECT e1.employee_id
-FROM Employees e1
-JOIN Employees e2
-ON e1.manager_id = e2.employee_id
-JOIN Employees e3
-ON e2.manager_id = e3.employee_id
+FROM Employees e1 JOIN Employees e2 ON e1.manager_id = e2.employee_id JOIN Employees e3 ON e2.manager_id = e3.employee_id
 WHERE e3.manager_id = 1 AND e1.employee_id != 1
 
-S*1341. Moving Rating (no Amazon tag)
+S*1341. Moving Rating (no Amazon tag) -> does not seem too bad, answer makes sense
 # Write your MySQL query statement below
--- 1st part, we calculate the name of the user who has rated the greatest number of movies. So, simply join users and movie_rating tables and group by user_id and sort the results by highest count first and limit the result to 1
--- 2nd part, we calculate the name of the movie with highest avg rating. Same as the first step, also include dates (i.e. feb) and sort the results by highest avg rating and take only first result
+# find name of user who has greated most number of movies (if tie, return lexicographically smaller user name)
+# find movie name with highest average rating in Feb 2020 (if tie, return lexicographically smaller movie name)
+(SELECT name AS results 
+ FROM Users JOIN Movie_Rating USING(user_id)
+ GROUP BY user_id
+ ORDER BY COUNT(DISTINCT movie_id) DESC, name ASC 
+ LIMIT 1)
 
-(select name as results from users u join movie_rating m
-on u.user_id = m.user_id
-group by u.user_id
-order by count(distinct movie_id) desc, name limit 1)
-Union
-(select title from movies a join movie_rating b
-on a.movie_id = b.movie_id
-where created_at between '2020-02-01' and '2020-02-29'
-group by a.movie_id
-order by avg(rating) desc, title limit 1)
+UNION
 
+(SELECT title
+ FROM Movies JOIN Movie_Rating USING(movie_id)
+ WHERE created_at BETWEEN '2020-02-01' AND '2020-02-29'
+ GROUP BY movie_id
+ ORDER BY AVG(rating) DESC, title ASC
+ LIMIT 1)
 
 Amazon tag hard - 5:
 185. Department Top Three Salaries
