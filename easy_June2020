@@ -1,7 +1,8 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
 Need to redo: 
-597, 603, 607 (easy - done but do again),
+597, 603 
+607 (easy - done but do again),
 1083 (easy - done but do again), 1142 (easy - COUNT(DISTINCT session_id)/COUNT(DISTINCT user_id) - done 1x), 
 1280 (weird 3-way join table),
 1435 (weird one), 1484 (easy -> do again for GROUP_CONCAT)
