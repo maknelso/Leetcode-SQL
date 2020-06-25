@@ -11,6 +11,7 @@ Notes:
 -- 184. RANK() OVER(PARTITION BY 1ST ORDER BY 2ND) => 184. RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS num
 -- 184. have to RANK OVER(PARTITION BY DepartmentId), then DepartmentId next line -> otherwise error
 -- 184. likely if you PARTITION BY DepartmentId, then DepartmentId must come AFTER
+-- 570. To do COUNT(), you need GROUP BY. GROUP BY ManagerId, HAVING COUNT(ManagerId) >= 5 -> usually COUNT comes with GROUP BY
 -- 1421. => USING(column1, column2) => FROM Queries LEFT JOIN NPV USING(id, year);
 
 Amazon tag medium - 9:
@@ -60,7 +61,7 @@ FROM Logs l1, Logs l2, Logs l3
 WHERE l1.Id = l2.Id - 1 AND l2.Id = l3.Id - 1
 AND l1.Num = l2.Num AND l2.Num = l3.num;
 
-A*184. Department Highest Salary -> not too bad, I like the Window function.
+A*184. Department Highest Salary -> Window function -> a bit harder
 => have to RANK OVER(PARTITION BY DepartmentId), then DepartmentId next line -> otherwise error
 => likely if you PARTITION BY DepartmentId, then DepartmentId must come AFTER
 
@@ -95,20 +96,17 @@ FROM Employee e1 JOIN (SELECT ManagerId
 A*626. Exchange Seats -> the CASE ordering has to be below probably because it depends if last id is odd...
 => CASE solution
 # Write your MySQL query statement below
-#number of student is odd, no need to  change id 
 SELECT (CASE
-            #id is odd and id is not 5
             WHEN id % 2 != 0 AND id != last_id THEN id + 1
-            #id is odd but id is last id, then stay the same
             WHEN id % 2 != 0 AND id = last_id THEN id
-            #else id is even
-            ELSE id - 1 
+            ELSE id - 1
         END) AS id, student
-FROM seat,
-#count last id (id 5)
-(SELECT COUNT(id) AS last_id
-FROM seat) AS subquery
+FROM seat, (SELECT MAX(id) AS last_id
+            FROM seat) AS subquery
 ORDER BY id ASC;
+#if id is odd, + 1 to even
+#if id is even, -1 to odd
+#if id = last id, leave
 
 A*1045. Customers Who Bought All Products -> not too difficult, using the COUNT(DISTINCT product_key) to compare both tables
 # Write your MySQL query statement below
@@ -122,14 +120,15 @@ A*1070. Product Sales Analysis III (Amazon tag) -> quite easy -> answer makes se
 # Write your MySQL query statement below
 SELECT product_id, year AS first_year, quantity, price
 FROM Sales
-WHERE (product_id, year) IN (SELECT product_id, MIN(year) AS year
+WHERE (product_id, year) IN (SELECT product_id, MIN(year)
                              FROM Sales
                              GROUP BY product_id);
 
 A*1421. NPV Queries (Amazon tag) -> seems easy
 # Write your MySQL query statement below
 SELECT id, year, IFNULL(npv, 0) AS npv
-FROM Queries LEFT JOIN NPV USING(id, year);
+FROM Queries LEFT JOIN NPV USING (id, year)
+ORDER BY id ASC;
 
 
 Other common medium - 5:
