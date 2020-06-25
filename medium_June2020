@@ -42,11 +42,12 @@ END
 #->set offset variable to be (n - 1)
 
 A, W*178. Rank Scores -> easy
-/* Write your T-SQL query statement below */
+# Write your MySQL query statement below
+# DENSE_RANK window function for no gaps
 SELECT score,
-DENSE_RANK() OVER(ORDER BY Score DESC) AS Rank
+DENSE_RANK() OVER(ORDER BY Score DESC) AS 'Rank'
 FROM Scores
-ORDER BY score DESC, Rank ASC;
+ORDER BY score DESC;
 
 A*180. Consecutive Numbers -> easy
 /* Write your T-SQL query statement below */
