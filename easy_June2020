@@ -35,7 +35,11 @@ Notes:
          => GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
 -- 1322. Multiple ORDER BY: ORDER BY ctr DESC, ad_id ASC;
 -- 1173. AVG(order_date = customer_pref_delivery_date)
--- 1211. AVG(rating/position), ROUND(AVG(rating < 3)        
+
+-- 1211. AVG(rating/position), ROUND(AVG(rating < 3)    
+-> AVG function takes (argument) as numerator. Denominator is COUNT(whatever is GROUPED BY)
+-> AVG(rating < 3) -> takes COUNT(where rating < 3)....  *not the same if you put an argument 
+
 -- 1251. Need WHERE purchase_date BETWEEN start_date AND end_date
 
 -- 1076. SELECT project_id, 
