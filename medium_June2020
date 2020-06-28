@@ -3,6 +3,8 @@ Difficulty: Medium
 
 midway point: 24th question: 1132 - Reported Posts II
 
+did 19/48 or 39.5%
+
 REDO: All
 Memorize: 177 (CREATE FUNCTION) -> CREATE, BEGIN, DECLARE, SET1, SET2, SET3,... RETURN
 
@@ -14,6 +16,7 @@ Notes:
 -- 534. SUM(games_played) OVER(PARTITION BY player_id ORDER BY event_date) AS games_played_so_far => SUM() OVER(PARTITION BY player_id ORDER BY event_date)
 -> SUMS up game_played, segregated by player_id, segregated by the order of event_date
 -- 570. To do COUNT(), you need GROUP BY. GROUP BY ManagerId, HAVING COUNT(ManagerId) >= 5 -> usually COUNT comes with GROUP BY
+-- 574. Winning Candidate => If you want to COUNT, you need to GROUP BY usually
 -- 1421. => USING(column1, column2) => FROM Queries LEFT JOIN NPV USING(id, year);
 
 A*177. Nth Highest Salary -> CREATE FUNCTION    -> easy
@@ -101,15 +104,23 @@ AND a1.event_date >= a2.event_date
 GROUP BY a1.player_id, a1.event_date
 ORDER BY a1.player_id, a1.event_date;
 
-550. Game Play Analysis IV -> leetcode crashed, not sure if it's the right answer
+550. Game Play Analysis IV -> half skipped
+# Write your MySQL query statement below
+# COUNT number of players that logged in for at least 2 conseuctive days 
+SELECT ROUND(COUNT(DISTINCT player_id) / (SELECT COUNT(DISTINCT player_id) FROM Activity),2) as fraction 
+FROM Activity
+WHERE (player_id, DATE_SUB(event_date, INTERVAL 1 DAY)) 
+IN (SELECT player_id, MIN(event_date) AS first_login 
+    FROM Activity 
+    GROUP BY player_id);
+
+Below was my attempt, gives you correct 0.33, but not the correct thinking
 # Write your MySQL query statement below
 # COUNT number of players that logged in for at least 2 conseuctive days 
 SELECT ROUND(a1.player_id / COUNT(DISTINCT a1.player_id), 2) AS fraction
 FROM Activity a1 JOIN Activity a2
 WHERE DATEDIFF(a2.event_date, a1.event_date) < 1
 AND a1.player_id = a2.player_id;
-
-
 
 A*570. Managers with at Least 5 Direct Reports -> not too bad
 # Write your MySQL query statement below
@@ -118,6 +129,48 @@ FROM Employee e1 JOIN (SELECT ManagerId
                        FROM Employee
                        GROUP BY ManagerId
                        HAVING COUNT(ManagerId) >= 5) e2 ON e1.Id = e2.ManagerId;
+
+574. Winning Candidate => If you want to COUNT, you need to GROUP BY usually
+# Write your MySQL query statement below
+SELECT Name
+FROM Candidate JOIN (SELECT Candidateid
+                     FROM Vote
+                     GROUP BY CandidateId
+                     ORDER BY COUNT(CandidateId) DESC
+                     LIMIT 1) AS winner
+WHERE Candidate.id = winner.Candidateid;
+
+578. Get Highest Answer Rate Question -> makes sense, did not flash
+# Write your MySQL query statement below
+# find the highest answer rate
+SELECT question_id AS survey_log
+FROM survey_log
+GROUP BY question_id
+ORDER BY COUNT(answer_id) / COUNT(IF(action = 'show', 1, 0)) DESC
+LIMIT 1;
+
+580. Count Student Number in Departments -> flashed 
+# Write your MySQL query statement below
+# print dept name and number of students majoring in each dep for all dep in dept table (even ones with no current students)
+# sort by number of students DESC, sort by dep't alphabetically
+SELECT dept_name, IFNULL(COUNT(student_id), 0) AS student_number
+FROM department LEFT JOIN student USING (dept_id)
+GROUP BY dept_id
+ORDER BY student_number DESC, dept_name ASC;
+
+S*608. Tree Node (no Amazon tag) -> do not fully understand WHERE p_id IS NOT NULL AND p_id IS NOT NULL
+# Write your MySQL query statement below
+# Write your MySQL query statement below
+# root - no parent node
+# inner - parent node of some node, NOT NULL parent 
+# leaf - rest of the cases
+SELECT DISTINCT t1.id,(CASE
+                            WHEN t1.p_id IS NULL THEN 'Root'
+                            WHEN t1.p_id IS NOT NULL AND t2.id IS NOT NULL THEN 'Inner'
+                            WHEN t1.p_id IS NOT NULL AND t2.id IS NULL THEN 'Leaf'
+                        END) AS type
+FROM tree t1 LEFT JOIN tree t2 ON t1.id = t2.p_id
+ORDER BY id ASC;
 
 A*626. Exchange Seats -> the CASE ordering has to be below probably because it depends if last id is odd...
 => CASE solution
@@ -149,29 +202,6 @@ FROM Sales
 WHERE (product_id, year) IN (SELECT product_id, MIN(year)
                              FROM Sales
                              GROUP BY product_id);
-
-A*1421. NPV Queries (Amazon tag) -> seems easy
-# Write your MySQL query statement below
-SELECT id, year, IFNULL(npv, 0) AS npv
-FROM Queries LEFT JOIN NPV USING (id, year)
-ORDER BY id ASC;
-
-
-Other common medium - 5:
-
-S*608. Tree Node (no Amazon tag) -> do not fully understand WHERE p_id IS NOT NULL AND p_id IS NOT NULL
-# Write your MySQL query statement below
-# Write your MySQL query statement below
-# root - no parent node
-# inner - parent node of some node, NOT NULL parent 
-# leaf - rest of the cases
-SELECT DISTINCT t1.id,(CASE
-                            WHEN t1.p_id IS NULL THEN 'Root'
-                            WHEN t1.p_id IS NOT NULL AND t2.id IS NOT NULL THEN 'Inner'
-                            WHEN t1.p_id IS NOT NULL AND t2.id IS NULL THEN 'Leaf'
-                        END) AS type
-FROM tree t1 LEFT JOIN tree t2 ON t1.id = t2.p_id
-ORDER BY id ASC;
 
 S*1132. Reported Posts II (no Amazon tag) -> have to read question carefully to understand question
 # Write your MySQL query statement below
@@ -220,9 +250,10 @@ UNION
  ORDER BY AVG(rating) DESC, title ASC
  LIMIT 1)
 
-Amazon tag hard - 5:
-185. Department Top Three Salaries
-262. Trips and Users
-579. Find Cumulative Salary of an Employee
-601. Human Traffic of Stadium
-618. Students Report by Geography
+A*1421. NPV Queries (Amazon tag) -> seems easy
+# Write your MySQL query statement below
+SELECT id, year, IFNULL(npv, 0) AS npv
+FROM Queries LEFT JOIN NPV USING (id, year)
+ORDER BY id ASC;
+ 
+ 
