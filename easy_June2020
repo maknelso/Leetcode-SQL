@@ -44,6 +44,12 @@ Notes:
 -- 1303. SELECT employee_id, 
          COUNT(employee_id) OVER(PARTITION BY team_id) AS team_size
          
+-- 1173.  Immediate Food Delivery I 
+# CANNOT GROUP BY delivery_id, otherwise, it will AVG out 6 different delivery_ids
+# Write your MySQL query statement below
+SELECT ROUND(AVG(order_date = customer_pref_delivery_date)*100 ,2) AS immediate_percentage
+FROM Delivery;
+
 -- 1179. 
 SELECT id,
 SUM(CASE WHEN month = 'Jan' THEN revenue END) AS Jan_Revenue,
@@ -424,7 +430,7 @@ WHERE author_id = viewer_id
 ORDER BY author_id ASC;
 
 *1173. Immediate Food Delivery I 
-=> half flashed => To find percentage just use AVG(order_date = customer_pref_delivery_date)
+# CANNOT GROUP BY delivery_id, otherwise, it will AVG out 6 different delivery_ids
 # Write your MySQL query statement below
 SELECT ROUND(AVG(order_date = customer_pref_delivery_date)*100 ,2) AS immediate_percentage
 FROM Delivery;
