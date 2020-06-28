@@ -337,7 +337,9 @@ FROM Product JOIN Sales USING (product_id)
 GROUP BY product_id
 ORDER BY product_id ASC;
 
-*1075. Project Employees I -> NEED TO REDO (half flashed)
+*1075. Project Employees I
+# essentially: AVG(experience_years) = SUM(experience_years) / denominator  => denominator is COUNT(project_id) because it is GROUP BY project_id
+# think of AVG as SUM(numerator/input) / DENOMINATOR => DENOMINATOR = COUNT (group by column)
 # Write your MySQL query statement below
 SELECT project_id, ROUND(AVG(experience_years), 2) AS average_years
 FROM Project JOIN Employee USING (employee_id)
