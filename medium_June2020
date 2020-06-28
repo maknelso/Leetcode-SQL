@@ -1,7 +1,7 @@
 Difficulty: Medium
 48 questions
 
-Do: 14 medium questions (29%)
+midway point: 24th question: 1132 - Reported Posts II
 
 REDO: All
 Memorize: 177 (CREATE FUNCTION) -> CREATE, BEGIN, DECLARE, SET1, SET2, SET3,... RETURN
@@ -11,10 +11,10 @@ Notes:
 -- 184. RANK() OVER(PARTITION BY 1ST ORDER BY 2ND) => 184. RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS num
 -- 184. have to RANK OVER(PARTITION BY DepartmentId), then DepartmentId next line -> otherwise error
 -- 184. likely if you PARTITION BY DepartmentId, then DepartmentId must come AFTER
+-- 534. SUM(games_played) OVER(PARTITION BY player_id ORDER BY event_date) AS games_played_so_far => SUM() OVER(PARTITION BY player_id ORDER BY event_date)
+-> SUMS up game_played, segregated by player_id, segregated by the order of event_date
 -- 570. To do COUNT(), you need GROUP BY. GROUP BY ManagerId, HAVING COUNT(ManagerId) >= 5 -> usually COUNT comes with GROUP BY
 -- 1421. => USING(column1, column2) => FROM Queries LEFT JOIN NPV USING(id, year);
-
-Amazon tag medium - 9:
 
 A*177. Nth Highest Salary -> CREATE FUNCTION    -> easy
                              BEGIN
@@ -84,6 +84,32 @@ WHERE (Employee.DepartmentId, Salary) IN
 (SELECT DepartmentId, MAX(Salary)
  FROM Employee 
  GROUP BY DepartmentId);
+
+534. Game Play Analysis III - did not flash
+#Window function answer
+# Write your MySQL query statement below
+SELECT player_id, event_date, SUM(games_played) OVER(PARTITION BY player_id ORDER BY event_date) AS games_played_so_far
+FROM Activity
+ORDER BY player_id, event_date ASC;
+
+#Non-window function answer -> don't fully get...
+# Write your MySQL query statement below
+SELECT a1.player_id, a1.event_date, SUM(a2.games_played) AS games_played_so_far
+FROM activity a1, activity a2
+WHERE a1.player_id = a2.player_id
+AND a1.event_date >= a2.event_date
+GROUP BY a1.player_id, a1.event_date
+ORDER BY a1.player_id, a1.event_date;
+
+550. Game Play Analysis IV -> leetcode crashed, not sure if it's the right answer
+# Write your MySQL query statement below
+# COUNT number of players that logged in for at least 2 conseuctive days 
+SELECT ROUND(a1.player_id / COUNT(DISTINCT a1.player_id), 2) AS fraction
+FROM Activity a1 JOIN Activity a2
+WHERE DATEDIFF(a2.event_date, a1.event_date) < 1
+AND a1.player_id = a2.player_id;
+
+
 
 A*570. Managers with at Least 5 Direct Reports -> not too bad
 # Write your MySQL query statement below
