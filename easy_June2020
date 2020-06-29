@@ -1,14 +1,43 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
+Redo: 
+176. (LIMIT 1 OFFSET 1 #has to be that particular order or else it is wrong), 
+181. (Think of the Cartesian product: 1, 2, 3, 4 | 1, 1, 1, 1 
+                                   : 1, 2, 3, 4 | 2, 2, 2, 2), 
+197. (197. DATEDIFF(start_date, end_date) => calculation seems to be start_date - end_date OR 1st date LESS 2nd date
+     => MS SQL SERVER needs: DATEDIFF(interval, start_date, end_date)
+     => MySQL: DATEDIFF(start_date, end_date)),
+512. (WHERE (a, b) => needs parentheses. GROUP BY => does not need parentheses), 
+586. (COUNT returns "before aggregation COUNT" even after GROUP BY), 
+S*597. (skipped - Facebook friend accept question)
+603. FROM cinema c1 JOIN cinema c2 ON ABS(c1.seat_id - c2.seat_id) = 1 #JOIN ON, not WHERE.... not 100% sure why,
+619. (not sure why I can't just do SELECT MAX(num) without a subquery),
+1076., 
+1082. (if you want RANK by seller_id, then GROUP BY seller_id. Although I believe there is a medium question that lets you RANK() OVER(PARTITION BY ORDER BY DESC) AS r...),
+1142., 
+1173. 
+S*1280. (skipped - 3 way join table)
+1327. Remember you cannot have WHERE SUM(unit)!!!! Always HAVING SUM(unit)!!!,
+*1435. CASE will not generate 0. If you want to generate 0, you need SELECT blah UNION ALL SELECT blah UNION ALL
+-> SELECT tier(MIN, MAX, bin) AS 
+
 If you want to completely redo:
 176, 181, 183, 196, 197, 512, 586, 613, 619, 627, 1050, 1068, 1069, 1082, 1083, 1327
 597, 603, 1083, 1142, 1280, 1435, 1076, 1303
 1173, 1211, 1251, 1179, 1322, 1407, 1435
 
-Need to redo: 
-597, 603 
+Notes:
 
-597:
+176. LIMIT 1 OFFSET 1 #has to be that particular order or else it is wrong
+197. DATEDIFF(start_date, end_date) => calculation seems to be start_date - end_date OR 1st date LESS 2nd date
+     => MS SQL SERVER needs: DATEDIFF(interval, start_date, end_date)
+     => MySQL: DATEDIFF(start_date, end_date)
+     
+512. WHERE (a, b) => needs parentheses. GROUP BY => does not need parentheses.
+
+586. GROUP BY and COUNT are very closely related. COUNT() counts things that are GROUP BY.
+
+S*597:
 SELECT ROUND(IFNULL((SELECT COUNT(*) 
                      FROM (SELECT DISTINCT requester_id, accepter_id 
                            FROM request_accepted) AS A)/
@@ -108,44 +137,23 @@ C*175 - Combine Two Tables -> done 1x
 SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);
 
-A,C*176 - Second Highest Salary -> done 1x
-- DID NOT FLASH => OFFSET excludes the first set of records
-- HAS TO BE LIMIT 1 OFFSET 1 (cannot do OFFSET 1 LIMIT 1)
-=> IFNULL(expression1, expression2) => IFNULL returns expression1 if expression1 is NOT NULL, otherwise it returns expression2
-
-This answer gives you NULL (correct answer) => is expression1 NULL? If not, return expression1. If it is NULL, return NULL.
+A,C*176 - Second Highest Salary -> LIMIT 1 OFFSET 1 (in that particular order)
 # Write your MySQL query statement below
-SELECT IFNULL(
-(SELECT DISTINCT Salary
-FROM Employee
-ORDER BY Salary DESC
-LIMIT 1 OFFSET 1), NULL) AS SecondHighestSalary;
+SELECT IFNULL((SELECT DISTINCT Salary
+               FROM Employee
+               ORDER BY Salary DESC
+               LIMIT 1 OFFSET 1), null) AS SecondHighestSalary;
 
-This subquery: 
-(SELECT DISTINCT Salary
-FROM Employee
-ORDER BY Salary DESC
-LIMIT 1 OFFSET 1) gives you the 200 already
-
-This answer DOES NOT give you the NULL
-# Write your MySQL query statement below
-SELECT DISTINCT Salary AS SecondHighestSalary
-FROM Employee
-ORDER BY Salary DESC
-LIMIT 1 OFFSET 1;
-
-This answer gets you the correct result, but the wrong thinking:
-# Write your MySQL query statement below
-SELECT MAX(Salary) AS SecondHighestSalary
-FROM Employee
-WHERE Salary < (SELECT MAX(Salary) FROM Employee);
-
-A,C*181 - Employees Earning More Than Their Managers -> done 1X 
-=> Have to draw it out on pen and paper
+A,C*181 - Employees Earning More Than Their Managers => Think of the Cartesian product: 1, 2, 3, 4 | 1, 1, 1, 1 
+                                                                                      : 1, 2, 3, 4 | 2, 2, 2, 2
 # Write your MySQL query statement below
 SELECT e1.Name AS Employee
 FROM Employee e1 JOIN Employee e2 ON e1.ManagerId = e2.Id
-WHERE e1.salary > e2.salary;
+WHERE e1.Salary > e2.Salary;
+
+# e1.ManagerId = e2.Id gets you:
+# e1.Id e1.name e1.Salary e1.ManagerId | e2.Id e2.name e2.Salary e2.ManagerId
+#    1    Joe      70000        3      |   3     Sam     60000      NULL
 
 C*182. Duplicate Emails - FLASHED - done 1x
 # Write your MySQL query statement below
@@ -169,11 +177,11 @@ FROM Person p1, Person p2
 WHERE p1.Email = p2.Email AND p1.Id > p2.Id;
 
 C*197. Rising Temperature - done 1x
-=> DID NOT FLASH (DATEDIFF function) - DATE DIFF
+# DATEDIFF(start_date, end_date) => calculation seems to be start_date - end_date OR 1st date LESS 2nd date
 # Write your MySQL query statement below
-SELECT w1.Id AS Id
-FROM Weather w1 JOIN Weather w2
-WHERE w1.Temperature > w2.Temperature AND DATEDIFF(w1.RecordDate, w2.RecordDate) = 1;
+SELECT DISTINCT w2.Id AS Id
+FROM Weather w1, Weather w2
+WHERE w2.Temperature > w1.Temperature AND DATEDIFF(w2.RecordDate, w1.RecordDate) = 1;
 
 *511. Game Play Analysis I -> done 1x
 # Write your MySQL query statement below
@@ -360,17 +368,14 @@ SELECT project_id, ROUND(AVG(experience_years), 2) AS average_years
 FROM Project JOIN Employee USING (employee_id)
 GROUP BY project_id;
 
-W**1076. Project Employees II => REDO
-=> DID NOT FLASH - WINDOW FUNCTION => need to review carefully
-=> trick: ORDER BY COUNT(DISTINCT employee_id) 
+W**1076. Project Employees II
 # Write your MySQL query statement below
-#report all projects with most employees
 SELECT project_id
-FROM (SELECT project_id, 
-      RANK() OVER(ORDER BY COUNT(DISTINCT employee_id)DESC) AS ranks
+FROM (SELECT project_id,
+      RANK() OVER(ORDER BY COUNT(DISTINCT employee_id) DESC) AS ranking
       FROM Project
       GROUP BY project_id) AS subquery
-WHERE ranks = 1;
+WHERE subquery.ranking = 1;
 
 A, W**1082. Sales Analysis I => done 1x
 # Write your MySQL query statement below
@@ -423,11 +428,11 @@ FROM Activity
 WHERE ABS(DATEDIFF('2019-07-27', activity_date)) < 30
 GROUP BY activity_date;
 
-C,S*1142. User Activity for the Past 30 Days II -> need to redo
+C,*1142. User Activity for the Past 30 Days II -> DATEDIFF(first_date, second_date) is first_date LESS second_date
 # Write your MySQL query statement below
 SELECT IFNULL(ROUND(COUNT(DISTINCT session_id)/COUNT(DISTINCT user_id), 2), 0.00) AS average_sessions_per_user
 FROM Activity
-WHERE ABS(DATEDIFF('2019-07-27', activity_date)) < 30; 
+WHERE DATEDIFF('2019-07-27', activity_date) < 30;
 
 *1148. Article Views I
 # Write your MySQL query statement below
@@ -439,10 +444,15 @@ WHERE author_id = viewer_id
 ORDER BY author_id ASC;
 
 *1173. Immediate Food Delivery I 
-# CANNOT GROUP BY delivery_id, otherwise, it will AVG out 6 different delivery_ids
 # Write your MySQL query statement below
-SELECT ROUND(AVG(order_date = customer_pref_delivery_date)*100 ,2) AS immediate_percentage
-FROM Delivery;
+SELECT ROUND((AVG(order_date = customer_pref_delivery_date)) * 100, 2) AS immediate_percentage
+FROM Delivery
+
+# We want immediate_percentage for all delivery_id combined, not broken out by delivery_id, so we do not
+# GROUP BY delivery_id. Otherwise, you are calculate immediate_percentage for EACH delivery_id
+# numerator / denominator 
+# numerator = SUM()
+# denomiantor = COUNT(whatever you grouped by)
 
 S*1179. Reformat Department Table
 SELECT id,
@@ -461,13 +471,22 @@ SUM(CASE WHEN month = 'Dec' THEN revenue END) AS Dec_Revenue
 FROM Department
 GROUP BY id;
 
-1211. Queries Quality and Percentage -> redo (not too bad)
+1211. Queries Quality and Percentage 
 # Write your MySQL query statement below
-# query to find query_name, quality, and poor_query_percentage
-SELECT query_name, ROUND(AVG(rating/position), 2) AS quality, ROUND(AVG(rating < 3) * 100, 2) AS poor_query_percentage
+SELECT query_name, ROUND(AVG(rating / position), 2) AS quality, ROUND(AVG(rating < 3)* 100, 2) AS poor_query_percentage
 FROM Queries
 GROUP BY query_name
 ORDER BY quality DESC;
+
+# i) above quality:
+# AVG(rating / position)
+# => numerator: SUM(rating/position)
+# => denomiantor: COUNT(query_name) - 3 
+
+# ii) above poor_query_percentage:
+# AVG(rating < 3)
+# => numerator: COUNT(where rating < 3)
+# => denominator: COUNT(query_name) - 3
 
 C*1241. Number of Comments per Post -> this is a weird question with strange table to join
 => Do not fully understand - need to take a look again
@@ -560,22 +579,22 @@ GROUP BY user_id
 ORDER BY travelled_distance DESC, name ASC;
 
 D*1435. Create a Session Bar Chart 
-=> Cannot use CASE WHEN, ELSE, END because there is no count for [10-15>
+=> Cannot use CASE WHEN, ELSE, END because there is no count for [10-15> AND you need left JOIN to create the NULL
 => Need a left JOIN to create a NULL
 => tiers, UNION
 # Write your MySQL query statement below
-With tiers (MIN, MAX, bin) AS
-(
-    SELECT 0, 299, '[0-5>'
-    UNION ALL
-    SELECT 300, 599, '[5-10>'
-    UNION
-    SELECT 600, 899, '[10-15>'
-    UNION ALL
-    SELECT 900, 100000, '15 or more'
+# Cannot use CASE because it will not generate the 0 for [10-15>
+WITH tiers (MIN, MAX, bin) AS
+(SELECT 0, 299, '[0-5>'
+ UNION ALL
+ SELECT 300, 599, '[5-10>'
+ UNION ALL
+ SELECT 600, 899, '[10-15>'
+ UNION ALL
+ SELECT 900, 100000, '15 or more'
 )
-SELECT tiers.bin, COUNT(session_id) AS total 
-FROM tiers LEFT JOIN Sessions on duration BETWEEN MIN AND MAX
+SELECT tiers.bin, IFNULL(COUNT(session_id), 0) AS total
+FROM tiers LEFT JOIN Sessions ON duration BETWEEN MIN AND MAX
 GROUP BY bin;
 
 D*1484. Groups Sold Products By The Date 
