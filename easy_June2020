@@ -1,13 +1,13 @@
 Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
 
-Redo: 
+Redo Notes: 
 176. (LIMIT 1 OFFSET 1 #has to be that particular order or else it is wrong), 
 181. (Think of the Cartesian product: 1, 2, 3, 4 | 1, 1, 1, 1 
                                    : 1, 2, 3, 4 | 2, 2, 2, 2), 
 197. (197. DATEDIFF(start_date, end_date) => calculation seems to be start_date - end_date OR 1st date LESS 2nd date
      => MS SQL SERVER needs: DATEDIFF(interval, start_date, end_date)
      => MySQL: DATEDIFF(start_date, end_date)),
-512. (WHERE (a, b) => needs parentheses. GROUP BY => does not need parentheses), 
+512. WHERE (a, b) => needs parentheses. GROUP BY => does not need parentheses), 
 586. (COUNT returns "before aggregation COUNT" even after GROUP BY), 
 S*597. (skipped - Facebook friend accept question)
 603. FROM cinema c1 JOIN cinema c2 ON ABS(c1.seat_id - c2.seat_id) = 1 #JOIN ON, not WHERE.... not 100% sure why,
@@ -18,8 +18,10 @@ S*597. (skipped - Facebook friend accept question)
 1173. 
 S*1280. (skipped - 3 way join table)
 1327. Remember you cannot have WHERE SUM(unit)!!!! Always HAVING SUM(unit)!!!,
-*1435. CASE will not generate 0. If you want to generate 0, you need SELECT blah UNION ALL SELECT blah UNION ALL
--> SELECT tier(MIN, MAX, bin) AS 
+1435. - CTE Answer 
+# Cannot use CASE because it will not show [10-15> as it is 0
+# Use CTE: A CTE (Common Table Expression) defines a temporary result set which you can then use in a SELECT 
+# statement. It becomes a convenient way to manage complicated queries,
 
 If you want to completely redo:
 176, 181, 183, 196, 197, 512, 586, 613, 619, 627, 1050, 1068, 1069, 1082, 1083, 1327
@@ -27,24 +29,7 @@ If you want to completely redo:
 1173, 1211, 1251, 1179, 1322, 1407, 1435
 
 Notes:
-
-176. LIMIT 1 OFFSET 1 #has to be that particular order or else it is wrong
-197. DATEDIFF(start_date, end_date) => calculation seems to be start_date - end_date OR 1st date LESS 2nd date
-     => MS SQL SERVER needs: DATEDIFF(interval, start_date, end_date)
-     => MySQL: DATEDIFF(start_date, end_date)
-     
-512. WHERE (a, b) => needs parentheses. GROUP BY => does not need parentheses.
-
 586. GROUP BY and COUNT are very closely related. COUNT() counts things that are GROUP BY.
-
-S*597:
-SELECT ROUND(IFNULL((SELECT COUNT(*) 
-                     FROM (SELECT DISTINCT requester_id, accepter_id 
-                           FROM request_accepted) AS A)/
-                     (SELECT COUNT(*) 
-                      FROM (SELECT DISTINCT sender_id, send_to_id 
-                            FROM friend_request) AS B), 0), 2) AS accept_rate;
-
 607 (easy - done but do again),
 1083 (easy - done but do again), 1142 (easy - COUNT(DISTINCT session_id)/COUNT(DISTINCT user_id) - done 1x), 
 1280 (weird 3-way join table),
@@ -69,7 +54,6 @@ Notes:
          => GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
 -- 1322. Multiple ORDER BY: ORDER BY ctr DESC, ad_id ASC;
 -- 1173. AVG(order_date = customer_pref_delivery_date)
-
 -- 1211. AVG(rating/position), ROUND(AVG(rating < 3)    
 -> AVG function takes (argument) as numerator. Denominator is COUNT(whatever is GROUPED BY)
 -> AVG(rating < 3) -> takes COUNT(where rating < 3)....  *not the same if you put an argument 
@@ -104,25 +88,6 @@ SUM(CASE WHEN month = 'Nov' THEN revenue END) AS Nov_Revenue,
 SUM(CASE WHEN month = 'Dec' THEN revenue END) AS Dec_Revenue
 FROM Department
 GROUP BY id;
-
--- 1294. -> WHERE day LIKE '2019-11-%'
-(CASE
-    WHEN AVG(weather_state) <= 15 THEN 'Cold'
-    WHEN AVG(weather_state) >= 25 THEN 'Hot'
-    ELSE 'Warm'
- END) AS weather_type
- 
- -- 1322. -> the GROUP BY clause affects AVG. GROUP BY column affects AVG denominator (because it is a count).
-# Write your MySQL query statement below
-SELECT ad_id,
-IFNULL(ROUND(AVG(CASE
-                    WHEN action = 'Clicked' THEN 1
-                    WHEN action = 'Viewed' THEN 0
-                    ELSE NULL
-                  END)*100, 2), 0) AS ctr
-FROM Ads
-GROUP BY ad_id
-ORDER BY ctr DESC, ad_id ASC;
 
 A - Amazon question
 C - common (green, yellow, and really large blue)
@@ -499,11 +464,13 @@ GROUP BY S1.sub_id;
 *1251. Average Selling Price - redo
 => Need WHERE purchase_date BETWEEN start_date AND end_date to make sure the correct SUM(units * price) pairing is used!!
 # Write your MySQL query statement below
-SELECT product_id, ROUND(SUM(units * price)/ SUM(units), 2) AS average_price
-FROM Prices JOIN UnitsSold USING (product_id)
+SELECT product_id, ROUND(SUM(units * price) / SUM(units), 2) AS average_price
+FROM UnitsSold JOIN Prices USING (product_id)
 WHERE purchase_date BETWEEN start_date AND end_date
-GROUP BY product_id
-ORDER BY product_id ASC;
+GROUP BY product_id;
+
+# ASP = total price / number of products sold
+# numerator - SUM(units * price) / SUM(units)
 
 S*1280. Students and Examinations
 # Write your MySQL query statement below
@@ -583,7 +550,9 @@ D*1435. Create a Session Bar Chart
 => Need a left JOIN to create a NULL
 => tiers, UNION
 # Write your MySQL query statement below
-# Cannot use CASE because it will not generate the 0 for [10-15>
+# Cannot use CASE because it will not show [10-15> as it is 0
+# Use CTE: A CTE (Common Table Expression) defines a temporary result set which you can then use in a SELECT 
+# statement. It becomes a convenient way to manage complicated queries.
 WITH tiers (MIN, MAX, bin) AS
 (SELECT 0, 299, '[0-5>'
  UNION ALL
