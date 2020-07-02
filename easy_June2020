@@ -103,6 +103,7 @@ SELECT FirstName, LastName, City, State
 FROM Person LEFT JOIN Address USING (PersonId);
 
 A,C*176 - Second Highest Salary -> LIMIT 1 OFFSET 1 (in that particular order)
+-> Cannot just do SELECT DISTINCT Salary FROM Employee ORDER BY Salary DESC LIMIT 1 OFFSET 1 (because there may only be row).
 # Write your MySQL query statement below
 SELECT IFNULL((SELECT DISTINCT Salary
                FROM Employee
