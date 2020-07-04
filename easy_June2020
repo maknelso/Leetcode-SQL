@@ -12,7 +12,7 @@ Redo Notes:
 S*597. (skipped - Facebook friend accept question)
 603. FROM cinema c1 JOIN cinema c2 ON ABS(c1.seat_id - c2.seat_id) = 1 #JOIN ON, not WHERE.... not 100% sure why,
 619. (not sure why I can't just do SELECT MAX(num) without a subquery),
-1076., 
+1076. cannot PARTITION BY because that will return most for both project 1 and project 2, 
 1082. (if you want RANK by seller_id, then GROUP BY seller_id. Although I believe there is a medium question that lets you RANK() OVER(PARTITION BY ORDER BY DESC) AS r...),
 1142., 
 1173. 
