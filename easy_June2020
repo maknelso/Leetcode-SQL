@@ -573,3 +573,8 @@ SELECT sell_date, COUNT(DISTINCT product) AS num_sold,
 GROUP_CONCAT(DISTINCT product ORDER BY product SEPARATOR ',') AS products
 FROM Activities
 GROUP BY sell_date;
+
+1495.
+SELECT DISTINCT title
+FROM Content JOIN TVProgram USING(content_id)
+WHERE kids_content = 'Y' AND content_type = 'Movies' AND program_date LIKE '2020-06-%';
