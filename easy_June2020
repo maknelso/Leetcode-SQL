@@ -544,7 +544,7 @@ This function is commonly used to REPLACE NULL value with another value (second 
 SELECT name, IFNULL(SUM(distance), 0) AS travelled_distance
 FROM Users LEFT JOIN Rides ON Users.id = Rides.user_id
 GROUP BY user_id
-ORDER BY travelled_distance DESC, name ASC;
+ORDER BY travelled_distance DESC, name;
 
 D*1435. Create a Session Bar Chart 
 => Cannot use CASE WHEN, ELSE, END because there is no count for [10-15> AND you need left JOIN to create the NULL
@@ -570,6 +570,6 @@ D*1484. Groups Sold Products By The Date
 => trick: GROUP_CONCAT(product ORDER BY product ASC SEPARATOR ',')
 # Write your MySQL query statement below
 SELECT sell_date, COUNT(DISTINCT product) AS num_sold, 
-GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
+GROUP_CONCAT(DISTINCT product ORDER BY product SEPARATOR ',') AS products
 FROM Activities
 GROUP BY sell_date;
