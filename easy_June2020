@@ -475,10 +475,13 @@ GROUP BY product_id;
 
 S*1280. Students and Examinations
 # Write your MySQL query statement below
-SELECT student.student_id, student.student_name, subject.subject_name, COUNT(exam.subject_name) AS attended_exams
-FROM Students as student JOIN Subjects as subject LEFT JOIN Examinations as exam
-ON student.student_id = exam.student_id AND subject.subject_name = exam.subject_name
-GROUP BY student.student_id, subject.subject_name
+# you want all the student_id from Students
+# you want all the subject_name from Examinations
+SELECT student_id, student_name, subject_name, COUNT(Examinations.subject_name) AS attended_exams
+FROM Students 
+CROSS JOIN Subjects
+LEFT JOIN Examinations USING (student_id, subject_name)
+GROUP BY student_id, subject_name
 ORDER BY student_id, subject_name;
 
 D 1294. Weather Type in Each Country -> not too bad actually
