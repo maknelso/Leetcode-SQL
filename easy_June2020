@@ -1,93 +1,33 @@
-Difficulty: Easy (do all high frequencies, and CASE, SET, UPDATE, INSERT ones)
+Difficulty: Easy
 
-Redo Notes: 
+Notes a):
 176. (LIMIT 1 OFFSET 1 #has to be that particular order or else it is wrong), 
 181. (Think of the Cartesian product: 1, 2, 3, 4 | 1, 1, 1, 1 
                                    : 1, 2, 3, 4 | 2, 2, 2, 2), 
-197. (197. DATEDIFF(start_date, end_date) => calculation seems to be start_date - end_date OR 1st date LESS 2nd date
-     => MS SQL SERVER needs: DATEDIFF(interval, start_date, end_date)
-     => MySQL: DATEDIFF(start_date, end_date)),
 512. WHERE (a, b) => needs parentheses. GROUP BY => does not need parentheses), 
-586. (COUNT returns "before aggregation COUNT" even after GROUP BY), 
-S*597. (skipped - Facebook friend accept question)
 603. FROM cinema c1 JOIN cinema c2 ON ABS(c1.seat_id - c2.seat_id) = 1 #JOIN ON, not WHERE.... not 100% sure why,
 619. (not sure why I can't just do SELECT MAX(num) without a subquery),
-1076. cannot PARTITION BY because that will return most for both project 1 and project 2, 
-1082. (if you want RANK by seller_id, then GROUP BY seller_id. Although I believe there is a medium question that lets you RANK() OVER(PARTITION BY ORDER BY DESC) AS r...),
-1142., 
-1173. 
 S*1280. (skipped - 3 way join table)
-1327. Remember you cannot have WHERE SUM(unit)!!!! Always HAVING SUM(unit)!!!,
 1435. - CTE Answer 
 # Cannot use CASE because it will not show [10-15> as it is 0
 # Use CTE: A CTE (Common Table Expression) defines a temporary result set which you can then use in a SELECT 
 # statement. It becomes a convenient way to manage complicated queries,
 
-If you want to completely redo:
-176, 181, 183, 196, 197, 512, 586, 613, 619, 627, 1050, 1068, 1069, 1082, 1083, 1327
-597, 603, 1083, 1142, 1280, 1435, 1076, 1303
-1173, 1211, 1251, 1179, 1322, 1407, 1435
-
-Notes:
-586. GROUP BY and COUNT are very closely related. COUNT() counts things that are GROUP BY.
-607 (easy - done but do again),
-1083 (easy - done but do again), 1142 (easy - COUNT(DISTINCT session_id)/COUNT(DISTINCT user_id) - done 1x), 
-1280 (weird 3-way join table),
-1435 (weird one), 1484 (easy -> do again for GROUP_CONCAT)
-1076 (window function - relatively easy) -> redo again
-1303 (window function - easy) -> redo again
-
-Notes:
+Notes b):
 -- Double check the JOIN tables to ensure it is what you need. That is very important 
 -- Have to thoroughly think through the case to ensure it yields the correct answer during exam
 -- MAX(num) takes care of NULL. SELECT MAX(NULL) gives you NULL
 -- WHERE __ IN (subquery) - this subquery does not need to add a subquery name
--- FROM (subquery) - this subquery needs a subquery name
 -- GROUP BY x, y - does not need parenthesis
 -- WHERE (x, y) - needs parenthesis
--- UPDATE table_name, SET sex = IF ( )
--- ROUND(AVG(experience_years), 2) with GROUP BY project_id -> GROUP BY affects the AVG denominator count
--- 1484. GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
 -- 1142. COUNT(DISTINCT session_id)/COUNT(DISTINCT user_id)
--- **WHERE first, then GROUP BY
 -- 1484. GROUP_CONCAT, SEPARATOR
          => GROUP_CONCAT(DISTINCT product ORDER BY product ASC SEPARATOR ',') AS products
--- 1322. Multiple ORDER BY: ORDER BY ctr DESC, ad_id ASC;
 -- 1173. AVG(order_date = customer_pref_delivery_date)
 -- 1211. AVG(rating/position), ROUND(AVG(rating < 3)    
 -> AVG function takes (argument) as numerator. Denominator is COUNT(whatever is GROUPED BY)
 -> AVG(rating < 3) -> takes COUNT(where rating < 3)....  *not the same if you put an argument 
-
 -- 1251. Need WHERE purchase_date BETWEEN start_date AND end_date
-
--- 1076. SELECT project_id, 
-         RANK() OVER(ORDER BY COUNT(DISTINCT employee_id)DESC) AS ranks
-         
--- 1303. SELECT employee_id, 
-         COUNT(employee_id) OVER(PARTITION BY team_id) AS team_size
-         
--- 1173.  Immediate Food Delivery I 
-# CANNOT GROUP BY delivery_id, otherwise, it will AVG out 6 different delivery_ids
-# Write your MySQL query statement below
-SELECT ROUND(AVG(order_date = customer_pref_delivery_date)*100 ,2) AS immediate_percentage
-FROM Delivery;
-
--- 1179. 
-SELECT id,
-SUM(CASE WHEN month = 'Jan' THEN revenue END) AS Jan_Revenue,
-SUM(CASE WHEN month = 'Feb' THEN revenue END) AS Feb_Revenue,
-SUM(CASE WHEN month = 'Mar' THEN revenue END) AS Mar_Revenue,
-SUM(CASE WHEN month = 'Apr' THEN revenue END) AS Apr_Revenue,
-SUM(CASE WHEN month = 'May' THEN revenue END) AS May_Revenue,
-SUM(CASE WHEN month = 'Jun' THEN revenue END) AS Jun_Revenue,
-SUM(CASE WHEN month = 'Jul' THEN revenue END) AS Jul_Revenue,
-SUM(CASE WHEN month = 'Aug' THEN revenue END) AS Aug_Revenue,
-SUM(CASE WHEN month = 'Sep' THEN revenue END) AS Sep_Revenue,
-SUM(CASE WHEN month = 'Oct' THEN revenue END) AS Oct_Revenue,
-SUM(CASE WHEN month = 'Nov' THEN revenue END) AS Nov_Revenue,
-SUM(CASE WHEN month = 'Dec' THEN revenue END) AS Dec_Revenue
-FROM Department
-GROUP BY id;
 
 A - Amazon question
 C - common (green, yellow, and really large blue)
@@ -473,7 +413,8 @@ GROUP BY product_id;
 # ASP = total price / number of products sold
 # numerator - SUM(units * price) / SUM(units)
 
-S*1280. Students and Examinations
+S*1280. Students and Examinations 
+-> FROM Students CROSS JOIN Subjects LEFT JOIN Examinations ON Students.student_id = Examinations.student_id AND Subjects.subject_name = Examinations.subject_name
 # Write your MySQL query statement below
 # you want all the student_id from Students
 # you want all the subject_name from Examinations
