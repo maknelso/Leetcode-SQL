@@ -350,15 +350,11 @@ FROM Product JOIN Sales USING (product_id)
 GROUP BY product_id
 HAVING MIN(sale_date) >= '2019-01-01' AND MAX(sale_date) <= '2019-03-31'
 
-*1113. Reported Posts -> NEED TO REDO. GROUP BY extra. Then COUNT (DISTINCT post_id) WITHIN the aggregated extra.
--> Within aggregated extra, there is 1 DISTINCT post_id for spam, and 2 DISTINCT post_id for racism
-=> DID NOT FLASH => DISTINCT does not need () 
-=> WHERE goes before GROUP BY
-=> HAVING is for filtering aggregate function
+*1113. Reported Posts
 # Write your MySQL query statement below
 SELECT extra AS report_reason, COUNT(DISTINCT post_id) AS report_count
 FROM Actions
-WHERE action_date = '2019-07-04' AND action = 'report'
+WHERE DATEDIFF('2019-07-05', action_date) = 1 AND action = 'report'
 GROUP BY extra;
 
 *1141. User Activity for the Past 30 Days I -> REDO - makes a difference the order for DATEDIFF(date1, date2)
