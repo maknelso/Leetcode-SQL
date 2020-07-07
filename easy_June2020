@@ -527,6 +527,12 @@ D*1435. Create a Session Bar Chart
 => tiers, UNION
 
 # Write your MySQL query statement below
+->  CTE creates the basic 0, 299, [0-5>
+                          300, 599, [5-10>
+
+LEFT JOIN to make sure we capture all the bins, IFNULL to show 0 if there is no count on a certain bin.
+GROUP BY bin, to keep all the bins, otherwise it'll just return the first bin.
+
 WITH CTE (minimum, maximum, bin) AS
 (
  SELECT 0, 299, '[0-5>'
