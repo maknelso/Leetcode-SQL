@@ -436,8 +436,8 @@ ORDER BY post_id;
 *1251. Average Selling Price - redo
 => Need WHERE purchase_date BETWEEN start_date AND end_date to make sure the correct SUM(units * price) pairing is used!!
 # Write your MySQL query statement below
-SELECT product_id, ROUND(SUM(units * price) / SUM(units), 2) AS average_price
-FROM UnitsSold JOIN Prices USING (product_id)
+SELECT product_id, IFNULL(ROUND(SUM(units * price) / SUM(units), 2), 0.00) AS average_price
+FROM Prices JOIN UnitsSold USING (product_id)
 WHERE purchase_date BETWEEN start_date AND end_date
 GROUP BY product_id;
 
