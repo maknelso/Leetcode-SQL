@@ -1,7 +1,7 @@
 Difficulty: Easy
 
 Implementing CTE: 1076, 1082
-Redo: 176, 1084
+Redo: 176, 1084, 1142, 1241, 1280, 1327, 1435
 
 Notes a):
 176. (LIMIT 1 OFFSET 1 #has to be that particular order or else it is wrong), 
