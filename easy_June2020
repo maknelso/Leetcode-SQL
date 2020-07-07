@@ -1,5 +1,8 @@
 Difficulty: Easy
 
+Implementing CTE: 1076, 1082
+
+
 Notes a):
 176. (LIMIT 1 OFFSET 1 #has to be that particular order or else it is wrong), 
 181. (Think of the Cartesian product: 1, 2, 3, 4 | 1, 1, 1, 1 
@@ -283,6 +286,20 @@ FROM (SELECT project_id,
       GROUP BY project_id) AS subquery
 WHERE subquery.ranking = 1;
 
+CTE answer:
+# Write your MySQL query statement below
+WITH CTE AS
+(
+    SELECT project_id,
+    RANK() OVER(ORDER BY COUNT(DISTINCT employee_id) DESC) AS ranking
+    FROM Project
+    GROUP BY project_id
+)
+SELECT project_id
+FROM CTE
+WHERE CTE.ranking = 1;
+
+
 A, W**1082. Sales Analysis I => done 1x
 # Write your MySQL query statement below
 # Window function answer:
@@ -302,7 +319,20 @@ GROUP BY seller_id
 HAVING SUM(price) >= ALL(SELECT SUM(price)
                          FROM Sales
                          GROUP BY seller_id);
-
+                         
+CTE answer:
+# Write your MySQL query statement below
+WITH CTE AS
+(
+    SELECT seller_id,
+    RANK() OVER(ORDER BY SUM(price) DESC) AS ranking
+    FROM Sales
+    GROUP BY seller_id
+)
+SELECT seller_id
+FROM CTE
+WHERE ranking = 1
+ORDER BY seller_id;
 
 A*1083. Sales Analysis II -> Need to redo (did not flash), done 1x -> buyer_id IN or NOT IN, if we are looking for buyer_id
 # Write your MySQL query statement below
