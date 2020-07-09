@@ -104,24 +104,15 @@ AND a1.event_date >= a2.event_date
 GROUP BY a1.player_id, a1.event_date
 ORDER BY a1.player_id, a1.event_date;
 
-550. Game Play Analysis IV -> half skipped
-# Write your MySQL query statement below
-# COUNT number of players that logged in for at least 2 conseuctive days 
-# numerator has WHERE restriction, denominator does not have WHERE restriction..., counts ALL the DISTINCT players
-SELECT ROUND(COUNT(DISTINCT player_id) / (SELECT COUNT(DISTINCT player_id) FROM Activity),2) AS fraction 
-FROM Activity
-WHERE (player_id, DATE_SUB(event_date, INTERVAL 1 DAY)) 
-IN (SELECT player_id, MIN(event_date) AS first_login 
-    FROM Activity 
-    GROUP BY player_id);
+550. Game Play Analysis IV -> tougher
+-- numerator: count # of players logged in for at least 2 consecutive days ,starting from their FIRST login date
+-- denominator: total number of players
 
-Below was my attempt, gives you correct 0.33, but not the correct thinking
 # Write your MySQL query statement below
-# COUNT number of players that logged in for at least 2 conseuctive days 
-SELECT ROUND(a1.player_id / COUNT(DISTINCT a1.player_id), 2) AS fraction
-FROM Activity a1 JOIN Activity a2
-WHERE DATEDIFF(a2.event_date, a1.event_date) < 1
-AND a1.player_id = a2.player_id;
+SELECT ROUND(SUM(IF(DATEDIFF(event_date, first_login) = 1, 1, 0)) / COUNT(DISTINCT player_id),2) AS fraction
+FROM (SELECT *, 
+      MIN(event_date) OVER(PARTITION BY player_id) AS first_login
+      FROM Activity) AS subquery
 
 A*570. Managers with at Least 5 Direct Reports -> not too bad
 # Write your MySQL query statement below
