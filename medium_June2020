@@ -110,7 +110,7 @@ ORDER BY a1.player_id, a1.event_date;
 
 # Write your MySQL query statement below
 SELECT ROUND(SUM(IF(DATEDIFF(event_date, first_login) = 1, 1, 0)) / COUNT(DISTINCT player_id),2) AS fraction
-FROM (SELECT *, 
+FROM (SELECT player_id, event_date, 
       MIN(event_date) OVER(PARTITION BY player_id) AS first_login
       FROM Activity) AS subquery
 
