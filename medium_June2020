@@ -1,8 +1,6 @@
 Difficulty: Medium
 48 questions
 
-Next set of 5 medium questions to do (by number sequence): 585, 602, 608, 612, 614
-
 midway point: 24th question: 1132 - Reported Posts II
 
 Redo: 177, 
@@ -132,14 +130,14 @@ FROM Candidate JOIN (SELECT Candidateid
                      LIMIT 1) AS winner
 WHERE Candidate.id = winner.Candidateid;
 
-578. Get Highest Answer Rate Question -> makes sense, did not flash
+578. Get Highest Answer Rate Question
 # Write your MySQL query statement below
-# find the highest answer rate
-SELECT question_id AS survey_log
+SELECT  question_id AS survey_log
 FROM survey_log
 GROUP BY question_id
-ORDER BY COUNT(answer_id) / COUNT(IF(action = 'show', 1, 0)) DESC
+ORDER BY IFNULL(COUNT(answer_id) / COUNT(IF(action = 'show', 1, 0)), 0) DESC
 LIMIT 1;
+-- ORDER BY: 1/1 for question 285, 0/1 for question 369
 
 580. Count Student Number in Departments -> flashed 
 # Write your MySQL query statement below
