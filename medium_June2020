@@ -70,13 +70,13 @@ A*184. Department Highest Salary -> Window function -> a bit harder
 
 -- Window function
 # Write your MySQL query statement below
-SELECT Department.Name AS Department, Esub.Name As Employee, Esub.Salary
-FROM (SELECT Name, Salary,
-      RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS r,
-      DepartmentId
-      FROM Employee) AS Esub
+SELECT Department.Name AS Department, Esub.Name AS Employee, Esub.Salary
+FROM
+(SELECT Id, Name, Salary, DepartmentId,
+RANK() OVER(PARTITION BY DepartmentId ORDER BY Salary DESC) AS r
+FROM Employee) AS Esub
 JOIN Department ON Esub.DepartmentId = Department.Id
-WHERE Esub.r = 1;
+WHERE Esub.r = 1
 
 -- Non-Window function
 # Write your MySQL query statement below
