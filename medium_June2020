@@ -160,6 +160,7 @@ WHERE TIV_2015 IN (SELECT TIV_2015
                                              FROM insurance
                                              GROUP BY LAT, LON
                                              HAVING COUNT(*) = 1);
+-- Filter CONCAT (LAT, LON) criteria 1st, then filter COUNT(TIV_2015) > 1 criteria 2nd, then SUM last once criteria 1 and 2 are filled.
                                                                   
 S*608. Tree Node (no Amazon tag) -> do not fully understand WHERE p_id IS NOT NULL AND p_id IS NOT NULL
 # Write your MySQL query statement below
