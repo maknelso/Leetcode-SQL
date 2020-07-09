@@ -107,7 +107,8 @@ ORDER BY a1.player_id, a1.event_date;
 550. Game Play Analysis IV -> half skipped
 # Write your MySQL query statement below
 # COUNT number of players that logged in for at least 2 conseuctive days 
-SELECT ROUND(COUNT(DISTINCT player_id) / (SELECT COUNT(DISTINCT player_id) FROM Activity),2) as fraction 
+# numerator has WHERE restriction, denominator does not have WHERE restriction..., counts ALL the DISTINCT players
+SELECT ROUND(COUNT(DISTINCT player_id) / (SELECT COUNT(DISTINCT player_id) FROM Activity),2) AS fraction 
 FROM Activity
 WHERE (player_id, DATE_SUB(event_date, INTERVAL 1 DAY)) 
 IN (SELECT player_id, MIN(event_date) AS first_login 
