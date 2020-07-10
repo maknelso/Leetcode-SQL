@@ -194,6 +194,15 @@ ORDER BY id ASC;
 SELECT ROUND(SQRT(MIN((POW(p1.x - p2.x, 2) + POW(p1.y - p2.y, 2)))), 2) AS shortest
 FROM point_2d p1 JOIN point_2d p2 ON p1.x != p2.x OR p1.y != p2.y;
 
+614. Second Degree Follower
+# Write your MySQL query statement below
+SELECT followee AS follower, COUNT(DISTINCT follower) AS num
+FROM follow
+GROUP BY followee
+HAVING followee IN (SELECT DISTINCT follower
+                    FROM follow)
+ORDER BY followee;
+
 A*626. Exchange Seats -> the CASE ordering has to be below probably because it depends if last id is odd...
 => CASE solution
 # Write your MySQL query statement below
