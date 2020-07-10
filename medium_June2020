@@ -161,6 +161,19 @@ WHERE TIV_2015 IN (SELECT TIV_2015
                                              GROUP BY LAT, LON
                                              HAVING COUNT(*) = 1);
 -- Filter CONCAT (LAT, LON) criteria 1st, then filter COUNT(TIV_2015) > 1 criteria 2nd, then SUM last once criteria 1 and 2 are filled.
+
+602. Friend Requests II: Who Has the Most Friends
+# Write your MySQL query statement below
+SELECT id, COUNT(id) AS num 
+FROM 
+    (
+      (SELECT requester_id AS id FROM request_accepted) 
+       UNION ALL 
+      (SELECT accepter_id AS id FROM request_accepted)
+    ) AS tb 
+GROUP BY id
+ORDER BY num DESC 
+LIMIT 1;
                                                                   
 S*608. Tree Node (no Amazon tag) -> do not fully understand WHERE p_id IS NOT NULL AND p_id IS NOT NULL
 # Write your MySQL query statement below
