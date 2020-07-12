@@ -262,6 +262,23 @@ FROM (SELECT student_id, course_id, grade,
 WHERE subquery.ranking = 1
 ORDER BY student_id;
 
+1126. Active Businesses -> not 100% sure of solution
+# Write your MySQL query statement below
+WITH CTE AS
+(
+    SELECT business_id, 
+    (CASE 
+        WHEN occurences > AVG(occurences) OVER(PARTITION BY event_type) THEN 1 
+        ELSE 0 
+     END
+     ) AS chosen
+    FROM Events
+)
+SELECT business_id
+FROM CTE
+GROUP BY business_id
+HAVING SUM(chosen) > 1;
+
 S*1132. Reported Posts II (no Amazon tag) -> have to read question carefully to understand question
 # Write your MySQL query statement below
 # find the average for daily percentage of posts that got removed after being reported as spam, rounded to 2 decimal places
