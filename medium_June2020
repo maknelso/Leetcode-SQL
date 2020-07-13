@@ -118,7 +118,7 @@ SELECT Name
 FROM Employee e1 JOIN (SELECT ManagerId
                        FROM Employee
                        GROUP BY ManagerId
-                       HAVING COUNT(ManagerId) >= 5) e2 ON e1.Id = e2.ManagerId;
+                       HAVING COUNT(ManagerId) >= 5) AS e2 ON e1.Id = e2.ManagerId;
 
 574. Winning Candidate => If you want to COUNT, you need to GROUP BY usually
 # Write your MySQL query statement below
