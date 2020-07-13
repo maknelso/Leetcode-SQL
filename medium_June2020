@@ -129,6 +129,18 @@ FROM Candidate JOIN (SELECT Candidateid
                      LIMIT 1) AS winner
 WHERE Candidate.id = winner.Candidateid;
 
+This answer didn't work -> throw in SQL Server
+# Write your MySQL query statement below
+SELECT DISTINCT Name
+FROM (SELECT *,
+      RANK() OVER(ORDER BY COUNT(CandidateId) DESC) AS count_rank
+      FROM Vote JOIN Candidate USING (id)
+      ) AS subquery
+WHERE subquery.count_rank = 1;
+
+-- winner is the most count in CandidateId from Vote table
+
+
 578. Get Highest Answer Rate Question
 # Write your MySQL query statement below
 SELECT  question_id AS survey_log
