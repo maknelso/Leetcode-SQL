@@ -140,6 +140,15 @@ WHERE subquery.count_rank = 1;
 
 -- winner is the most count in CandidateId from Vote table
 
+This answer didn't work either -> throw in SQL server
+# Write your MySQL query statement below
+SELECT Name
+FROM Candidate
+WHERE id IN (SELECT CandidateId
+             FROM Vote
+             GROUP BY id
+             ORDER BY COUNT(CandidateId) DESC
+             LIMIT 1) AS subquery
 
 578. Get Highest Answer Rate Question
 # Write your MySQL query statement below
