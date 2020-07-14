@@ -129,7 +129,15 @@ FROM Candidate JOIN (SELECT Candidateid
                      LIMIT 1) AS winner
 WHERE Candidate.id = winner.Candidateid;
 
-This answer didn't work -> throw in SQL Server
+-- This works too => JOIN ON or JOIN WHERE is similar except, 
+SELECT Name
+FROM Candidate JOIN (SELECT Candidateid
+                     FROM Vote
+                     GROUP BY CandidateId
+                     ORDER BY COUNT(CandidateId) DESC
+                     LIMIT 1) AS winner ON winner.CandidateId = Candidate.id 
+
+This answer didn't work -> RANK OVER(ORDER BY COUNT) gives every COUNT 1... doesn't work because when you GROUP BY, each COUNT gives only 1... have to GROUP BY candidateId
 # Write your MySQL query statement below
 SELECT DISTINCT Name
 FROM (SELECT *,
@@ -140,15 +148,15 @@ WHERE subquery.count_rank = 1;
 
 -- winner is the most count in CandidateId from Vote table
 
-This answer didn't work either -> throw in SQL server
+-- This answer works
 # Write your MySQL query statement below
 SELECT Name
 FROM Candidate
-WHERE id IN (SELECT CandidateId
+WHERE id =  (SELECT CandidateId
              FROM Vote
-             GROUP BY id
+             GROUP BY CandidateId
              ORDER BY COUNT(CandidateId) DESC
-             LIMIT 1) AS subquery
+             LIMIT 1);
 
 578. Get Highest Answer Rate Question
 # Write your MySQL query statement below
