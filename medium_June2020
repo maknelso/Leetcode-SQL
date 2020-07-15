@@ -15,6 +15,12 @@ Notes:
 -> SUMS up game_played, segregated by player_id, segregated by the order of event_date
 -- 570. To do COUNT(), you need GROUP BY. GROUP BY ManagerId, HAVING COUNT(ManagerId) >= 5 -> usually COUNT comes with GROUP BY
 -- 574. Winning Candidate => If you want to COUNT, you need to GROUP BY usually
+-- 574. RANK and COUNT does not seem to work well
+-- 574. JOIN ON and JOIN WHERE combos are very similar. JOIN ON with LEFT JOIN will produce NULLs, JOIN WHERE combo with LEFT JOIN will not produce nulls.
+-- 608. If subquery returns more than 1 line, you need IN (otherwise if it returns just 1 line, you can use = )
+-- 614. WHERE and HAVING are very similar for a non-aggregate function. If you put before GROUP BY, use WHERE. If you put AFTER GROUP BY, use HAVING.
+-- 1045. If you cannot segregate the product_key, use COUNT(DISTINCT product_key) to compare both tables
+-- 1077. RANK() seems to have to be empty
 -- 1421. => USING(column1, column2) => FROM Queries LEFT JOIN NPV USING(id, year);
 
 A*177. Nth Highest Salary -> CREATE FUNCTION    -> easy
@@ -223,14 +229,23 @@ ORDER BY id;
 612. Shortest Distance in a Plane 
 # Write your MySQL query statement below
 SELECT ROUND(SQRT(MIN((POW(p1.x - p2.x, 2) + POW(p1.y - p2.y, 2)))), 2) AS shortest
-FROM point_2d p1 JOIN point_2d p2 ON p1.x != p2.x OR p1.y != p2.y;
+FROM point_2d p1, point_2d p2 
+WHERE p1.x != p2.x OR p1.y != p2.y
 
 614. Second Degree Follower
 # Write your MySQL query statement below
 SELECT followee AS follower, COUNT(DISTINCT follower) AS num
 FROM follow
+WHERE followee IN (SELECT follower
+                   FROM follow)
 GROUP BY followee
-HAVING followee IN (SELECT DISTINCT follower
+ORDER BY followee;
+
+# Write your MySQL query statement below
+SELECT followee AS follower, COUNT(DISTINCT follower) AS num
+FROM follow
+GROUP BY followee
+HAVING followee IN (SELECT follower
                     FROM follow)
 ORDER BY followee;
 
