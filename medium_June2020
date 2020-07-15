@@ -3,7 +3,7 @@ Difficulty: Medium
 
 midway point: 24th question: 1132 - Reported Posts II
 
-Redo: 177, 184, 574, 1077, 1098 (a little bit difficult, need to look at the tables), 1107
+Redo: 177, 184, 574, 1077, 1098 (a little bit difficult, need to look at the tables), 1107, 1126, 
 Memorize: 177 (CREATE FUNCTION) -> CREATE, BEGIN, DECLARE, SET1, SET2, SET3,... RETURN
 
 Notes:
@@ -309,22 +309,28 @@ FROM (SELECT student_id, course_id, grade,
 WHERE subquery.ranking = 1
 ORDER BY student_id;
 
-1126. Active Businesses -> not 100% sure of solution
+1126. Active Businesses -> MORE THAN ONE event type
 # Write your MySQL query statement below
 WITH CTE AS
 (
-    SELECT business_id, 
-    (CASE 
-        WHEN occurences > AVG(occurences) OVER(PARTITION BY event_type) THEN 1 
-        ELSE 0 
-     END
-     ) AS chosen
+    SELECT business_id,
+    (
+        CASE
+            WHEN occurences > AVG(occurences) OVER(PARTITION BY event_type) THEN 1
+            ELSE 0
+        END
+    ) AS count
     FROM Events
 )
 SELECT business_id
 FROM CTE
 GROUP BY business_id
-HAVING SUM(chosen) > 1;
+HAVING SUM(count) > 1
+-- AVG:
+-- numerator: SUM() -> SUM(occurrences) as indicated by AVG
+-- denominator: COUNT() -> PARTITION BY event_type so COUNT(event_type)
+-- active is when occurrences > greater than avg occurrences for that event type
+
 
 S*1132. Reported Posts II (no Amazon tag) -> have to read question carefully to understand question
 # Write your MySQL query statement below
