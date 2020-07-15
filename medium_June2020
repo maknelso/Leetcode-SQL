@@ -21,6 +21,7 @@ Notes:
 -- 614. WHERE and HAVING are very similar for a non-aggregate function. If you put before GROUP BY, use WHERE. If you put AFTER GROUP BY, use HAVING.
 -- 1045. If you cannot segregate the product_key, use COUNT(DISTINCT product_key) to compare both tables
 -- 1077. RANK() seems to have to be empty
+-- 1077. Better to PARTITION BY if you know it works... if you GROUP BY you may lose the tie in the RANK()
 -- 1421. => USING(column1, column2) => FROM Queries LEFT JOIN NPV USING(id, year);
 
 A*177. Nth Highest Salary -> CREATE FUNCTION    -> easy
