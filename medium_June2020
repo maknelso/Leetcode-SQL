@@ -461,6 +461,13 @@ FROM (SELECT log_id,
 GROUP BY row_ranking
 ORDER BY start_id;
 
+1308. Running Total for Different Genders
+# Write your MySQL query statement below
+SELECT gender, day,
+SUM(score_points) OVER(PARTITION BY gender ORDER BY day) AS total
+FROM Scores
+ORDER BY gender, day;
+
 S*1341. Moving Rating (no Amazon tag) -> does not seem too bad, answer makes sense
 # Write your MySQL query statement below
 # find name of user who has greated most number of movies (if tie, return lexicographically smaller user name)
