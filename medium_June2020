@@ -359,6 +359,21 @@ FROM Products
 GROUP BY product_id
 HAVING MIN(change_date) > '2019-08-16';
 
+1204. Last Person to Fit in the Elevator
+# Write your MySQL query statement below
+WITH CTE AS
+(
+    SELECT *,
+    SUM(weight) OVER(ORDER BY turn) AS total_weight
+    FROM queue
+)
+
+SELECT person_name
+FROM CTE
+WHERE total_weight <= 1000
+ORDER BY turn DESC
+LIMIT 1;
+
 S*1212. Team Scores in Football Tournament (no Amazon tag) -> Answer makes sense -> not too hard
 # Write your MySQL query statement below
 SELECT team_id, team_name,
