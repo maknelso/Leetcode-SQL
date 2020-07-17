@@ -430,6 +430,20 @@ FROM Teams LEFT JOIN Matches ON team_id = host_team OR team_id = guest_team
 GROUP BY team_id
 ORDER BY num_points DESC, team_id ASC;
 
+1264. Page Recommendations
+# Write your MySQL query statement below
+SELECT DISTINCT page_id AS recommended_page 
+FROM Likes 
+WHERE user_id IN (SELECT DISTINCT user2_id 
+                  FROM friendship WHERE user1_id = 1 
+                  UNION 
+                  SELECT DISTINCT user1_id 
+                  FROM friendship WHERE user2_id = 1
+                  ) 
+AND Likes.page_id NOT IN (SELECT page_id 
+                          FROM likes 
+                          WHERE user_id = 1);
+
 S*1270. All People Report to the Given Manager (no Amazon tag) -> Answer kind of makes sense I guess
 => JOIN all 3 table, get e1.employee_id. WHERE e3.manager_id = 1 and e1.employee_id != 1
 # Write your MySQL query statement below
