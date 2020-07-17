@@ -399,6 +399,26 @@ WHERE total_weight <= 1000
 ORDER BY turn DESC
 LIMIT 1;
 
+1205. Monthly Transactions II -> seems a bit difficult
+# Write your MySQL query statement below
+SELECT SUBSTR(trans_date, 1, 7) AS month, country, 
+SUM(state = 'approved') AS approved_count, 
+SUM(IF(state = 'approved', amount, 0)) AS approved_amount, 
+SUM(state = 'chargeback') AS chargeback_count, 
+SUM(IF(state = 'chargeback', amount, 0)) AS chargeback_amount
+
+FROM (SELECT id, country, 'chargeback' AS state, amount, Chargebacks.trans_date
+	    FROM Chargebacks JOIN Transactions ON Chargebacks.trans_id = Transactions.id
+	  
+      UNION
+	  
+      SELECT *
+	    FROM Transactions
+	    WHERE state = 'approved'
+     ) AS subquery
+
+GROUP BY month, country;
+
 S*1212. Team Scores in Football Tournament (no Amazon tag) -> Answer makes sense -> not too hard
 # Write your MySQL query statement below
 SELECT team_id, team_name,
