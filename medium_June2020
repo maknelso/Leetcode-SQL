@@ -452,6 +452,15 @@ SELECT e1.employee_id
 FROM Employees e1 JOIN Employees e2 ON e1.manager_id = e2.employee_id JOIN Employees e3 ON e2.manager_id = e3.employee_id
 WHERE e3.manager_id = 1 AND e1.employee_id != 1
 
+1285. Find the Start and End Number of Continuous Ranges
+/* Write your T-SQL query statement below */
+SELECT MIN(log_id) AS start_id, MAX(log_id) AS end_id
+FROM (SELECT log_id, 
+      DENSE_RANK() OVER(ORDER BY log_id) - log_id AS row_ranking
+      FROM logs) AS subquery
+GROUP BY row_ranking
+ORDER BY start_id;
+
 S*1341. Moving Rating (no Amazon tag) -> does not seem too bad, answer makes sense
 # Write your MySQL query statement below
 # find name of user who has greated most number of movies (if tie, return lexicographically smaller user name)
