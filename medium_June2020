@@ -468,6 +468,15 @@ SUM(score_points) OVER(PARTITION BY gender ORDER BY day) AS total
 FROM Scores
 ORDER BY gender, day;
 
+S*1321. Restaurant Growth
+# Write your MySQL query statement below
+SELECT a.visited_on AS visited_on, SUM(b.day_sum) AS amount, ROUND(AVG(b.day_sum), 2) AS average_amount
+FROM (SELECT visited_on, SUM(amount) AS day_sum FROM Customer GROUP BY visited_on) AS a,
+     (SELECT visited_on, SUM(amount) AS day_sum FROM Customer GROUP BY visited_on) AS b
+WHERE DATEDIFF(a.visited_on, b.visited_on) BETWEEN 0 AND 6
+GROUP BY a.visited_on
+HAVING COUNT(b.visited_on) = 7
+
 S*1341. Moving Rating (no Amazon tag) -> does not seem too bad, answer makes sense
 # Write your MySQL query statement below
 # find name of user who has greated most number of movies (if tie, return lexicographically smaller user name)
