@@ -495,6 +495,16 @@ UNION
  GROUP BY movie_id
  ORDER BY AVG(rating) DESC, title ASC
  LIMIT 1)
+ 
+155. Activity Participants
+# Write your MySQL query statement below
+SELECT Activity
+FROM Friends
+GROUP BY Activity
+HAVING COUNT(id) != (SELECT COUNT(id) FROM friends GROUP BY activity ORDER BY COUNT(id) DESC LIMIT 1)
+AND COUNT(id) != (SELECT COUNT(id) FROM friends GROUP BY activity ORDER BY COUNT(id) LIMIT 1)
+-- first subquery gives != most number of COUNT(id)
+-- second subquery gives != least number of COUNT(id)
 
 A*1421. NPV Queries (Amazon tag) -> seems easy
 # Write your MySQL query statement below
