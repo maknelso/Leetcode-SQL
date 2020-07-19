@@ -515,6 +515,12 @@ LEFT JOIN customers c2 ON c2.email = con.contact_email
 GROUP BY i.invoice_id, c.customer_name, i.price
 ORDER BY i.invoice_id;
 
+1393. Capital Gain/Loss
+# Write your MySQL query statement below
+SELECT DISTINCT stock_name, 
+SUM(CASE WHEN operation = 'Buy' THEN -price ELSE price END) OVER(PARTITION BY stock_name) AS capital_gain_loss
+FROM stocks;
+
 A*1421. NPV Queries (Amazon tag) -> seems easy
 # Write your MySQL query statement below
 SELECT id, year, IFNULL(npv, 0) AS npv
