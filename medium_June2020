@@ -496,7 +496,7 @@ UNION
  ORDER BY AVG(rating) DESC, title ASC
  LIMIT 1)
  
-155. Activity Participants
+1355. Activity Participants
 # Write your MySQL query statement below
 SELECT Activity
 FROM Friends
@@ -505,6 +505,15 @@ HAVING COUNT(id) != (SELECT COUNT(id) FROM friends GROUP BY activity ORDER BY CO
 AND COUNT(id) != (SELECT COUNT(id) FROM friends GROUP BY activity ORDER BY COUNT(id) LIMIT 1)
 -- first subquery gives != most number of COUNT(id)
 -- second subquery gives != least number of COUNT(id)
+
+S*1364. Number of Trusted Contacts of a Customer
+# Write your MySQL query statement below
+SELECT i.invoice_id, c.customer_name, i.price, COUNT(con.user_id) AS contacts_cnt, COUNT(c2.email) AS trusted_contacts_cnt
+FROM Invoices i JOIN Customers c ON c.customer_id = i.user_id
+LEFT JOIN Contacts con ON con.user_id = c.customer_id
+LEFT JOIN customers c2 ON c2.email = con.contact_email
+GROUP BY i.invoice_id, c.customer_name, i.price
+ORDER BY i.invoice_id;
 
 A*1421. NPV Queries (Amazon tag) -> seems easy
 # Write your MySQL query statement below
