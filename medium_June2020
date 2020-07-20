@@ -3,7 +3,7 @@ Difficulty: Medium
 
 midway point: 24th question: 1132 - Reported Posts II
 
-Redo: 177, 184, 534, 550, 574, 1077, 1098 (a little bit difficult, need to look at the tables), 1107, 1126, 
+Redo: 177, 184, 534, 550, 574, 1077, 1098 (a little bit difficult, need to look at the tables), 1107, 1126, 1445
 Memorize: 177 (CREATE FUNCTION) -> CREATE, BEGIN, DECLARE, SET1, SET2, SET3,... RETURN
 
 Notes:
@@ -563,5 +563,15 @@ GROUP BY sale_date
 ORDER BY sale_date
 -- have s1 only containing apples
 -- have s2 only containing oranges
- 
- 
+
+1454. Active Users -> do not fully understand answer
+# Write your MySQL query statement below
+SELECT DISTINCT a.id, a.name
+FROM (SELECT id, 
+      LEAD(login_date, 4) OVER(PARTITION BY id ORDER BY login_date) AS five_days,
+      DATEDIFF(LEAD(login_date, 4) OVER(PARTITION BY id ORDER BY login_date), login_date) AS gap
+      FROM (SELECT DISTINCT id, login_date FROM Logins) AS c
+) AS d
+LEFT JOIN Accounts a ON a.id = d.id
+WHERE gap = 4
+ORDER BY a.id
