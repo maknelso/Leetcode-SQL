@@ -547,10 +547,10 @@ WITH CTE AS
 SELECT left_operand, operator, right_operand,
 (
     CASE 
-    WHEN operator = '=' AND left_value = right_value THEN "true"
-    WHEN operator = ">" AND left_value > right_value THEN "true"
-    WHEN operator = "<" AND left_value < right_value THEN "true"
-    ELSE "false"
+    	WHEN operator = '=' AND left_value = right_value THEN "true"
+    	WHEN operator = ">" AND left_value > right_value THEN "true"
+    	WHEN operator = "<" AND left_value < right_value THEN "true"
+    	ELSE "false"
     END
 ) AS value
 FROM CTE
