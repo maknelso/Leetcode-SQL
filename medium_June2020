@@ -534,6 +534,6 @@ A*1421. NPV Queries (Amazon tag) -> seems easy
 # Write your MySQL query statement below
 SELECT id, year, IFNULL(npv, 0) AS npv
 FROM Queries LEFT JOIN NPV USING (id, year)
-ORDER BY id ASC;
+ORDER BY id, year;
  
  
