@@ -554,5 +554,14 @@ SELECT left_operand, operator, right_operand,
     END
 ) AS value
 FROM CTE
+
+1445. Apples & Oranges
+# Write your MySQL query statement below
+SELECT s1.sale_date, (s1.sold_num - s2.sold_num) AS diff
+FROM Sales s1 JOIN Sales s2 ON s1.sale_date = s2.sale_date AND s1.fruit = 'apples' AND s2.fruit = 'oranges'
+GROUP BY sale_date
+ORDER BY sale_date
+-- have s1 only containing apples
+-- have s2 only containing oranges
  
  
