@@ -535,5 +535,24 @@ A*1421. NPV Queries (Amazon tag) -> seems easy
 SELECT id, year, IFNULL(npv, 0) AS npv
 FROM Queries LEFT JOIN NPV USING (id, year)
 ORDER BY id, year;
+
+1440. Evaluate Boolean Expression
+# Write your MySQL query statement below
+WITH CTE AS
+(
+    SELECT left_operand, right_operand, operator, v.value AS left_value, v1.value AS right_value
+    FROM Expressions e JOIN Variables v ON e.left_operand = v.name
+    JOIN Variables v1 ON e.right_operand = v1.name
+)
+SELECT left_operand, operator, right_operand,
+(
+    CASE 
+    WHEN operator = '=' AND left_value = right_value THEN "true"
+    WHEN operator = ">" AND left_value > right_value THEN "true"
+    WHEN operator = "<" AND left_value < right_value THEN "true"
+    ELSE "false"
+    END
+) AS value
+FROM CTE
  
  
