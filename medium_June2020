@@ -283,6 +283,15 @@ FROM Sales
 WHERE (product_id, year) IN (SELECT product_id, MIN(year)
                              FROM Sales
                              GROUP BY product_id);
+			     
+1077. Project Employees III
+# Write your MySQL query statement below
+SELECT project_id, employee_id
+FROM (SELECT project_id, employee_id,
+      RANK() OVER(PARTITION BY project_id ORDER BY experience_years DESC) AS ranking
+      FROM Project JOIN Employee USING(employee_id)) AS subquery
+WHERE subquery.ranking = 1
+ORDER BY project_id, employee_id;
 
 A*1098. Unpopular Books
 # Write your MySQL query statement below
