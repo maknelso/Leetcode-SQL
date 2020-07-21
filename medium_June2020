@@ -594,9 +594,9 @@ WITH country_call AS
 country_duration AS 
 (
     SELECT name, AVG(duration) AS country_avg
-    FROM country_call, Calls
-	WHERE id = caller_id OR id = callee_id
-	GROUP BY name
+    FROM country_call JOIN Calls
+    WHERE id = caller_id OR id = callee_id
+    GROUP BY name
 )
 SELECT name AS country
 FROM country_duration
