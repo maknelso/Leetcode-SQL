@@ -251,15 +251,18 @@ HAVING followee IN (SELECT follower
 ORDER BY followee;
 
 A*626. Exchange Seats -> the CASE ordering has to be below probably because it depends if last id is odd...
-=> CASE solution
 # Write your MySQL query statement below
+WITH lastid_CTE AS
+(
+    SELECT MAX(id) AS last_id
+    FROM seat
+)
 SELECT (CASE
             WHEN id % 2 != 0 AND id != last_id THEN id + 1
             WHEN id % 2 != 0 AND id = last_id THEN id
             ELSE id - 1
         END) AS id, student
-FROM seat, (SELECT MAX(id) AS last_id
-            FROM seat) AS subquery
+FROM seat, lastid_CTE
 ORDER BY id ASC;
 #if id is odd, + 1 to even
 #if id is even, -1 to odd
