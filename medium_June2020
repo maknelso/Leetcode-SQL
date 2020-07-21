@@ -1,5 +1,5 @@
 Difficulty: Medium
-48 questions
+49 questions
 
 midway point: 24th question: 1132 - Reported Posts II
 
@@ -582,4 +582,24 @@ SELECT p1.id AS p1, p2.id AS p2, ABS(p1.x_value - p2.x_value) * ABS(p1.y_value -
 FROM Points p1 JOIN Points p2
 ON p1.x_value != p2.x_value AND p1.y_value != p2.y_value AND p1.id < p2.id
 ORDER BY area DESC, p1, p2;
+
+1501. Countries You Can Safely Invest In
+# Write your MySQL query statement below
+WITH country_call AS 
+(
+    SELECT c.name, p.id
+    FROM Country c, Person p
+    WHERE SUBSTRING(p.phone_number,1, 3) = c.country_code
+),
+country_duration AS 
+(
+    SELECT name, AVG(duration) AS country_avg
+    FROM country_call, Calls
+	WHERE id = caller_id OR id = callee_id
+	GROUP BY name
+)
+SELECT name AS country
+FROM country_duration
+WHERE country_avg > (SELECT AVG(duration) 
+                     FROM Calls)
 
