@@ -307,7 +307,7 @@ SELECT login_date, COUNT(DISTINCT user_id) AS user_count
 FROM (SELECT MIN(activity_date) AS login_date, user_id
       FROM Traffic
       WHERE activity = 'login'
-      group by user_id) AS subquery
+      GROUP BY user_id) AS subquery
 WHERE DATEDIFF ('2019-06-30', login_date) <= 90
 GROUP BY login_date;
 
