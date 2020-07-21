@@ -191,10 +191,10 @@ WHERE TIV_2015 IN (SELECT TIV_2015
                    FROM insurance
                    GROUP BY TIV_2015
                    HAVING COUNT(TIV_2015) > 1)
-                   AND CONCAT (LAT, LON) IN (SELECT CONCAT (LAT, LON)
-                                             FROM insurance
-                                             GROUP BY LAT, LON
-                                             HAVING COUNT(*) = 1);
+AND CONCAT (LAT, LON) IN (SELECT CONCAT (LAT, LON)
+                          FROM insurance
+                          GROUP BY LAT, LON
+                          HAVING COUNT(*) = 1);
 -- Filter CONCAT (LAT, LON) criteria 1st, then filter COUNT(TIV_2015) > 1 criteria 2nd, then SUM last once criteria 1 and 2 are filled.
 
 602. Friend Requests II: Who Has the Most Friends -> use tbl, don't use table (reserved word)
