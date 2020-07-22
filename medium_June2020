@@ -604,6 +604,23 @@ FROM Points p1 JOIN Points p2
 ON p1.x_value != p2.x_value AND p1.y_value != p2.y_value AND p1.id < p2.id
 ORDER BY area DESC, p1, p2;
 
+1468. Calculate Salaries
+# Write your MySQL query statement below
+WITH tax_CTE AS 
+(
+    SELECT company_id,
+        (CASE 
+            WHEN MAX(salary) < 1000 THEN (1 - 0.00)
+            WHEN MAX(salary) BETWEEN 1001 AND 10000 THEN (1 - 0.24)
+            ELSE (1 - 0.49)
+          END
+         ) AS multiplier
+    FROM Salaries
+    GROUP BY company_id
+)
+SELECT Salaries.company_id, employee_id, employee_name, ROUND(salary * multiplier) AS salary
+FROM Salaries JOIN tax_CTE USING (company_id);
+
 1501. Countries You Can Safely Invest In
 # Write your MySQL query statement below
 WITH country_call AS 
