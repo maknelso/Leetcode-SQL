@@ -9,6 +9,7 @@ Redo: 177, 184, 534, 550, 574, 1077, 1098 (a little bit difficult, need to look 
 1341 (important - need brackets for each subquery when using UNION, we want to AVG(rating) PER movie_id, 
 1355 (need brackets for the subqueries, HAVING COUNT AND COUNT (don't need HAVING COUNT AND HAVING COUNT), 
 1364 (many joins - need to look at the table)
+1421 - USING with 2 conditions for join
 
 Very important (applicable to Amazon): 1398 (WHERE AND AND) - only need WHERE once. You need to break out the tables piece by piece. Similar to the Amazon Vancouver interview Q
 
@@ -581,8 +582,7 @@ AND customer_id NOT IN (SELECT customer_id
 A*1421. NPV Queries (Amazon tag) -> seems easy
 # Write your MySQL query statement below
 SELECT id, year, IFNULL(npv, 0) AS npv
-FROM Queries LEFT JOIN NPV USING (id, year)
-ORDER BY id, year;
+FROM Queries LEFT JOIN NPV USING (id, year);
 
 1440. Evaluate Boolean Expression
 # Write your MySQL query statement below
