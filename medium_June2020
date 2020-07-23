@@ -5,7 +5,7 @@ midway point: 24th question: 1132 - Reported Posts II
 
 Skipped on redo: q23 - 1126, q24 - 1132, q31 - 1205, q35 - 1285 (this one is prob not important)
 Redo: 177, 184, 534, 550, 574, 1077, 1098 (a little bit difficult, need to look at the tables), 1107, 1126, 1158 (always ask do we want 0s? - left join), 1164, 1174, 
-1193 (not super important - but might be good to do again), 1204, 1264, 1321 (moving average - need to throw in SQLITE to fully understand), 1445
+1193 (not super important - but might be good to do again), 1204, 1264, 1321 (moving average - need to throw in SQLITE to fully understand), 1341, 1445
 Memorize: 177 (CREATE FUNCTION) -> CREATE, BEGIN, DECLARE, SET1, SET2, SET3,... RETURN
 
 Notes:
@@ -503,24 +503,25 @@ WHERE DATEDIFF(a.visited_on, b.visited_on) BETWEEN 0 AND 6
 GROUP BY a.visited_on
 HAVING COUNT(b.visited_on) = 7
 
-S*1341. Moving Rating (no Amazon tag) -> does not seem too bad, answer makes sense
+1341. Moving Rating
 # Write your MySQL query statement below
-# find name of user who has greated most number of movies (if tie, return lexicographically smaller user name)
-# find movie name with highest average rating in Feb 2020 (if tie, return lexicographically smaller movie name)
-(SELECT name AS results 
- FROM Users JOIN Movie_Rating USING(user_id)
- GROUP BY user_id
- ORDER BY COUNT(DISTINCT movie_id) DESC, name ASC 
- LIMIT 1)
-
-UNION
-
-(SELECT title
- FROM Movies JOIN Movie_Rating USING(movie_id)
- WHERE created_at BETWEEN '2020-02-01' AND '2020-02-29'
- GROUP BY movie_id
- ORDER BY AVG(rating) DESC, title ASC
- LIMIT 1)
+-- 2 vastly different things... better to UNION to join these 2 tables
+(SELECT name AS results
+FROM Users JOIN Movie_Rating USING(user_id)
+GROUP BY user_id
+ORDER BY COUNT(rating) DESC, name
+LIMIT 1)
+UNION 
+(SELECT title AS results
+FROM Movies JOIN Movie_Rating USING(movie_id)
+WHERE created_at LIKE '2020-02-%'
+GROUP BY movie_id
+ORDER BY AVG(rating) DESC, title 
+LIMIT 1)
+-- AVG
+-- numerator = SUM(rating)
+-- denominator = COUNT(rating) => COUNT(group by clause)
+-- GROUP BY movie_id, because each movie_id may have multiple ratings
  
 1355. Activity Participants
 # Write your MySQL query statement below
