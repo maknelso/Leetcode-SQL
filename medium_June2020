@@ -5,7 +5,7 @@ midway point: 24th question: 1132 - Reported Posts II
 
 Skipped on redo: q23 - 1126, q24 - 1132, q31 - 1205, q35 - 1285 (this one is prob not important)
 Redo: 177, 184, 534, 550, 574, 1077, 1098 (a little bit difficult, need to look at the tables), 1107, 1126, 1158 (always ask do we want 0s? - left join), 1164, 1174, 
-1193 (not super important - but might be good to do again), 1204, 1264, 1445
+1193 (not super important - but might be good to do again), 1204, 1264, 1321 (moving average - need to throw in SQLITE to fully understand), 1445
 Memorize: 177 (CREATE FUNCTION) -> CREATE, BEGIN, DECLARE, SET1, SET2, SET3,... RETURN
 
 Notes:
