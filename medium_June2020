@@ -3,19 +3,25 @@ Difficulty: Medium
 
 midway point: 24th question: 1132 - Reported Posts II
 
-Skipped on redo: q23 - 1126, q24 - 1132, q31 - 1205, q35 - 1285 (this one is prob not important)
-Redo: 177, 184, 534, 550, 574, 1077, 1098 (a little bit difficult, need to look at the tables), 1107, 1126, 1158 (always ask do we want 0s? - left join), 1164, 1174, 
+Skipped: 177., 608., 612., 614.
+
+Skipped on redo: 
+q23 - 1126 (find active business), q24 - 1132 (AVG percentage removed as spam), q31 - 1205 (bunch of SELECT), 
+q35 - 1285 (this one is prob not important), q44 - 1440 (boolean expression), 1454. (lead window fx)
+
+Redo Notes: 177, 184, 534, 550, 574, 1077, 1098 (a little bit difficult, need to look at the tables), 1107, 1126, 1158 (always ask do we want 0s? - left join), 1164, 1174, 
 1193 (not super important - but might be good to do again), 1204, 1264, 1321 (moving average - need to throw in SQLITE to fully understand), 
 1341 (important - need brackets for each subquery when using UNION, we want to AVG(rating) PER movie_id, 
 1355 (need brackets for the subqueries, HAVING COUNT AND COUNT (don't need HAVING COUNT AND HAVING COUNT), 
 1364 (many joins - need to look at the table)
+1398. (WHERE AND AND) - only need WHERE once. You need to break out the tables piece by piece. Similar to the Amazon Vancouver interview Q
 1421 - USING with 2 conditions for join
 
-Very important (applicable to Amazon): 1398 (WHERE AND AND) - only need WHERE once. You need to break out the tables piece by piece. Similar to the Amazon Vancouver interview Q
-
-
-1445
-
+Very Important (applicable to Amazon): 
+184., 534., 550., 570., 574., 580., 585., 602., 626., 1045., 
+1070., 1077., 1098., 1107., 1112., 1126., 1149., 1158., 1164., 1174., 
+1204., 1212., 1264., 1270., 1285. (maybe), 1308., 1321. (moving average), 1341., 1355., 1364. (maybe), 
+1393., 1398., 1421., 1445., 1468., 1501. (double CTE)
 
 Memorize: 177 (CREATE FUNCTION) -> CREATE, BEGIN, DECLARE, SET1, SET2, SET3,... RETURN
 
