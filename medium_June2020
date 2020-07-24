@@ -656,21 +656,18 @@ ORDER BY company_id, employee_id;
 
 1501. Countries You Can Safely Invest In
 # Write your MySQL query statement below
-WITH country_call AS 
+WITH country_call AS
 (
-    SELECT c.name, p.id
-    FROM Country c, Person p
-    WHERE SUBSTRING(p.phone_number,1, 3) = c.country_code
+    SELECT id, Country.name
+    FROM Country JOIN Person ON Country.country_code = SUBSTRING(Person.phone_number, 1, 3)
 ),
-country_duration AS 
+country_duration AS
 (
     SELECT name, AVG(duration) AS country_avg
-    FROM country_call JOIN Calls
-    WHERE id = caller_id OR id = callee_id
+    FROM country_call JOIN Calls ON country_call.id = Calls.caller_id OR country_call.id = Calls.callee_id
     GROUP BY name
 )
 SELECT name AS country
 FROM country_duration
-WHERE country_avg > (SELECT AVG(duration) 
-                     FROM Calls)
-
+WHERE country_avg > (SELECT AVG(duration)
+                     FROM Calls)       
