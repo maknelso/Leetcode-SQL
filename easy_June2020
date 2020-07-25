@@ -343,6 +343,18 @@ ORDER BY seller_id;
 
 A*1083. Sales Analysis II -> Need to redo (did not flash), done 1x -> buyer_id IN or NOT IN, if we are looking for buyer_id
 # Write your MySQL query statement below
+-- buyers who bought S8, but not iPhone
+-- S8 and iPhone are products present in Product table
+SELECT DISTINCT buyer_id
+FROM Sales
+WHERE buyer_id IN (SELECT buyer_id
+                   FROM Product JOIN Sales USING(product_id) 
+                   WHERE product_name = 'S8')
+AND buyer_id NOT IN (SELECT buyer_id
+                     FROM Product JOIN Sales USING(product_id)
+                     WHERE product_name = 'iPhone');
+
+# Write your MySQL query statement below
 SELECT DISTINCT buyer_id
 FROM Sales JOIN Product USING(product_id)
 WHERE product_name = 'S8'
