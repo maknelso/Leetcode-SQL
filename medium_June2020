@@ -337,6 +337,9 @@ GROUP BY Books.book_id
 HAVING IFNULL(SUM(quantity), 0) < 10;
 
 1107. New Users Daily Count
+
+-- you need to find the MIN(activity_date) in the subquery, then you can work on it from your outter query
+
 # Write your MySQL query statement below
 SELECT login_date, COUNT(DISTINCT user_id) AS user_count
 FROM (SELECT MIN(activity_date) AS login_date, user_id
