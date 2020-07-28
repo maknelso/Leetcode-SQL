@@ -132,6 +132,10 @@ ORDER BY a1.player_id, a1.event_date;
 -- numerator: count # of players logged in for at least 2 consecutive days ,starting from their FIRST login date
 -- denominator: total number of players
 
+-- you need event_date (all of it), and the MIN(event_date) that's why you need to partition. 
+If you just did SELECT player_id, event_date, MIN(event_date)
+		FROM Activity
+		GROUP by player_id 			=> event_date and MIN(event_date) returns the exact same thing
 # Write your MySQL query statement below
 SELECT ROUND(SUM(IF(DATEDIFF(event_date, first_login) = 1, 1, 0)) / COUNT(DISTINCT player_id),2) AS fraction
 FROM (SELECT player_id, event_date, 
